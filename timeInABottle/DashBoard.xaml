@@ -9,19 +9,73 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    
-    <Grid Padding="20">
-        <Grid.ColumnDefinitions> 
-            <ColumnDefinition Width="9*"/>
-            <ColumnDefinition Width="3*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="10*"/>
-        </Grid.RowDefinitions>
+    <Grid>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <!-- khi man hinh lon hon = 800 -->
+                <VisualState x:Name="WideState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="800"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!-- hien sidebar -->
+                        <Setter Target="SideBar.Visibility" Value="Visible"/>
+                        <Setter Target="ColumnDefinitionSideBar.Width" Value="3*"/>
+                        <Setter Target="ToggleButton.Visibility" Value="Collapsed"/>
+                    </VisualState.Setters>
+                </VisualState>
 
-        <Grid x:Name="NoticeBoard" Background="Black"/>
-        <Grid x:Name="SideBar" Grid.Column="1" Grid.RowSpan="2" Background="Aquamarine"/>
-        <Grid x:Name="CalendarContainer" Grid.Row="1" Background="Aqua"/>
+                <!-- khi man hinh nho hon 800 -->
+                <VisualState x:Name="NarrowState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!-- an sidebar-->
+                        <Setter Target="SideBar.Visibility" Value="Collapsed"/>
+                        <Setter Target="ColumnDefinitionSideBar.Width" Value="0"/>
+                        <Setter Target="ToggleButton.Visibility" Value="Visible"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <!-- layout chinh -->
+        <Grid Padding="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="9*"/>
+                <ColumnDefinition x:Name="ColumnDefinitionSideBar" Width="3*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="10*"/>
+            </Grid.RowDefinitions>
+
+            <!-- NoticeBoard : hien deadline, cac thong tin thoi tiet, thoi gian, cac hoat dong tiep theo,... -->
+            <Grid x:Name="NoticeBoard" Background="Black">
+                <Button x:Name="ToggleButton"
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Height="auto"
+                        Width="50"
+                        Visibility="Collapsed"
+                        >
+                    <FontIcon Glyph="&#xE700;" />
+                </Button>
+            </Grid>
+
+                <!-- SideBar: chua cac nut thuc hien cac chuc nang -->
+            <Grid x:Name="SideBar" Grid.Column="1" Grid.RowSpan="2" Background="Aquamarine"/>
+
+            <!-- CalendarContainer: chua lich chinh -->
+            <Grid x:Name="CalendarContainer" Grid.Row="1" Background="Aqua"/>
+
+            <!-- Toggle Button for small screens -->
+           
+        </Grid>
     </Grid>
+
+
 </Page>
