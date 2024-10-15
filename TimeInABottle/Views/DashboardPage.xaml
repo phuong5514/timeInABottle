@@ -1,0 +1,77 @@
+﻿<Page
+    x:Class="TimeInABottle.Views.DashboardPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid x:Name="ContentArea">
+		<VisualStateManager.VisualStateGroups>
+			<VisualStateGroup>
+				<!-- khi man hinh lon hon = 800 -->
+				<VisualState x:Name="WideState">
+					<VisualState.StateTriggers>
+						<AdaptiveTrigger MinWindowWidth="800"/>
+					</VisualState.StateTriggers>
+					<VisualState.Setters>
+						<!-- hien sidebar -->
+						<Setter Target="SideBar.Visibility" Value="Visible"/>
+						<Setter Target="ColumnDefinitionSideBar.Width" Value="3*"/>
+						<Setter Target="ToggleButton.Visibility" Value="Collapsed"/>
+					</VisualState.Setters>
+				</VisualState>
+
+				<!-- khi man hinh nho hon 800 -->
+				<VisualState x:Name="NarrowState">
+					<VisualState.StateTriggers>
+						<AdaptiveTrigger MinWindowWidth="0"/>
+					</VisualState.StateTriggers>
+					<VisualState.Setters>
+						<!-- an sidebar-->
+						<Setter Target="SideBar.Visibility" Value="Collapsed"/>
+						<Setter Target="ColumnDefinitionSideBar.Width" Value="0"/>
+						<Setter Target="ToggleButton.Visibility" Value="Visible"/>
+					</VisualState.Setters>
+				</VisualState>
+			</VisualStateGroup>
+		</VisualStateManager.VisualStateGroups>
+
+		<!-- layout chinh -->
+		<Grid Padding="20">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="9*"/>
+				<ColumnDefinition x:Name="ColumnDefinitionSideBar" Width="3*"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="2*"/>
+				<RowDefinition Height="10*"/>
+			</Grid.RowDefinitions>
+
+			<!-- NoticeBoard : hien deadline, cac thong tin thoi tiet, thoi gian, cac hoat dong tiep theo,... -->
+			<Grid x:Name="NoticeBoard" Background="Black">
+				<Button x:Name="ToggleButton"
+						Grid.Row="0"
+						Grid.Column="0"
+						VerticalAlignment="Center"
+						HorizontalAlignment="Right"
+						Height="auto"
+						Width="50"
+						Visibility="Collapsed"
+						Click ="ToggleButton_Click"
+                    >
+					<FontIcon Glyph="&#xE700;" />
+				</Button>
+			</Grid>
+
+			<!-- SideBar: chua cac nut thuc hien cac chuc nang -->
+			<Grid x:Name="SideBar" Grid.Column="1" Grid.RowSpan="2" Background="Aquamarine"/>
+
+			<!-- CalendarContainer: chua lich chinh -->
+			<Grid x:Name="CalendarContainer" Grid.Row="1" Background="Aqua"/>
+
+			<!-- Toggle Button for small screens -->
+
+		</Grid>
+    </Grid>
+</Page>
