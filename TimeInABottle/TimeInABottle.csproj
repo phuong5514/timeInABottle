@@ -15,6 +15,10 @@
     <EnableMsixTooling>true</EnableMsixTooling>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Styles\ListItem.xaml" />
+    <None Remove="Styles\ResourceDictionary1.xaml" />
+  </ItemGroup>
 
   <ItemGroup>
     <Manifest Include="$(ApplicationManifest)" />
@@ -43,6 +47,12 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Styles\ListItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Styles\ResourceDictionary1.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
