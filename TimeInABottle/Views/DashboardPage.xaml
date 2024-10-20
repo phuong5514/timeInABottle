@@ -50,6 +50,23 @@
 
 			<!-- NoticeBoard : hien deadline, cac thong tin thoi tiet, thoi gian, cac hoat dong tiep theo,... -->
 			<Grid x:Name="NoticeBoard" Background="Black">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="6*"/>
+                    <ColumnDefinition Width="6*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Vertical" Padding="16, 8, 16, 8">
+                    <!--TODO: data binding-->
+                    <TextBlock Style="{StaticResource TitleLargeTextBlockStyle}">Good Evening</TextBlock>
+                    <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}">19/10/2024 - Clear weather</TextBlock>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical" Grid.Column="1" Padding="16, 8, 16, 8">
+                    <TextBlock Style="{StaticResource TitleLargeTextBlockStyle}">22:00</TextBlock>
+                    <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}">Next up: task X</TextBlock>
+
+                </StackPanel>
+                
 				<Button x:Name="ToggleButton"
 						Grid.Row="0"
 						Grid.Column="0"
@@ -58,20 +75,34 @@
 						Height="auto"
 						Width="50"
 						Visibility="Collapsed"
-						Click ="ToggleButton_Click"
+						Click ="ToggleButton_Click" 
                     >
 					<FontIcon Glyph="&#xE700;" />
 				</Button>
+                
 			</Grid>
 
 			<!-- SideBar: chua cac nut thuc hien cac chuc nang -->
-			<Grid x:Name="SideBar" Grid.Column="1" Grid.RowSpan="2" Background="Aquamarine"/>
+            <StackPanel x:Name="SideBar" Grid.Column="1" Grid.RowSpan="2" Background="Aquamarine" Orientation="Vertical">
+                <TextBlock Style="{StaticResource VerticalListTitleStyle}">Today's Tasks</TextBlock>
+                <TextBlock Style="{StaticResource VerticalListTitleStyle}"> 08:00 - abc</TextBlock>
+                <TextBlock Style="{StaticResource VerticalListTitleStyle}"> 09:00 - xyz</TextBlock>
+                <TextBlock Style="{StaticResource VerticalListTitleStyle}"> 10:00 - tyhdssd</TextBlock>
+                <TextBlock Style="{StaticResource VerticalListTitleStyle}"> 14:00 - adsf</TextBlock>
+                <TextBlock Style="{StaticResource VerticalListTitleStyle}"> 15:00 - 24vflgn</TextBlock>
+                <TextBlock Style="{StaticResource VerticalListTitleStyle}"> 21:00 - sdfsdf</TextBlock>
+            </StackPanel>
 
 			<!-- CalendarContainer: chua lich chinh -->
-			<Grid x:Name="CalendarContainer" Grid.Row="1" Background="Aqua"/>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Grid.Row="1">
+                <Grid x:Name="CalendarContainer" Background="Green">
+            
+                </Grid>
+            </ScrollViewer>
+            <!-- Basic Grid structure, we will add rows and columns in the code-behind -->
 
-			<!-- Toggle Button for small screens -->
 
-		</Grid>
+
+        </Grid>
     </Grid>
 </Page>
