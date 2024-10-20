@@ -84,25 +84,25 @@
 
 			<!-- SideBar: chua cac nut thuc hien cac chuc nang -->
             <StackPanel x:Name="SideBar" Grid.Column="1" Grid.RowSpan="2" Background="Aquamarine" Orientation="Vertical">
-                <TextBlock Style="{StaticResource ListTitleStyle}">Today's tasks</TextBlock>
-                <TextBlock Style="{StaticResource ListItemStyle}"> abcxyz</TextBlock>
-                <TextBlock Style="{StaticResource ListItemStyle}"> abcxyz</TextBlock>
-                <TextBlock Style="{StaticResource ListItemStyle}"> abcxyz</TextBlock>
-                <TextBlock Style="{StaticResource ListItemStyle}"> abcxyz</TextBlock>
-                <TextBlock Style="{StaticResource ListItemStyle}"> abcxyz</TextBlock>
-                <TextBlock Style="{StaticResource ListItemStyle}"> abcxyz</TextBlock>
-                <TextBlock Style="{StaticResource ListItemStyle}"> abcxyz</TextBlock>
-                <TextBlock Style="{StaticResource ListItemStyle}"> abcxyz</TextBlock>
-                <TextBlock Style="{StaticResource ListItemStyle}"> abcxyz</TextBlock>
-                <TextBlock Style="{StaticResource ListItemStyle}"> abcxyz</TextBlock>
-                <TextBlock Style="{StaticResource ListItemStyle}"> abcxyz</TextBlock>
+                <TextBlock Style="{StaticResource VerticalListTitleStyle}">Today's Tasks</TextBlock>
+                <TextBlock Style="{StaticResource VerticalListTitleStyle}"> 08:00 - abc</TextBlock>
+                <TextBlock Style="{StaticResource VerticalListTitleStyle}"> 09:00 - xyz</TextBlock>
+                <TextBlock Style="{StaticResource VerticalListTitleStyle}"> 10:00 - tyhdssd</TextBlock>
+                <TextBlock Style="{StaticResource VerticalListTitleStyle}"> 14:00 - adsf</TextBlock>
+                <TextBlock Style="{StaticResource VerticalListTitleStyle}"> 15:00 - 24vflgn</TextBlock>
+                <TextBlock Style="{StaticResource VerticalListTitleStyle}"> 21:00 - sdfsdf</TextBlock>
             </StackPanel>
 
 			<!-- CalendarContainer: chua lich chinh -->
-			<Grid x:Name="CalendarContainer" Grid.Row="1" Background="Aqua"/>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Grid.Row="1">
+                <Grid x:Name="CalendarContainer" Background="Green">
+            
+                </Grid>
+            </ScrollViewer>
+            <!-- Basic Grid structure, we will add rows and columns in the code-behind -->
 
-			<!-- Toggle Button for small screens -->
 
-		</Grid>
+
+        </Grid>
     </Grid>
 </Page>

@@ -16,8 +16,9 @@
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Styles\ListItem.xaml" />
-    <None Remove="Styles\ResourceDictionary1.xaml" />
+    <None Remove="Styles\GridCells.xaml" />
+    <None Remove="Styles\ListItems.xaml" />
+    <None Remove="Styles\MarginsAndPaddingValues.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,10 +48,13 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Page Update="Styles\ListItem.xaml">
+    <Page Update="Styles\GridCells.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="Styles\ResourceDictionary1.xaml">
+    <Page Update="Styles\MarginsAndPaddingValues.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Styles\ListItems.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
