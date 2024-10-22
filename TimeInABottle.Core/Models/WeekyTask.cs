@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace TimeInABottle.Core.Models;
-internal class WeekyTask : IRepeatedTask
+public class WeekyTask : IRepeatedTask
 {
     public string Name
     {

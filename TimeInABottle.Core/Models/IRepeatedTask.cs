@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace TimeInABottle.Core.Models;
-internal interface IRepeatedTask : ITask
+public interface IRepeatedTask : ITask
 {
 }

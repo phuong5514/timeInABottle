@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace TimeInABottle.Core.Models;
-internal class NonRepeatedTask : ITask
+public class NonRepeatedTask : ITask
 {
     public string Name
     {
