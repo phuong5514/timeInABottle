@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,24 +8,17 @@ using System.Threading.Tasks;
 namespace TimeInABottle.Core.Models;
 public class MonthlyTask : IRepeatedTask
 {
-    public string Name
+    // sẽ xử lý trường hợp ngày trong tháng này không tồn tại trong tháng sau
+    // vd: tháng 1 ngày 30 -> tháng 2 ngày 28/29
+    public int Date
     {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
+        get; set;
     }
-    public string Description
+
+    MonthlyTask(string name, string description, Time startingTime, Time endingTime, int date) : base(name, description, startingTime, endingTime)
     {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
+        Date = date;
     }
-    public Time Start
-    {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
-    }
-    public Time End
-    {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
-    }
+
+    public override string ToString() => "MonthlyTask";
 }

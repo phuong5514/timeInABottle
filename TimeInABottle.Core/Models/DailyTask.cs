@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,24 +8,9 @@ using System.Threading.Tasks;
 namespace TimeInABottle.Core.Models;
 public class DailyTask : IRepeatedTask
 {
-    public string Name
+    public DailyTask(string name, string description, Time startingTime, Time endingTime) : base(name, description, startingTime, endingTime)
     {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
     }
-    public string Description
-    {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
-    }
-    public Time Start
-    {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
-    }
-    public Time End
-    {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
-    }
+
+    public override string ToString() => $"DailyTask";
 }
