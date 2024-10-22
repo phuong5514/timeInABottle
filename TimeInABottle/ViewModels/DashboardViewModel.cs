@@ -1,9 +1,8 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Helpers;
 using TimeInABottle.Core.Models;
 using TimeInABottle.Core.Services;
-
 namespace TimeInABottle.ViewModels;
 
 public partial class DashboardViewModel : ObservableRecipient
