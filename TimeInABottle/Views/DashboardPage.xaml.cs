@@ -29,32 +29,34 @@ public sealed partial class DashboardPage : Page
 
     private void LoadData()
     {
-        Border eventBlock = new Border
-        {
-            Background = new SolidColorBrush(Colors.LightBlue),
-            BorderBrush = new SolidColorBrush(Colors.Black),
-            BorderThickness = new Thickness(1)
-        };
-        Grid.SetRow(eventBlock, 24); // 12:00 PM (24th row)
-        Grid.SetColumn(eventBlock, 1); // Monday (1st day column)
-        CalendarContainer.Children.Add(eventBlock);
+        //Border eventBlock = new Border
+        //{
+        //    Style = (Style)Application.Current.Resources["CellItemBorder"]
+        //};
 
-        var event2 = new StackPanel
+        var event1 = new Grid
         {
+            Style = (Style)Application.Current.Resources["CellContent"],
             Background = new SolidColorBrush(Colors.Red),
-            Margin = (Thickness)Application.Current.Resources["CellContentMargin"]
+            //Margin = (Thickness)Application.Current.Resources["CellContentMargin"]
         };
 
-        Grid.SetRow(event2, 6); 
-        Grid.SetColumn(event2, 2);
-        Grid.SetRowSpan(event2, 4);
-        CalendarContainer.Children.Add(event2);
+        //Grid.SetRow(eventBlock, 6); 
+        //Grid.SetColumn(eventBlock, 2);
+        //Grid.SetRowSpan(eventBlock, 4);
+
+        //eventBlock.Child = event2;
+
+        Grid.SetRow(event1, 6);
+        Grid.SetColumn(event1, 2);
+        Grid.SetRowSpan(event1, 4);
+        CalendarContainer.Children.Add(event1);
     }
 
     private void SetTitles()
     {
         // Add columns (1 for time labels, the rest for days)
-        CalendarContainer.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }); // Time Column
+        CalendarContainer.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) }); // Time Column
         for (var i = 0; i < 7; i++) // For Monday to Sunday
         {
             CalendarContainer.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) });

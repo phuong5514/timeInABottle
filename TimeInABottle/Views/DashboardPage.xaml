@@ -57,12 +57,12 @@
 
                 <StackPanel Orientation="Vertical" Padding="16, 8, 16, 8">
                     <!--TODO: data binding-->
-                    <TextBlock Style="{StaticResource TitleLargeTextBlockStyle}">Good Evening</TextBlock>
+                    <TextBlock Style="{StaticResource PageTitleStyle}">Good Evening</TextBlock>
                     <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}">19/10/2024 - Clear weather</TextBlock>
                 </StackPanel>
 
                 <StackPanel Orientation="Vertical" Grid.Column="1" Padding="16, 8, 16, 8">
-                    <TextBlock Style="{StaticResource TitleLargeTextBlockStyle}">22:00</TextBlock>
+                    <TextBlock Style="{StaticResource PageTitleStyle}">22:00</TextBlock>
                     <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}">Next up: task X</TextBlock>
 
                 </StackPanel>

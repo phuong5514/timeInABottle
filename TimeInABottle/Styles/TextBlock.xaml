@@ -20,19 +20,19 @@
     
     
     <Style x:Key="DetailSubTitleStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
-        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}"  />
         <Setter Property="FontWeight" Value="SemiLight" />
     </Style>
 
     <Style x:Key="DetailBodyBaseMediumStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
         <Setter Property="FontWeight" Value="Normal" />
-        <Setter Property="FontSize" Value="15" />
+        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}"/>
         <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseMediumBrush}" />
     </Style>
 
     <Style x:Key="DetailBodyStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
         <Setter Property="FontWeight" Value="Normal" />
-        <Setter Property="FontSize" Value="15" />
+        <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
     </Style>
 
 </ResourceDictionary>
