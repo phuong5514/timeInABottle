@@ -8,6 +8,9 @@ namespace TimeInABottle.ViewModels;
 public partial class DashboardViewModel : ObservableRecipient
 {
     private readonly IDaoService? _dao = null;
+
+    public Time time;
+
     private FullObservableCollection<ITask> Tasks
     {
         set; get;
@@ -16,6 +19,7 @@ public partial class DashboardViewModel : ObservableRecipient
     public void Innit(IDaoService _dao)
     {
         _dao = new MockDaoService();
+        UpdateTime();
         getAllTasks();
     }
 
@@ -27,9 +31,11 @@ public partial class DashboardViewModel : ObservableRecipient
         Tasks = tasks;
     }
 
+    private void UpdateTime() => time = new Time();
+
 
     public DashboardViewModel()
     {
-
+        UpdateTime();
     }
 }

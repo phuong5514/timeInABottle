@@ -9,14 +9,22 @@ public class Time
 {
     public Time(int hours, int minutes)
     {
-        //int minuteValue = minute % 60;
-        //int extraHour = minute / 60;
-        //int hourValue = (hour + extraHour) % 24;
+        if (hours < 0 || hours > 23) {
+            throw new ArgumentException("hour must be in range of 0-23");
+        }
 
-        //Hours = hourValue;
-        //Minutes = minuteValue;
+        if (minutes < 0 || minutes > 59) { 
+            throw new ArgumentException("minute must be in range of 0-59");
+        }
+
         Hours = hours;
-        Minutes = minutes;    
+        Minutes = minutes;
+    }
+
+    public Time() {
+        DateTime localNow = DateTime.Now;
+        Hours = localNow.Hour;
+        Minutes = localNow.Minute;
     }
 
     public int Hours
