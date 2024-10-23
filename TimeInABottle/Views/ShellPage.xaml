@@ -45,7 +45,7 @@
                 -->
                 <NavigationViewItem x:Uid="Shell_Dashboard" helpers:NavigationHelper.NavigateTo="TimeInABottle.ViewModels.DashboardViewModel">
                     <NavigationViewItem.Icon>
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE80F; " />
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE80F;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem x:Uid="Shell_Main" helpers:NavigationHelper.NavigateTo="TimeInABottle.ViewModels.MainViewModel">
