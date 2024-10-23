@@ -42,4 +42,38 @@ public class Time
             "{0:00}:{1:00}",
             Hours, Minutes);
     }
+
+
+    //public static Boolean operator <(Time left, Time right)
+    //{
+    //    if (left.Hours == right.Hours) {
+    //        return left.Minutes < right.Minutes;
+    //    }
+    //    else
+    //    {
+    //        return left.Hours < right.Hours;
+    //    }
+    //}
+
+    //public static Boolean operator >(Time left, Time right)
+    //{
+    //    if (left.Hours == right.Hours)
+    //    {
+    //        return left.Minutes > right.Minutes;
+    //    }
+    //    else
+    //    {
+    //        return left.Hours > right.Hours;
+    //    }
+    //}
+
+    //public static Boolean operator ==(Time left, Time right)
+    //{
+    //    return left.Hours == right.Hours && left.Minutes == right.Minutes;
+    //}
+
+    //public static Boolean operator !=(Time left, Time right)
+    //{
+    //    return !(left == right);
+    //}
 }
