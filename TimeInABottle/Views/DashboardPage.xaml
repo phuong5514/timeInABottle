@@ -4,7 +4,24 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:helpers="using:TimeInABottle.Helpers"
+    xmlns:models="using:TimeInABottle.Core.Models"
+    xmlns:xaml="using:Microsoft.UI.Xaml"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <helpers:TimeToGreetingConverter x:Key="TimeToGreetingConverter"/>
+        <helpers:TimeToStringConverter x:Key="TimeToStringConverter"/>
+        <helpers:TaskToNotificationConverter x:Key="TaskToNotificationConverter"/>
+
+        <DataTemplate x:Key ="ListItem" x:DataType="models:ITask">
+            <StackPanel Orientation="Horizontal" Style="{StaticResource BaseListItemContainerStyle}">
+                <TextBlock Style="{StaticResource ListSubTitleStyle}">
+                    <Run Text="{x:Bind Start, Converter={StaticResource TimeToStringConverter}}"/>: <Run Text="{x:Bind Name}"/>
+                </TextBlock>
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
 
     <Grid x:Name="ContentArea">
 		<VisualStateManager.VisualStateGroups>
@@ -49,7 +66,7 @@
 			</Grid.RowDefinitions>
 
 			<!-- NoticeBoard : hien deadline, cac thong tin thoi tiet, thoi gian, cac hoat dong tiep theo,... -->
-			<Grid x:Name="NoticeBoard" Background="Black">
+			<Grid x:Name="NoticeBoard">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="6*"/>
                     <ColumnDefinition Width="6*"/>
@@ -57,13 +74,13 @@
 
                 <StackPanel Orientation="Vertical" Padding="16, 8, 16, 8">
                     <!--TODO: data binding-->
-                    <TextBlock Style="{StaticResource PageTitleStyle}">Good Evening</TextBlock>
-                    <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}">19/10/2024 - Clear weather</TextBlock>
+                    <TextBlock Style="{StaticResource PageTitleStyle}" Text="{x:Bind ViewModel.Time, Mode=OneWay, Converter={StaticResource TimeToGreetingConverter}}"/>
+                    <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="{x:Bind ViewModel.Date, Mode=OneWay}"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Vertical" Grid.Column="1" Padding="16, 8, 16, 8">
-                    <TextBlock Style="{StaticResource PageTitleStyle}">22:00</TextBlock>
-                    <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}">Next up: task X</TextBlock>
+                    <TextBlock Style="{StaticResource PageTitleStyle}" Text="{x:Bind ViewModel.Time, Mode=OneWay, Converter={StaticResource TimeToStringConverter}}"/>
+                    <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="{x:Bind ViewModel.NextTask, Mode=OneWay, Converter={StaticResource TaskToNotificationConverter}}"/>
 
                 </StackPanel>
                 
@@ -83,19 +100,27 @@
 			</Grid>
 
 			<!-- SideBar: chua cac nut thuc hien cac chuc nang -->
-            <StackPanel x:Name="SideBar" Grid.Column="1" Grid.RowSpan="2" Background="Aquamarine" Orientation="Vertical">
+            <StackPanel x:Name="SideBar" Grid.Column="1" Grid.RowSpan="2" Orientation="Vertical">
                 <TextBlock Style="{StaticResource VerticalListTitleStyle}">Today's Tasks</TextBlock>
+                <!--
+                
                 <TextBlock Style="{StaticResource VerticalListTitleStyle}"> 08:00 - abc</TextBlock>
                 <TextBlock Style="{StaticResource VerticalListTitleStyle}"> 09:00 - xyz</TextBlock>
                 <TextBlock Style="{StaticResource VerticalListTitleStyle}"> 10:00 - tyhdssd</TextBlock>
                 <TextBlock Style="{StaticResource VerticalListTitleStyle}"> 14:00 - adsf</TextBlock>
                 <TextBlock Style="{StaticResource VerticalListTitleStyle}"> 15:00 - 24vflgn</TextBlock>
                 <TextBlock Style="{StaticResource VerticalListTitleStyle}"> 21:00 - sdfsdf</TextBlock>
+                -->
+
+                <ListView Name="TaskList"
+                    ItemsSource="{x:Bind ViewModel.Tasks, Mode=OneWay}"
+                    ItemTemplate="{StaticResource ListItem}">   
+                </ListView>
             </StackPanel>
 
 			<!-- CalendarContainer: chua lich chinh -->
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Grid.Row="1">
-                <Grid x:Name="CalendarContainer" Background="Green">
+                <Grid x:Name="CalendarContainer">
             
                 </Grid>
             </ScrollViewer>

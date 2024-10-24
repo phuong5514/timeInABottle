@@ -3,6 +3,7 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using TimeInABottle.Core.Services;
 using TimeInABottle.ViewModels;
 
 namespace TimeInABottle.Views;
@@ -18,6 +19,7 @@ public sealed partial class DashboardPage : Page
     public DashboardPage()
     {
         ViewModel = App.GetService<DashboardViewModel>();
+        //ViewModel.Innit();
         InitializeComponent();
 
 

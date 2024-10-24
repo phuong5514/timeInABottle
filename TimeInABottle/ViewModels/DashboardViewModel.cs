@@ -7,16 +7,84 @@ namespace TimeInABottle.ViewModels;
 
 public partial class DashboardViewModel : ObservableRecipient
 {
-    private readonly IDaoService? _dao = null;
-    private FullObservableCollection<ITask> Tasks
+    private IDaoService? _dao;
+
+    private Time _time;
+    public Time Time
+    {
+        get => _time;
+        private set
+        {
+            if (_time != value)
+            {
+                _time = value;
+                OnPropertyChanged(nameof(Time)); // Notify UI of changes
+
+                UpdateNextTask();
+            }
+        }
+    }
+
+    private void UpdateTime() => Time = new Time();
+
+
+    public FullObservableCollection<ITask> Tasks
     {
         set; get;
     }
 
-    public void Innit(IDaoService _dao)
+
+    private ITask? _nextTask;
+    public ITask? NextTask
+    {
+        get => _nextTask;
+        private set
+        {
+            if (_nextTask != value)
+            {
+                _nextTask = value;
+                OnPropertyChanged(nameof(NextTask)); // Notify UI of changes
+            }
+        }
+    }
+
+
+
+    private void UpdateNextTask()
+    {
+        if (Tasks == null)
+        {
+            NextTask = null;
+            return;
+        }
+
+        foreach (var task in Tasks)
+        {
+            // Get the first task that starts after the current time (assuming Tasks are sorted)
+            if (task.Start > Time)
+            {
+                NextTask = task;
+                return;
+            }
+        }
+
+        NextTask = null;
+    }
+
+
+    public DateOnly Date
+    {
+        set; get;
+    }
+    private void UpdateDate() => Date = DateOnly.FromDateTime(DateTime.Now);
+
+
+    public void Innit()
     {
         _dao = new MockDaoService();
         getAllTasks();
+        UpdateTime();
+        UpdateDate();
     }
 
     private void getAllTasks() {
@@ -28,8 +96,13 @@ public partial class DashboardViewModel : ObservableRecipient
     }
 
 
+
+
+    //private void 
+
     public DashboardViewModel()
     {
-
+        Innit();
+        UpdateTime();
     }
 }

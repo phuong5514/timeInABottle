@@ -12,6 +12,6 @@
     <Thickness x:Key="LargeMargin">16, 16, 16, 16</Thickness>
 
     <Thickness x:Key="CellContentMargin">3, 3, 3, 5</Thickness>
-
+    <Thickness x:Key="ListItemMargin">2, 2, 2, 2</Thickness>
 
 </ResourceDictionary>
