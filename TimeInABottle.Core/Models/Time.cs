@@ -5,99 +5,104 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace TimeInABottle.Core.Models;
-public class Time
-{
-    public Time(int hours, int minutes)
-    {
-        if (hours < 0 || hours > 23) {
-            throw new ArgumentException("hour must be in range of 0-23");
-        }
+// not needed
 
-        if (minutes < 0 || minutes > 59) { 
-            throw new ArgumentException("minute must be in range of 0-59");
-        }
+//public class Time
+//{
+//    public Time(int hours, int minutes)
+//    {
+//        if (hours < 0 || hours > 23)
+//        {
+//            throw new ArgumentException("hour must be in range of 0-23");
+//        }
 
-        Hours = hours;
-        Minutes = minutes;
-    }
+//        if (minutes < 0 || minutes > 59)
+//        {
+//            throw new ArgumentException("minute must be in range of 0-59");
+//        }
 
-    public Time() {
-        DateTime localNow = DateTime.Now;
-        Hours = localNow.Hour;
-        Minutes = localNow.Minute;
-    }
+//        Hours = hours;
+//        Minutes = minutes;
+//    }
 
-    public int Hours
-    {
-        get; set;
-    }
-    public int Minutes
-    {
-        get; set;
-    }
+//    public Time()
+//    {
+//        DateTime localNow = DateTime.Now;
+//        Hours = localNow.Hour;
+//        Minutes = localNow.Minute;
+//    }
 
-    public override string ToString()
-    {
-        return string.Format(
-            "{0:00}:{1:00}",
-            Hours, Minutes);
-    }
+//    public int Hours
+//    {
+//        get; set;
+//    }
+//    public int Minutes
+//    {
+//        get; set;
+//    }
+
+//    public override string ToString()
+//    {
+//        return string.Format(
+//            "{0:00}:{1:00}",
+//            Hours, Minutes);
+//    }
 
 
-    public static bool operator <(Time left, Time right)
-    {
-        if (left == null || right == null)
-        {
-            throw new ArgumentNullException("Cannot compare null Time objects.");
-        }
+//    public static bool operator <(Time left, Time right)
+//    {
+//        if (left == null || right == null)
+//        {
+//            throw new ArgumentNullException("Cannot compare null Time objects.");
+//        }
 
-        if (left.Hours == right.Hours)
-        {
-            return left.Minutes < right.Minutes;
-        }
-        return left.Hours < right.Hours;
-    }
+//        if (left.Hours == right.Hours)
+//        {
+//            return left.Minutes < right.Minutes;
+//        }
+//        return left.Hours < right.Hours;
+//    }
 
-    public static bool operator >(Time left, Time right)
-    {
-        if (left == null || right == null)
-        {
-            throw new ArgumentNullException("Cannot compare null Time objects.");
-        }
+//    public static bool operator >(Time left, Time right)
+//    {
+//        if (left == null || right == null)
+//        {
+//            throw new ArgumentNullException("Cannot compare null Time objects.");
+//        }
 
-        if (left.Hours == right.Hours)
-        {
-            return left.Minutes > right.Minutes;
-        }
-        return left.Hours > right.Hours;
-    }
+//        if (left.Hours == right.Hours)
+//        {
+//            return left.Minutes > right.Minutes;
+//        }
+//        return left.Hours > right.Hours;
+//    }
 
-    // Equality operators
-    public static bool operator ==(Time left, Time right)
-    {
-        if (ReferenceEquals(left, right)) return true;
-        if (left is null || right is null) return false;
+//    // Equality operators
+//    public static bool operator ==(Time left, Time right)
+//    {
+//        if (ReferenceEquals(left, right)) return true;
+//        if (left is null || right is null) return false;
 
-        return left.Hours == right.Hours && left.Minutes == right.Minutes;
-    }
+//        return left.Hours == right.Hours && left.Minutes == right.Minutes;
+//    }
 
-    public static bool operator !=(Time left, Time right)
-    {
-        return !(left == right);
-    }
+//    public static bool operator !=(Time left, Time right)
+//    {
+//        return !(left == right);
+//    }
 
-    // Override Equals and GetHashCode
-    public override bool Equals(object obj)
-    {
-        if (obj is Time other)
-        {
-            return this == other;
-        }
-        return false;
-    }
+//    // Override Equals and GetHashCode
+//    public override bool Equals(object obj)
+//    {
+//        if (obj is Time other)
+//        {
+//            return this == other;
+//        }
+//        return false;
+//    }
 
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Hours, Minutes);
-    }
-}
+//    public override int GetHashCode()
+//    {
+//        return HashCode.Combine(Hours, Minutes);
+//    }
+//}

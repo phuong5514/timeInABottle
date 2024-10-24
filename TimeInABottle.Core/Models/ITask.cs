@@ -9,7 +9,7 @@ namespace TimeInABottle.Core.Models;
 
 public abstract class ITask : INotifyPropertyChanged
 {
-    protected ITask(string name, string description, Time start, Time end)
+    protected ITask(string name, string description, TimeOnly start, TimeOnly end)
     {
         Name = name;
         Description = description;
@@ -19,8 +19,8 @@ public abstract class ITask : INotifyPropertyChanged
 
     public string Name { get; set; }
     public string Description { get; set; }
-    public Time Start { get; set; }
-    public Time End { get; set; }
+    public TimeOnly Start { get; set; }
+    public TimeOnly End { get; set; }
 
     public event PropertyChangedEventHandler PropertyChanged;
 

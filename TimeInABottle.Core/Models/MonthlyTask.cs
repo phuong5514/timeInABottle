@@ -15,7 +15,7 @@ public class MonthlyTask : IRepeatedTask
         get; set;
     }
 
-    MonthlyTask(string name, string description, Time startingTime, Time endingTime, int date) : base(name, description, startingTime, endingTime)
+    MonthlyTask(string name, string description, TimeOnly startingTime, TimeOnly endingTime, int date) : base(name, description, startingTime, endingTime)
     {
         Date = date;
     }

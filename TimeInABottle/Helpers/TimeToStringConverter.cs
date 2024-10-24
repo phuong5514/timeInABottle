@@ -10,14 +10,14 @@ namespace TimeInABottle.Helpers;
 public class TimeToStringConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language) {
-        var timeValue = (Time)value;
+        var timeValue = (TimeOnly)value;
         if (timeValue == null) {
             return new ArgumentNullException();
         }
 
 
-        var hours = timeValue.Hours;
-        var minutes = timeValue.Minutes;
+        var hours = timeValue.Hour;
+        var minutes = timeValue.Minute;
         var result = string.Format("{0:00}:{1:00}", hours, minutes);
         return result;
     }
@@ -35,7 +35,7 @@ public class TimeToStringConverter : IValueConverter
         {
             var hours = Int32.Parse(list[0]);
             var minutes = Int32.Parse(list[1]);
-            return new Time(hours, minutes);
+            return new TimeOnly(hours, minutes);
         }
 
         return new Exception();
