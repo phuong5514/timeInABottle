@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Helpers;
@@ -65,13 +66,17 @@ public partial class DashboardViewModel : ObservableRecipient
             if (task.Start > Time)
             {
                 NextTask = task;
-                var notificationService = new NotificationService();
-                notificationService.ShowNextTask(task);
+                
                 return;
             }
         }
 
         NextTask = null;
+    }
+
+    public void ShowNextTaskNotification() {
+        var notificationService = new NotificationService();
+        notificationService.ShowNextTask(NextTask);
     }
 
 

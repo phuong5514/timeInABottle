@@ -12,8 +12,14 @@ internal class NotificationService
 {
     public void ShowNextTask(ITask task)
     {
-        var title = $"Up next at {task.Start}:";
-        var message = $"{task.Name}\n {task.Description}";
+        var title = "No more tasks left!";
+        var message = "Enjoy your freetime!";
+
+        if (task != null)
+        {
+            title = $"Up next at {task.Start}:";
+            message = $"{task.Name}\n {task.Description}";
+        }
         ShowToast(title, message);
     }
 
