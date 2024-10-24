@@ -12,6 +12,7 @@
     <Page.Resources>
         <helpers:TimeToGreetingConverter x:Key="TimeToGreetingConverter"/>
         <helpers:TimeToStringConverter x:Key="TimeToStringConverter"/>
+        <helpers:TaskToNotificationConverter x:Key="TaskToNotificationConverter"/>
 
         <DataTemplate x:Key ="ListItem" x:DataType="models:ITask">
             <StackPanel Orientation="Horizontal" Style="{StaticResource BaseListItemContainerStyle}">
@@ -74,12 +75,12 @@
                 <StackPanel Orientation="Vertical" Padding="16, 8, 16, 8">
                     <!--TODO: data binding-->
                     <TextBlock Style="{StaticResource PageTitleStyle}" Text="{x:Bind ViewModel.Time, Mode=OneWay, Converter={StaticResource TimeToGreetingConverter}}"/>
-                    <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}">19/10/2024 - Clear weather</TextBlock>
+                    <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="{x:Bind ViewModel.Date, Mode=OneWay}"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Vertical" Grid.Column="1" Padding="16, 8, 16, 8">
                     <TextBlock Style="{StaticResource PageTitleStyle}" Text="{x:Bind ViewModel.Time, Mode=OneWay, Converter={StaticResource TimeToStringConverter}}"/>
-                    <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}">Next up: task X</TextBlock>
+                    <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="{x:Bind ViewModel.NextTask, Mode=OneWay, Converter={StaticResource TaskToNotificationConverter}}"/>
 
                 </StackPanel>
                 

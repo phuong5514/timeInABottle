@@ -21,8 +21,8 @@ public class MockDaoService : IDaoService
             new DailyTask("Name J", "Desc K", new Time(15, 20), new Time(16, 30))
         };
 
-        //var sorter = new TaskListSorter();
-        //sorter.SortByTime(list);
+        var sorter = new TaskListSorter();
+        sorter.SortByTimeAscending(list);
         return new FullObservableCollection<ITask>(list);
     }
 

@@ -44,36 +44,60 @@ public class Time
     }
 
 
-    //public static Boolean operator <(Time left, Time right)
-    //{
-    //    if (left.Hours == right.Hours) {
-    //        return left.Minutes < right.Minutes;
-    //    }
-    //    else
-    //    {
-    //        return left.Hours < right.Hours;
-    //    }
-    //}
+    public static bool operator <(Time left, Time right)
+    {
+        if (left == null || right == null)
+        {
+            throw new ArgumentNullException("Cannot compare null Time objects.");
+        }
 
-    //public static Boolean operator >(Time left, Time right)
-    //{
-    //    if (left.Hours == right.Hours)
-    //    {
-    //        return left.Minutes > right.Minutes;
-    //    }
-    //    else
-    //    {
-    //        return left.Hours > right.Hours;
-    //    }
-    //}
+        if (left.Hours == right.Hours)
+        {
+            return left.Minutes < right.Minutes;
+        }
+        return left.Hours < right.Hours;
+    }
 
-    //public static Boolean operator ==(Time left, Time right)
-    //{
-    //    return left.Hours == right.Hours && left.Minutes == right.Minutes;
-    //}
+    public static bool operator >(Time left, Time right)
+    {
+        if (left == null || right == null)
+        {
+            throw new ArgumentNullException("Cannot compare null Time objects.");
+        }
 
-    //public static Boolean operator !=(Time left, Time right)
-    //{
-    //    return !(left == right);
-    //}
+        if (left.Hours == right.Hours)
+        {
+            return left.Minutes > right.Minutes;
+        }
+        return left.Hours > right.Hours;
+    }
+
+    // Equality operators
+    public static bool operator ==(Time left, Time right)
+    {
+        if (ReferenceEquals(left, right)) return true;
+        if (left is null || right is null) return false;
+
+        return left.Hours == right.Hours && left.Minutes == right.Minutes;
+    }
+
+    public static bool operator !=(Time left, Time right)
+    {
+        return !(left == right);
+    }
+
+    // Override Equals and GetHashCode
+    public override bool Equals(object obj)
+    {
+        if (obj is Time other)
+        {
+            return this == other;
+        }
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Hours, Minutes);
+    }
 }

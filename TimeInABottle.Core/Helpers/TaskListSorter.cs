@@ -8,23 +8,48 @@ using TimeInABottle.Core.Models;
 namespace TimeInABottle.Core.Helpers;
 internal class TaskListSorter
 {
-    //public void SortByTime(List<ITask> list)
-    //{
-    //    for (var i = 0; i < list.Count; i++) {
-    //        for (var j = 0; j < list.Count; j++) { 
-    //            var taskA = list[i];
-    //            var taskB = list[j];
-    //            var taskATime = taskA.Start;
-    //            var taskBATime = taskB.Start;
+    // selection sort
+    public void SortByTimeAscending(List<ITask> list)
+    {
+        for (var i = 0; i < list.Count; i++)
+        {
+            for (var j = i + 1; j < list.Count; j++)
+            {
+                var taskA = list[i];
+                var taskATime = taskA.Start;
+                var taskB = list[j];
+                var taskBTime = taskB.Start;
 
-    //            if (taskATime > taskBATime) {
-    //                var temp = list[i];
-    //                list[i] = list[j];
-    //                list[j] = temp;
-    //            }
-    //        }
-    //    }
-    //}
+                if (taskATime > taskBTime)
+                {
+                    var temp = list[i];
+                    list[i] = list[j];
+                    list[j] = temp;
+                }
+            }
+        }
+    }
+
+    public void SortByTimeDescending(List<ITask> list)
+    {
+        for (var i = 0; i < list.Count; i++)
+        {
+            for (var j = i + 1; j < list.Count; j++)
+            {
+                var taskA = list[i];
+                var taskATime = taskA.Start;
+                var taskB = list[j];
+                var taskBTime = taskB.Start;
+
+                if (taskATime < taskBTime)
+                {
+                    var temp = list[i];
+                    list[i] = list[j];
+                    list[j] = temp;
+                }
+            }
+        }
+    }
 
     //public void SortByDay
 }
