@@ -8,7 +8,7 @@ using Windows.Data.Xml.Dom;
 using Windows.UI.Notifications;
 
 namespace TimeInABottle.Services;
-internal class NotificationService
+public class NotificationService
 {
     public void ShowNextTask(ITask task)
     {
