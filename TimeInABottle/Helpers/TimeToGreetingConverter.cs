@@ -11,8 +11,8 @@ namespace TimeInABottle.Helpers;
 public partial class TimeToGreetingConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language) {
-        var TimeValue = (Time)value;
-        var hours = TimeValue.Hours;
+        var TimeValue = (TimeOnly)value;
+        var hours = TimeValue.Hour;
         string? result;
         if (hours < 4)
         {

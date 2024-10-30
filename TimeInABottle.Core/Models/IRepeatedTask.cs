@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace TimeInABottle.Core.Models;
 public abstract class IRepeatedTask : ITask
 {
-    protected IRepeatedTask(string name, string description, Time startingTime, Time endingTime) : base(name, description, startingTime, endingTime)    
+    protected IRepeatedTask(string name, string description, TimeOnly startingTime, TimeOnly endingTime) : base(name, description, startingTime, endingTime)    
     {
     }
 

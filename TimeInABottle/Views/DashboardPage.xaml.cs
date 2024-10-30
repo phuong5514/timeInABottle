@@ -131,6 +131,11 @@ public sealed partial class DashboardPage : Page
         return (Style)Application.Current.Resources[key];
     }
 
+    private void DebugButton_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.ShowNextTaskNotification(); 
+    }
+
     private void ToggleButton_Click(object sender, RoutedEventArgs e)
     {
         if (SideBar.Visibility == Visibility.Collapsed)

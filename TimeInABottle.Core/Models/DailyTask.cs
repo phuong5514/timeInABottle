@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace TimeInABottle.Core.Models;
 public class DailyTask : IRepeatedTask
 {
-    public DailyTask(string name, string description, Time startingTime, Time endingTime) : base(name, description, startingTime, endingTime)
+    public DailyTask(string name, string description, TimeOnly startingTime, TimeOnly endingTime) : base(name, description, startingTime, endingTime)
     {
     }
 

@@ -1,16 +1,18 @@
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Helpers;
 using TimeInABottle.Core.Models;
 using TimeInABottle.Core.Services;
+using TimeInABottle.Services;
 namespace TimeInABottle.ViewModels;
 
 public partial class DashboardViewModel : ObservableRecipient
 {
     private IDaoService? _dao;
 
-    private Time _time;
-    public Time Time
+    private TimeOnly _time;
+    public TimeOnly Time
     {
         get => _time;
         private set
@@ -25,7 +27,7 @@ public partial class DashboardViewModel : ObservableRecipient
         }
     }
 
-    private void UpdateTime() => Time = new Time();
+    private void UpdateTime() => Time = TimeOnly.FromDateTime(DateTime.Now);
 
 
     public FullObservableCollection<ITask> Tasks
@@ -64,11 +66,17 @@ public partial class DashboardViewModel : ObservableRecipient
             if (task.Start > Time)
             {
                 NextTask = task;
+                
                 return;
             }
         }
 
         NextTask = null;
+    }
+
+    public void ShowNextTaskNotification() {
+        var notificationService = new NotificationService();
+        notificationService.ShowNextTask(NextTask);
     }
 
 
@@ -94,6 +102,8 @@ public partial class DashboardViewModel : ObservableRecipient
         var tasks = _dao.GetAllTasks();
         Tasks = tasks;
     }
+
+    
 
 
 

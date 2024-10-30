@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace TimeInABottle.Core.Models;
 public class NonRepeatedTask : ITask
 {
-    public NonRepeatedTask(string name, string description, Time start, Time end, DateOnly date) : base(name, description, start, end)
+    public NonRepeatedTask(string name, string description, TimeOnly start, TimeOnly end, DateOnly date) : base(name, description, start, end)
     {
         Date = date;
     }

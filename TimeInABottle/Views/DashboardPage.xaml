@@ -101,6 +101,8 @@
 
 			<!-- SideBar: chua cac nut thuc hien cac chuc nang -->
             <StackPanel x:Name="SideBar" Grid.Column="1" Grid.RowSpan="2" Orientation="Vertical">
+                <Button x:Name="DebugButton" Click="DebugButton_Click">Debug</Button>
+                
                 <TextBlock Style="{StaticResource VerticalListTitleStyle}">Today's Tasks</TextBlock>
                 <!--
                 

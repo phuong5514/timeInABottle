@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace TimeInABottle.Core.Models;
 public class DerivedTask : ITask
 {
-    public DerivedTask(string name, string description, Time start, Time end) : base(name, description, start, end)
+    public DerivedTask(string name, string description, TimeOnly start, TimeOnly end) : base(name, description, start, end)
     {
     }
 
