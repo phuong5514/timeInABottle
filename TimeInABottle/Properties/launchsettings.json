@@ -1,0 +1,10 @@
+﻿{
+    "profiles": {
+      "TimeInABottle (Package)": {
+        "commandName": "MsixPackage"
+      },
+      "TimeInABottle (Unpackaged)": {
+        "commandName": "Project"
+      }
+    }
+}
