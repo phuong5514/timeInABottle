@@ -7,9 +7,12 @@
 ## Features
 
 - **Task Management**: Create, edit, and delete various types of tasks, including daily, weekly, monthly, and non-repeating tasks.
-- **Smart Recommendations**: Automatically suggest additional tasks based on user behavior and preferences.
+- **Notification**: Notify user of upcomming tasks. 
+- **Smart Recommendations**: Automatically suggest additional tasks based on user behavior and preferences
+- **Buffering**: Automatically buffer and re-adjust tasks based on local weather and location data 
 - **Custom Queries**: Filter and sort tasks according to user-defined criteria.
 - **User-Friendly Interface**: Easy navigation and interaction for a seamless user experience.
+
 
 ## Technology Stack
 
