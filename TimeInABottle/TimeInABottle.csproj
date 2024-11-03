@@ -16,6 +16,9 @@
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
   </PropertyGroup>
   <ItemGroup>
+    <Content Remove="Assets\LockScreenLogo.scale-200.png" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Styles\GridCells.xaml" />
     <None Remove="Styles\ListItems.xaml" />
     <None Remove="Styles\MarginsAndPaddingValues.xaml" />
