@@ -154,4 +154,10 @@
   <data name="Shell_Dashboard.Content" xml:space="preserve">
     <value>Dashboard</value>
   </data>
+  <data name="TaskList_NoSelection.Text" xml:space="preserve">
+    <value>Select an item from the list.</value>
+  </data>
+  <data name="Shell_TaskList.Content" xml:space="preserve">
+    <value>TaskList</value>
+  </data>
 </root>

@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace TimeInABottle.Contracts.Services;
-internal class INotificationService
+public class INotificationService
 {
 }
