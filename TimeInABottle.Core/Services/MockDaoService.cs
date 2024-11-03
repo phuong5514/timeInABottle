@@ -43,7 +43,7 @@ public class MockDaoService : IDaoService, IDaoQueryService
 
     };
 
-    public List<ITask> TaskList { get; private set; }
+    public List<ITask> TaskList { get => _taskList; private set { } }
 
 
     // trong tuong lai, ham nay chi co the dc goi boi class, ko nen dc goi tu ben ngoai ma thay vao do
