@@ -6,16 +6,16 @@ using TimeInABottle.ViewModels;
 
 namespace TimeInABottle.Views;
 
-public sealed partial class ListDetailsPage : Page
+public sealed partial class TaskListPage : Page
 {
-    public ListDetailsViewModel ViewModel
+    public TaskListViewModel ViewModel
     {
         get;
     }
 
-    public ListDetailsPage()
+    public TaskListPage()
     {
-        ViewModel = App.GetService<ListDetailsViewModel>();
+        ViewModel = App.GetService<TaskListViewModel>();
         InitializeComponent();
     }
 
