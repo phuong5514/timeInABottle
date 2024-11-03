@@ -30,11 +30,14 @@ public partial class DashboardViewModel : ObservableRecipient
     private void UpdateTime() => Time = TimeOnly.FromDateTime(DateTime.Now);
 
 
-    public FullObservableCollection<ITask> Tasks
+    public FullObservableCollection<ITask> TodayTasks
     {
         set; get;
     }
-
+    public FullObservableCollection<ITask> ThisWeekTasks
+    {
+        set; get;
+    }
 
     private ITask? _nextTask;
     public ITask? NextTask
@@ -54,13 +57,13 @@ public partial class DashboardViewModel : ObservableRecipient
 
     private void UpdateNextTask()
     {
-        if (Tasks == null)
+        if (TodayTasks == null)
         {
             NextTask = null;
             return;
         }
 
-        foreach (var task in Tasks)
+        foreach (var task in TodayTasks)
         {
             // Get the first task that starts after the current time (assuming Tasks are sorted)
             if (task.Start > Time)
@@ -90,17 +93,27 @@ public partial class DashboardViewModel : ObservableRecipient
     public void Innit()
     {
         _dao = new MockDaoService();
-        getAllTasks();
+        getTodayTasks();
+        getWeekTasks();
         UpdateTime();
         UpdateDate();
     }
 
-    private void getAllTasks() {
+    private void getTodayTasks() {
         if (_dao == null) { 
             return;
         }
         var tasks = _dao.GetAllTasks();
-        Tasks = tasks;
+        TodayTasks = tasks;
+    }
+
+    private void getWeekTasks()
+    {
+        if (_dao == null)
+        {
+            return;
+        }
+        ThisWeekTasks = _dao.GetThisWeekTasks();
     }
 
     
