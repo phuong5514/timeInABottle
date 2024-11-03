@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace TimeInABottle.Core.Helpers;
-internal class Values
+public class Values
 {
     public enum Weekdays
     {

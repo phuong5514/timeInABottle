@@ -16,4 +16,5 @@ public interface IDaoService
     FullObservableCollection<ITask> GetThisWeekTasks();
 
     FullObservableCollection<ITask> GetThisMonthTasks();
+
 }
