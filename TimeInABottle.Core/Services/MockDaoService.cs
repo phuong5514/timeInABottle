@@ -11,9 +11,10 @@ using TimeInABottle.Core.Models;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TimeInABottle.Core.Services;
-public class MockDaoService : IDaoService
+public class MockDaoService : IDaoService, IDaoQueryService
 {
-    private List<ITask> _taskList = new List<ITask> {
+    private readonly List<ITask> _taskList = new()
+    {
         // daily
         new DailyTask("Morning routines", "Brush teeth, wash face, boil water, make breakfast", new TimeOnly(5, 30), new TimeOnly(6, 0)),
         new DailyTask("Lunch", "Eat at: abc place with friends", new TimeOnly(11, 0), new TimeOnly(12, 0)),
@@ -42,7 +43,25 @@ public class MockDaoService : IDaoService
 
     };
 
-    public List<ITask> TaskList { get; set; }
+    public List<ITask> TaskList { get; private set; }
+
+
+    // trong tuong lai, ham nay chi co the dc goi boi class, ko nen dc goi tu ben ngoai ma thay vao do
+    // la cac ham dac hieu
+    public FullObservableCollection<ITask> CustomQuery(Func<ITask, bool> filter, bool isSortAscending) { 
+        var result = TaskList.Where(filter).ToList();
+
+        var sorter = new TaskListSorter();
+        if (isSortAscending)
+        {
+            sorter.SortByTimeAscending(result);
+        }
+        else {
+            sorter.SortByTimeDescending(result);
+        }
+
+        return new FullObservableCollection<ITask>(result);
+    }
 
     FullObservableCollection<ITask> IDaoService.GetAllTasks()
     {
