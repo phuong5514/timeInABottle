@@ -6,13 +6,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace TimeInABottle.Core.Models;
-public class WeekyTask : IRepeatedTask
+public class WeeklyTask : IRepeatedTask
 {
-    public WeekyTask(string name, string description, TimeOnly startingTime, TimeOnly endingTime) : base(name, description, startingTime, endingTime)
+    public WeeklyTask(string name, string description, TimeOnly startingTime, TimeOnly endingTime) : base(name, description, startingTime, endingTime)
     {
     }
 
-    public List<int> WeekDay
+    public List<int> WeekDays
     {
         set; get;
     }

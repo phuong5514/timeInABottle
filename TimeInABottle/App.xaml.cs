@@ -65,34 +65,27 @@ public partial class App : Application
             services.AddSingleton<IActivationService, ActivationService>();
             services.AddSingleton<IPageService, PageService>();
             services.AddSingleton<INavigationService, NavigationService>();
+            services.AddSingleton<INotificationService, NotificationService>();
+
+
 
             // Core Services
+            services.AddSingleton<IDaoService, MockDaoService>();
             services.AddSingleton<ISampleDataService, SampleDataService>();
             services.AddSingleton<IFileService, FileService>();
 
             // Views and ViewModels
+            services.AddTransient<TaskListViewModel>();
+            services.AddTransient<TaskListPage>();
             services.AddTransient<DashboardViewModel>();
             services.AddTransient<DashboardPage>();
+
             services.AddTransient<SettingsViewModel>();
             services.AddTransient<SettingsPage>();
-            services.AddTransient<ContentGridDetailViewModel>();
-            services.AddTransient<ContentGridDetailPage>();
-            services.AddTransient<ContentGridViewModel>();
-            services.AddTransient<ContentGridPage>();
-            services.AddTransient<DataGridViewModel>();
-            services.AddTransient<DataGridPage>();
-            services.AddTransient<WebViewViewModel>();
-            services.AddTransient<WebViewPage>();
-            services.AddTransient<ListDetailsViewModel>();
-            services.AddTransient<ListDetailsPage>();
-            services.AddTransient<Blank2ViewModel>();
-            services.AddTransient<Blank2Page>();
-            services.AddTransient<Blank1ViewModel>();
-            services.AddTransient<Blank1Page>();
-            services.AddTransient<BlankViewModel>();
-            services.AddTransient<BlankPage>();
+
             services.AddTransient<MainViewModel>();
             services.AddTransient<MainPage>();
+
             services.AddTransient<ShellPage>();
             services.AddTransient<ShellViewModel>();
 

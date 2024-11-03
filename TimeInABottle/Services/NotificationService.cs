@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TimeInABottle.Contracts.Services;
 using TimeInABottle.Core.Models;
 using Windows.Data.Xml.Dom;
 using Windows.UI.Notifications;
 
 namespace TimeInABottle.Services;
-public class NotificationService
+public class NotificationService : INotificationService
 {
     public void ShowNextTask(ITask task)
     {

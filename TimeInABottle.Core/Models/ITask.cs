@@ -25,4 +25,5 @@ public abstract class ITask : INotifyPropertyChanged
     public event PropertyChangedEventHandler PropertyChanged;
 
     public abstract string ToString();
+    public string FormattedTime => $"{Start.ToString()} - {End.ToString()}";
 }
