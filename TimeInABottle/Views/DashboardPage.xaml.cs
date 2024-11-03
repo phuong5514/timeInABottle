@@ -3,6 +3,7 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using TimeInABottle.Core.Models;
 using TimeInABottle.Core.Services;
 using TimeInABottle.ViewModels;
 
@@ -31,29 +32,84 @@ public sealed partial class DashboardPage : Page
 
     private void LoadData()
     {
-        //Border eventBlock = new Border
-        //{
-        //    Style = (Style)Application.Current.Resources["CellItemBorder"]
-        //};
+        if (ViewModel == null) return;
 
-        var event1 = new Grid
+        var thisWeekTasks = ViewModel.ThisWeekTasks;
+        foreach (var task in thisWeekTasks)
+        {
+            if (task is DailyTask)
+            {
+                // Daily Task: Create a grid cell for each day
+                for (var day = 0; day < 7; day++)
+                {
+                    var dayEvent = CreateTaskGrid(task);
+                    Grid.SetColumn(dayEvent, day); // Set column based on the day
+                    CalendarContainer.Children.Add(dayEvent);
+                }
+            }
+            else if (task is WeeklyTask weeklyTask)
+            {
+                // Weekly Task: Create grids only for specified weekdays
+                foreach (var day in weeklyTask.WeekDays)
+                {
+                    var weeklyEvent = CreateTaskGrid(task);
+                    Grid.SetColumn(weeklyEvent, (int)day); // Convert weekday to column index
+                    CalendarContainer.Children.Add(weeklyEvent);
+                }
+            }
+            else if (task is MonthlyTask monthlyTask)
+            {
+                var date = monthlyTask.Date;
+                var dayOfWeek = (int)new DateTime(DateTime.Now.Year, DateTime.Now.Month, date).DayOfWeek;
+                dayOfWeek = dayOfWeek == 0 ? 7 : dayOfWeek;
+
+                var monthlyEvent = CreateTaskGrid(task);
+
+                Grid.SetColumn(monthlyEvent, dayOfWeek);
+                CalendarContainer.Children.Add(monthlyEvent);
+            }
+            else if (task is NonRepeatedTask nonRepeatedTask) {
+                DateOnly date = nonRepeatedTask.Date;
+                DateTime eventDate = new DateTime(date.Year, date.Month, date.Day);
+
+                var dayOfWeek = (int)eventDate.DayOfWeek;
+                dayOfWeek = dayOfWeek == 0 ? 7 : dayOfWeek;
+
+                var nonRepeatedEvent = CreateTaskGrid(task);
+
+                Grid.SetColumn(nonRepeatedEvent, dayOfWeek);
+                CalendarContainer.Children.Add(nonRepeatedEvent);
+            }
+        }
+    }
+
+    // should be a service, this is for milestone 1 only
+    private Grid CreateTaskGrid(ITask task)
+    {
+        var eventGrid = new Grid
         {
             Style = (Style)Application.Current.Resources["CellContent"],
-            Background = new SolidColorBrush(Colors.Red),
-            //Margin = (Thickness)Application.Current.Resources["CellContentMargin"]
+            Background = new SolidColorBrush(Colors.Blue), // Customize as needed
         };
+        var row = CalculateRow(task.Start);
+        var rowSpan = CalculateRowSpan(task.Start, task.End);
 
-        //Grid.SetRow(eventBlock, 6); 
-        //Grid.SetColumn(eventBlock, 2);
-        //Grid.SetRowSpan(eventBlock, 4);
+        Grid.SetRow(eventGrid, row);
+        Grid.SetRowSpan(eventGrid, rowSpan);
 
-        //eventBlock.Child = event2;
-
-        Grid.SetRow(event1, 6);
-        Grid.SetColumn(event1, 2);
-        Grid.SetRowSpan(event1, 4);
-        CalendarContainer.Children.Add(event1);
+        return eventGrid;
     }
+
+    private int CalculateRow(TimeOnly time) => 1 + (time.Minute / 30) + (time.Hour * 2);
+
+    private int CalculateRowSpan(TimeOnly start, TimeOnly end)
+    {
+        int startRow = CalculateRow(start);
+        int endRow = CalculateRow(end);
+        return endRow - startRow;
+    }
+
+    //
 
     private void SetTitles()
     {

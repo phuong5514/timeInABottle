@@ -9,13 +9,13 @@ public class Values
 {
     public enum Weekdays
     {
-        Sunday,
-        Monday,
+        Monday = 1,
         Tuesday,
         Wednesday,
         Thursday,
         Friday,
-        Saturday
+        Saturday,
+        Sunday
     }
 
     public enum Months
