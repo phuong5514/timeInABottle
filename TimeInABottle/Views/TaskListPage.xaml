@@ -1,0 +1,23 @@
+﻿<!-- TaskListPage.xaml -->
+<Page x:Class="TimeInABottle.Views.TaskListPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Tasks">
+    <StackPanel Padding="20">
+        <ComboBox x:Name="SortOptions" SelectionChanged="OnSortOptionChanged">
+            <ComboBoxItem Content="Ưu tiên" Tag="Priority" />
+            <ComboBoxItem Content="Deadline" Tag="Deadline" />
+        </ComboBox>
+        <ListView ItemsSource="{x:Bind ViewModel.Tasks}">
+            <ListView.ItemTemplate>
+                <!-- Template for displaying each task -->
+                <DataTemplate x:DataType="local:TaskModel">
+                    <StackPanel>
+                        <TextBlock Text="{x:Bind Title}" FontWeight="Bold" />
+                        <TextBlock Text="{x:Bind Deadline, StringFormat='dd/MM/yyyy'}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackPanel>
+</Page>
