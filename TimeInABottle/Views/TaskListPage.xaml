@@ -78,9 +78,26 @@
                     Text="{Binding}" />
             </Grid>
         </DataTemplate>
+
+        <!--
+        <DataTemplate x:Key="FilterTagTemplate">
+           
+            <Button
+                Style="{StaticResource FilterTag}"
+                Content="{Binding}" />
+        </DataTemplate>
+        -->
     </Page.Resources>
 
     <Grid x:Name="ContentArea">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <!--
+            <RowDefinition Height="Auto"/>
+            -->
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
@@ -89,12 +106,75 @@
                         <AdaptiveTrigger MinWindowWidth="641" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="Header.Visibility" Value="Visible"/>
                         <Setter Target="ListDetailsViewControl.ListHeaderTemplate" Value="{StaticResource ListHeaderTemplate}" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="CompactView">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!-- Hide the header in compact view -->
+                        <Setter Target="Header.Visibility" Value="Collapsed"/>
+                        <Setter Target="ListDetailsViewControl.ListHeaderTemplate" Value="{StaticResource MinimalListHeaderTemplate}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
+
+        <Grid Grid.Row="0" Margin="{StaticResource MediumMargin}" x:Name="Header" Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="312"/>
+                <!-- Column for the search bar -->
+                <ColumnDefinition Width="*" />
+                <!-- Column for the action buttons -->
+            </Grid.ColumnDefinitions>
+
+            <!-- Search bar -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Padding="{StaticResource MediumPadding}">
+                
+                <AutoSuggestBox
+                    Width="240"
+                    x:Name="Searchbar"
+                    PlaceholderText="Search"
+                    QueryIcon="Find"
+                    TextChanged="AutoSuggestBox_TextChanged"
+                    QuerySubmitted="AutoSuggestBox_QuerySubmitted"
+                    SuggestionChosen="AutoSuggestBox_SuggestionChosen" />
+
+                <Button Click="OnFilterButtonClick" Margin="{StaticResource SmallLeftMargin}">
+                    <FontIcon Glyph="&#xE71C;" FontSize="20" />
+                    <!-- Filter icon (filter) -->
+                </Button>
+            </StackPanel>
+            
+
+            <!-- Action buttons stack -->
+            <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" Grid.Column="1" HorizontalAlignment="Right">
+                <AppBarButton Icon="Add" Label="Add"/>
+                <AppBarButton Icon="Edit" Label="Edit"/>
+                <AppBarButton Icon="Delete" Label="Delete"/>
+                <CommandBar.SecondaryCommands>
+                    <AppBarButton Icon="Setting" Label="Settings">
+                        <AppBarButton.KeyboardAccelerators>
+                            <KeyboardAccelerator Modifiers="Control" Key="I" />
+                        </AppBarButton.KeyboardAccelerators>
+                    </AppBarButton>
+                </CommandBar.SecondaryCommands>
+            </CommandBar>
+            
+        </Grid>
+
+        <!--
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding FilterCollection}" ItemTemplate="{StaticResource FilterTagTemplate}">
+        </ItemsControl>
+        -->
+        
+        <!-- List view with details -->
         <controls:ListDetailsView
+            Grid.Row="2"
             x:Uid="TaskList"
             x:Name="ListDetailsViewControl"
             BackButtonBehavior="Manual"
@@ -106,6 +186,9 @@
             ListHeaderTemplate="{StaticResource MinimalListHeaderTemplate}"
             NoSelectionContentTemplate="{StaticResource NoSelectionContentTemplate}"
             SelectedItem="{x:Bind ViewModel.Selected, Mode=TwoWay}"
-            ViewStateChanged="OnViewStateChanged"/>
+            ViewStateChanged="OnViewStateChanged"
+            />
     </Grid>
+
+    
 </Page>
