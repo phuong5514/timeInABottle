@@ -19,6 +19,7 @@
     <Content Remove="Assets\LockScreenLogo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Styles\Buttons.xaml" />
     <None Remove="Styles\GridCells.xaml" />
     <None Remove="Styles\ListItems.xaml" />
     <None Remove="Styles\MarginsAndPaddingValues.xaml" />
@@ -57,6 +58,9 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Styles\Buttons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Styles\GridCells.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
