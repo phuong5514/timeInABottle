@@ -8,6 +8,7 @@ using System.Xml.Linq;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Helpers;
 using TimeInABottle.Core.Models;
+using TimeInABottle.Core.Models.Filters;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TimeInABottle.Core.Services;
@@ -48,20 +49,23 @@ public class MockDaoService : IDaoService, IDaoQueryService
 
     // trong tuong lai, ham nay chi co the dc goi boi class, ko nen dc goi tu ben ngoai ma thay vao do
     // la cac ham dac hieu
-    public FullObservableCollection<ITask> CustomQuery(Func<ITask, bool> filter, bool isSortAscending) { 
-        var result = TaskList.Where(filter).ToList();
+    public FullObservableCollection<ITask> CustomQuery(IFilter filter, bool isSortAscending)
+    {
+        var result = TaskList.Where(task => filter.MatchesCriteria(task)).ToList();
 
         var sorter = new TaskListSorter();
         if (isSortAscending)
         {
             sorter.SortByTimeAscending(result);
         }
-        else {
+        else
+        {
             sorter.SortByTimeDescending(result);
         }
 
         return new FullObservableCollection<ITask>(result);
     }
+
 
     FullObservableCollection<ITask> IDaoService.GetAllTasks()
     {

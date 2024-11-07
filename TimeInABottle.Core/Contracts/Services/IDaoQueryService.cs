@@ -5,9 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using TimeInABottle.Core.Helpers;
 using TimeInABottle.Core.Models;
+using TimeInABottle.Core.Models.Filters;
 
 namespace TimeInABottle.Core.Contracts.Services;
 internal interface IDaoQueryService
 {
-    FullObservableCollection<ITask> CustomQuery(Func<ITask, bool> filter, bool isSortAscending = true);
+    FullObservableCollection<ITask> CustomQuery(IFilter filter, bool isSortAscending = true);
 }
