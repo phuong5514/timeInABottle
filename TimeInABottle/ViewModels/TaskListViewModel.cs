@@ -7,6 +7,7 @@ using TimeInABottle.Contracts.ViewModels;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Helpers;
 using TimeInABottle.Core.Models;
+using TimeInABottle.Core.Models.Filters;
 
 namespace TimeInABottle.ViewModels;
 
@@ -16,17 +17,8 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
 
     public FullObservableCollection<ITask> Tasks { get; private set; }
 
-    private Dictionary<string, object> _filterTags = new();
-
-    public Dictionary<string, object> FilterTags
-    {
-        get => _filterTags;
-        set
-        {
-            _filterTags = value;
-            OnPropertyChanged(nameof(FilterTags));  // Notify the view when the dictionary changes
-        }
-    }
+    private readonly CompositeFilter _filter = new();
+    private bool _isInvertOrder = false;
 
     public ICommand AddFilterCommand
     {
@@ -37,35 +29,80 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
         get;
     }
 
+    public ICommand SwitchOrderCommand
+    {
+        get;
+    }
+
     [ObservableProperty]
     private ITask? selected;
 
     public TaskListViewModel( IDaoService daoService)
     {
-        AddFilterCommand = new RelayCommand<string>(AddFilter);
-        RemoveFilterCommand = new RelayCommand<string>(RemoveFilter);
+        AddFilterCommand = new RelayCommand<IFilter>(AddFilter);
+        RemoveFilterCommand = new RelayCommand<IFilter>(RemoveFilter);
+        SwitchOrderCommand = new RelayCommand<bool>(SwitchOrder);
         _daoService = daoService;
+        Tasks = new FullObservableCollection<ITask>();
     }
 
-    private void AddFilter(string tag)
+    private void SwitchOrder(bool value)
     {
-        if (!_filterTags.ContainsKey(tag))
+        if (_isInvertOrder != value)
         {
-            _filterTags.Add(tag, new object());
+            _isInvertOrder = value;
+            LoadTask();
         }
     }
 
-    private void RemoveFilter(string tag)
+    private void AddFilter(IFilter filter)
     {
-        if (_filterTags.ContainsKey(tag))
+        _filter.AddFilter(filter);
+        LoadTask();
+    }
+
+    private void RemoveFilter(IFilter filter)
+    {
+        _filter.RemoveFilter(filter);
+        LoadTask();
+    }
+
+    private void LoadTask()
+    {
+        //if (_daoService is IDaoQueryService DaoService)
+        //{
+        //    Tasks.Clear();
+        //    Tasks = DaoService.CustomQuery(_filter, !_isInvertOrder);
+        //}
+        //else { 
+        //    Tasks = _daoService.GetAllTasks();
+        //}
+
+        if (_daoService is IDaoQueryService DaoService)
         {
-            _filterTags.Remove(tag);
+            var newTasks = DaoService.CustomQuery(_filter, !_isInvertOrder);
+
+            Tasks.Clear();  // Clear the existing items
+            foreach (var task in newTasks)
+            {
+                Tasks.Add(task);  // Add each new task individually
+            }
+        }
+        else
+        {
+            var allTasks = _daoService.GetAllTasks();
+
+            Tasks.Clear();
+            foreach (var task in allTasks)
+            {
+                Tasks.Add(task);
+            }
         }
     }
 
     public async void OnNavigatedTo(object parameter)
     {
-        Tasks = _daoService.GetAllTasks();
+        LoadTask();
     }
 
     public void OnNavigatedFrom()

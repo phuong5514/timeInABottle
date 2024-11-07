@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.WinUI.UI.Controls;
 
 using Microsoft.UI.Xaml.Controls;
-
+using TimeInABottle.Core.Models.Filters;
 using TimeInABottle.ViewModels;
 
 namespace TimeInABottle.Views;
@@ -54,7 +54,9 @@ public sealed partial class TaskListPage : Page
         }
         else
         {
-            // Use args.QueryText to determine what to do.
+            KeywordFilter filter = new KeywordFilter { Criteria = args.QueryText };
+            ViewModel.AddFilterCommand.Execute(filter);
+            sender.Text = string.Empty;
         }
     }
 

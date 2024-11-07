@@ -12,11 +12,47 @@ public class CompositeFilter : IFilter
     public void AddFilter(IFilter filter)
     {
         var filterType = filter.GetType();
-        if (!_filtersByType.ContainsKey(filterType))
+        if (filter is IValueFilter)
         {
-            _filtersByType[filterType] = new List<IFilter>();
+            if (!_filtersByType.ContainsKey(filterType))
+            {
+                _filtersByType[filter.GetType()] = new List<IFilter>();
+            }
+            _filtersByType[filter.GetType()].Add(filter);
         }
-        _filtersByType[filterType].Add(filter);
+        else if (filter is ITypeFilter)
+        {
+            if (!_filtersByType.ContainsKey(filterType))
+            {
+                _filtersByType[filter.GetType()] = new List<IFilter> { filter };
+            }
+        }
+        else
+        {
+            throw new ArgumentException("Unrecognized filter type!");
+        }
+
+
+
+    }
+
+    public void RemoveFilter(IFilter filter)
+    {
+        var filterType = filter.GetType();
+        if (filter is ITypeFilter)
+        {
+            _filtersByType.Remove(filter.GetType());
+        }
+        else if (filter is IValueFilter valueFilter)
+        {
+            if (_filtersByType.TryGetValue(filter.GetType(), out var filterList))
+            {
+                filterList.RemoveAll(existingFilter =>
+                    existingFilter is IValueFilter existingValueFilter &&
+                    existingValueFilter.Criteria == valueFilter.Criteria);
+            }
+        }
+
     }
 
     public bool MatchesCriteria(ITask task)

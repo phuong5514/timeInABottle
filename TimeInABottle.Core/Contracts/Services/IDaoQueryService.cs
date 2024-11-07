@@ -8,7 +8,7 @@ using TimeInABottle.Core.Models;
 using TimeInABottle.Core.Models.Filters;
 
 namespace TimeInABottle.Core.Contracts.Services;
-internal interface IDaoQueryService
+public interface IDaoQueryService
 {
     FullObservableCollection<ITask> CustomQuery(IFilter filter, bool isSortAscending = true);
 }
