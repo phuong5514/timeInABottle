@@ -16,6 +16,8 @@ public sealed partial class TaskListPage : Page
     public TaskListPage()
     {
         ViewModel = App.GetService<TaskListViewModel>();
+        // set data context for Filter to show
+        //DataContext = ViewModel;
         InitializeComponent();
     }
 
@@ -54,9 +56,12 @@ public sealed partial class TaskListPage : Page
         }
         else
         {
-            KeywordFilter filter = new KeywordFilter { Criteria = args.QueryText };
-            ViewModel.AddFilterCommand.Execute(filter);
-            sender.Text = string.Empty;
+            if (args.QueryText != string.Empty)
+            {
+                KeywordFilter filter = new KeywordFilter { Criteria = args.QueryText };
+                ViewModel.AddFilterCommand.Execute(filter);
+                //sender.Text = string.Empty;
+            }
         }
     }
 
@@ -76,6 +81,11 @@ public sealed partial class TaskListPage : Page
     }
 
     private void OnFilterButtonClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+
+    }
+
+    private void FilterGrid_ItemClick(object sender, ItemClickEventArgs e)
     {
 
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,8 @@ public class NameFilter : IValueFilter
         get;
         set;
     }
+
+    public event PropertyChangedEventHandler PropertyChanged;
 
     public bool MatchesCriteria(ITask task) {
         if (task == null || string.IsNullOrWhiteSpace(Criteria))

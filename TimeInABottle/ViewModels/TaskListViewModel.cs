@@ -16,8 +16,11 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
     private readonly IDaoService _daoService;
 
     public FullObservableCollection<ITask> Tasks { get; private set; }
+    public ObservableCollection<IFilter> DisplayedFilters { get; } = new ObservableCollection<IFilter>();
 
     private readonly CompositeFilter _filter = new();
+    
+
     private bool _isInvertOrder = false;
 
     public ICommand AddFilterCommand
@@ -57,46 +60,40 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
 
     private void AddFilter(IFilter filter)
     {
-        _filter.AddFilter(filter);
+        var success = _filter.AddFilter(filter);
+        if (success) { 
+            DisplayedFilters.Add(filter);
+        }
         LoadTask();
     }
 
     private void RemoveFilter(IFilter filter)
     {
         _filter.RemoveFilter(filter);
+        DisplayedFilters.Remove(filter);
         LoadTask();
+    }
+
+    private void AddTasks(IEnumerable<ITask> newTasks)
+    {
+        Tasks.Clear();
+        foreach (var task in newTasks)
+        {
+            Tasks.Add(task);
+        }
     }
 
     private void LoadTask()
     {
-        //if (_daoService is IDaoQueryService DaoService)
-        //{
-        //    Tasks.Clear();
-        //    Tasks = DaoService.CustomQuery(_filter, !_isInvertOrder);
-        //}
-        //else { 
-        //    Tasks = _daoService.GetAllTasks();
-        //}
-
         if (_daoService is IDaoQueryService DaoService)
         {
             var newTasks = DaoService.CustomQuery(_filter, !_isInvertOrder);
-
-            Tasks.Clear();  // Clear the existing items
-            foreach (var task in newTasks)
-            {
-                Tasks.Add(task);  // Add each new task individually
-            }
+            AddTasks(newTasks);
         }
         else
         {
             var allTasks = _daoService.GetAllTasks();
-
-            Tasks.Clear();
-            foreach (var task in allTasks)
-            {
-                Tasks.Add(task);
-            }
+            AddTasks(allTasks);
         }
     }
 

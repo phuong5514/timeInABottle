@@ -1,18 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace TimeInABottle.Core.Models.Filters;
 
-public class DescriptionFilter : IValueFilter   
+public class DescriptionFilter : IValueFilter
 {
     public string Criteria
     {
         get;
         set;
     }
+
+    public event PropertyChangedEventHandler PropertyChanged;
 
     public bool MatchesCriteria(ITask task)
     {
