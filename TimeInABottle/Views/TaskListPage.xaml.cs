@@ -87,7 +87,10 @@ public sealed partial class TaskListPage : Page
 
     private void FilterGrid_ItemClick(object sender, ItemClickEventArgs e)
     {
-
+        if (e.ClickedItem is IFilter selectedFilter)
+        {
+            ViewModel.RemoveFilterCommand.Execute(selectedFilter);
+        }
     }
 
     //private void OnFilterRemoveClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)

@@ -64,6 +64,11 @@ public class CompositeFilter : IFilter
                 filterList.RemoveAll(existingFilter =>
                     existingFilter is IValueFilter existingValueFilter &&
                     existingValueFilter.Criteria == valueFilter.Criteria);
+
+                // empty filter list can mess with MatchesCriteria's result
+                if (filterList.Count <= 0) {
+                    _filtersByType.Remove(filter.GetType());
+                }
             }
         }
 
@@ -73,7 +78,7 @@ public class CompositeFilter : IFilter
     {
         // Apply each filter type's collection as a union (OR), then intersect (AND) across types.
         return _filtersByType.Values.All(filterList =>
-            filterList.Any(filter => filter.MatchesCriteria(task)) // this is really cool, I dont even know this exist
+            filterList.Any(filter => filter.MatchesCriteria(task)) // this is really cool
         );
     }
 
