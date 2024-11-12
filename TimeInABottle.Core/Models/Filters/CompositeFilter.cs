@@ -31,7 +31,9 @@ public class CompositeFilter : IFilter
             }
 
             list.Add(filter);
+
             return true;
+
         }
         else if (filter is ITypeFilter)
         {

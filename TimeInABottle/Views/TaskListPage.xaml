@@ -81,6 +81,7 @@
             </Grid>
         </DataTemplate>
 
+        
 
         <DataTemplate x:Key="FilterTagTemplate" x:DataType="filters:IFilter">
             <TextBlock
@@ -201,5 +202,5 @@
             />
     </Grid>
 
-    
+  
 </Page>

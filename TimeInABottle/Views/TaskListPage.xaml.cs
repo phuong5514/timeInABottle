@@ -80,9 +80,27 @@ public sealed partial class TaskListPage : Page
 
     }
 
-    private void OnFilterButtonClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    private async Task CreateFilterDialog()
     {
+        var dialog = new ContentDialog
+        {
+            Title = "Filters",
+            Content = new FilterDialogContent(),
+            PrimaryButtonText = "Add",
+            CloseButtonText = "Cancel",
+            XamlRoot = this.Content.XamlRoot, // Ensure the dialog is shown in the correct XAML root
+            DataContext = (TaskListViewModel)ViewModel
+        };
 
+        var result = await dialog.ShowAsync(); // went to this yet doesnt show dialog
+        if (result == ContentDialogResult.Primary)
+        {
+            ViewModel.AddFilterCommand.Execute(null);
+        }
+        else
+        {
+            // left blank
+        }
     }
 
     private void FilterGrid_ItemClick(object sender, ItemClickEventArgs e)
@@ -93,8 +111,15 @@ public sealed partial class TaskListPage : Page
         }
     }
 
+    private void OnFilterButtonClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e) {
+        _ = CreateFilterDialog();
+    }
+
+
+
     //private void OnFilterRemoveClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     //{
 
     //}
 }
+

@@ -1,7 +1,9 @@
 ﻿using System.Collections.ObjectModel;
+using System.Reflection;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using TimeInABottle.Contracts.ViewModels;
 using TimeInABottle.Core.Contracts.Services;
@@ -15,6 +17,27 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
 {
     private readonly IDaoService _daoService;
 
+    // list of filter options
+    public List<IFilter> FilterOptions
+    {
+        get;
+    } 
+
+
+    public IFilter SelectedFilterOption
+    {
+        get;
+        set;
+    }
+
+    public bool IsFilterParameterVisible => SelectedFilterOption is IValueFilter;
+
+    public string FilterParameter
+    {
+        get;
+        set;
+    }
+
     public FullObservableCollection<ITask> Tasks { get; private set; }
     public ObservableCollection<IFilter> DisplayedFilters { get; } = new ObservableCollection<IFilter>();
 
@@ -27,6 +50,12 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
     {
         get;
     }
+
+    //public ICommand AddSelectedFilterCommand
+    //{
+    //    get;
+    //}
+
     public ICommand RemoveFilterCommand
     {
         get;
@@ -43,10 +72,25 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
     public TaskListViewModel( IDaoService daoService)
     {
         AddFilterCommand = new RelayCommand<IFilter>(AddFilter);
+        //AddSelectedFilterCommand = new RelayCommand(AddFilter);
         RemoveFilterCommand = new RelayCommand<IFilter>(RemoveFilter);
         SwitchOrderCommand = new RelayCommand<bool>(SwitchOrder);
         _daoService = daoService;
         Tasks = new FullObservableCollection<ITask>();
+
+        FilterOptions = new List<IFilter>
+        {
+            new DailyTaskFilter(),
+            new WeeklyTaskFilter(),
+            new MonthlyTaskFilter(),
+            new NameFilter(),
+            new DescriptionFilter(),
+            new TimeFilter(),
+        }; // TODO: dependency injection
+
+        SelectedFilterOption = FilterOptions.First();
+
+        _filter.PropertyChanged += (sender, args) => LoadTask();
     }
 
     private void SwitchOrder(bool value)
@@ -60,12 +104,22 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
 
     private void AddFilter(IFilter filter)
     {
+        if (filter == null) {
+            filter = SelectedFilterOption;
+            if (filter is IValueFilter valueFilter)
+            {
+                valueFilter.Criteria = FilterParameter;
+            }
+            
+        }
         var success = _filter.AddFilter(filter);
         if (success) { 
             DisplayedFilters.Add(filter);
         }
         LoadTask();
     }
+
+    
 
     private void RemoveFilter(IFilter filter)
     {
