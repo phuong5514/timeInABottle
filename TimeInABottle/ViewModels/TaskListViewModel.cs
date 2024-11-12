@@ -21,6 +21,7 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
     public List<IFilter> FilterOptions
     {
         get;
+        set;
     } 
 
 
@@ -78,19 +79,35 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
         _daoService = daoService;
         Tasks = new FullObservableCollection<ITask>();
 
-        FilterOptions = new List<IFilter>
-        {
-            new DailyTaskFilter(),
-            new WeeklyTaskFilter(),
-            new MonthlyTaskFilter(),
-            new NameFilter(),
-            new DescriptionFilter(),
-            new TimeFilter(),
-        }; // TODO: dependency injection
 
-        SelectedFilterOption = FilterOptions.First();
+
+        SetFilterOptions();
 
         _filter.PropertyChanged += (sender, args) => LoadTask();
+    }
+
+    private void SetFilterOptions()
+    {
+        FilterOptions = new List<IFilter>();
+        // get all the filter types from the assembly
+        var filterTypes = Assembly.GetAssembly(typeof(IFilter)).GetTypes().Where(t => t.IsClass && !t.IsAbstract && t.GetInterface(nameof(IFilter)) != null);
+        foreach (var filterType in filterTypes)
+        {
+            // skip the composite filter
+            if (filterType == typeof(CompositeFilter))
+            {
+                continue;
+            }
+
+            // add the filter to the list of filter options
+            FilterOptions.Add((IFilter)Activator.CreateInstance(filterType));
+            // register the filter types with the filter factory
+            FilterFactory.RegisterFilter(filterType.Name, filterType);
+        }
+
+        
+
+        SelectedFilterOption = FilterOptions.First();
     }
 
     private void SwitchOrder(bool value)
@@ -105,7 +122,8 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
     private void AddFilter(IFilter filter)
     {
         if (filter == null) {
-            filter = SelectedFilterOption;
+            //filter = SelectedFilterOption;
+            filter = FilterFactory.CreateFilter(SelectedFilterOption.GetType().Name);
             if (filter is IValueFilter valueFilter)
             {
                 valueFilter.Criteria = FilterParameter;
@@ -116,6 +134,8 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
         if (success) { 
             DisplayedFilters.Add(filter);
         }
+
+        // TODO: somehow notify from the Filter so that this can get removed
         LoadTask();
     }
 
@@ -125,6 +145,8 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
     {
         _filter.RemoveFilter(filter);
         DisplayedFilters.Remove(filter);
+
+        // TODO: somehow notify from the Filter so that this can get removed
         LoadTask();
     }
 
