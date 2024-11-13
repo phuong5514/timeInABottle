@@ -13,40 +13,65 @@ using TimeInABottle.Core.Models.Filters;
 
 namespace TimeInABottle.ViewModels;
 
+/// <summary>
+/// ViewModel for managing and displaying a list of tasks with filtering options.
+/// </summary>
 public partial class TaskListViewModel : ObservableRecipient, INavigationAware
 {
     private readonly IDaoService _daoService;
 
-    // list of filter options
+    /// <summary>
+    /// List of available filter options.
+    /// </summary>
     public List<IFilter> FilterOptions
     {
         get;
         set;
-    } 
+    }
 
-
+    /// <summary>
+    /// Currently selected filter option.
+    /// </summary>
     public IFilter SelectedFilterOption
     {
         get;
         set;
     }
 
+    /// <summary>
+    /// Indicates whether the filter parameter input should be visible.
+    /// </summary>
     public bool IsFilterParameterVisible => SelectedFilterOption is IValueFilter;
 
+    /// <summary>
+    /// Parameter for the selected filter.
+    /// </summary>
     public string FilterParameter
     {
         get;
         set;
     }
 
-    public FullObservableCollection<ITask> Tasks { get; private set; }
+    /// <summary>
+    /// Collection of tasks to be displayed.
+    /// </summary>
+    public FullObservableCollection<ITask> Tasks
+    {
+        get; private set;
+    }
+
+    /// <summary>
+    /// Collection of currently applied filters.
+    /// </summary>
     public ObservableCollection<IFilter> DisplayedFilters { get; } = new ObservableCollection<IFilter>();
 
     private readonly CompositeFilter _filter = new();
-    
 
     private bool _isInvertOrder = false;
 
+    /// <summary>
+    /// Command to add a filter.
+    /// </summary>
     public ICommand AddFilterCommand
     {
         get;
@@ -57,11 +82,17 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
     //    get;
     //}
 
+    /// <summary>
+    /// Command to remove a filter.
+    /// </summary>
     public ICommand RemoveFilterCommand
     {
         get;
     }
 
+    /// <summary>
+    /// Command to switch the order of tasks.
+    /// </summary>
     public ICommand SwitchOrderCommand
     {
         get;
@@ -70,7 +101,11 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
     [ObservableProperty]
     private ITask? selected;
 
-    public TaskListViewModel( IDaoService daoService)
+    /// <summary>
+    /// Initializes a new instance of the TaskListViewModel class.
+    /// </summary>
+    /// <param name="daoService">The data access service.</param>
+    public TaskListViewModel(IDaoService daoService)
     {
         AddFilterCommand = new RelayCommand<IFilter>(AddFilter);
         //AddSelectedFilterCommand = new RelayCommand(AddFilter);
@@ -79,13 +114,14 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
         _daoService = daoService;
         Tasks = new FullObservableCollection<ITask>();
 
-
-
         SetFilterOptions();
 
         _filter.PropertyChanged += (sender, args) => LoadTask();
     }
 
+    /// <summary>
+    /// Sets the available filter options.
+    /// </summary>
     private void SetFilterOptions()
     {
         FilterOptions = new List<IFilter>();
@@ -106,12 +142,19 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
         }
     }
 
+    /// <summary>
+    /// Resets the selected filter option and parameter.
+    /// </summary>
     public void resetFilterChoice()
     {
         SelectedFilterOption = FilterOptions.First();
         FilterParameter = "";
     }
 
+    /// <summary>
+    /// Switches the order of tasks.
+    /// </summary>
+    /// <param name="value">True to invert the order, false otherwise.</param>
     private void SwitchOrder(bool value)
     {
         if (_isInvertOrder != value)
@@ -121,19 +164,25 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
         }
     }
 
+    /// <summary>
+    /// Adds a filter to the collection of applied filters.
+    /// </summary>
+    /// <param name="filter">The filter to add.</param>
     private void AddFilter(IFilter filter)
     {
-        if (filter == null) {
+        if (filter == null)
+        {
             //filter = SelectedFilterOption;
             filter = FilterFactory.CreateFilter(SelectedFilterOption.GetType().Name);
             if (filter is IValueFilter valueFilter)
             {
                 valueFilter.Criteria = FilterParameter;
             }
-            
+
         }
         var success = _filter.AddFilter(filter);
-        if (success) { 
+        if (success)
+        {
             DisplayedFilters.Add(filter);
         }
 
@@ -141,8 +190,10 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
         LoadTask();
     }
 
-    
-
+    /// <summary>
+    /// Removes a filter from the collection of applied filters.
+    /// </summary>
+    /// <param name="filter">The filter to remove.</param>
     private void RemoveFilter(IFilter filter)
     {
         _filter.RemoveFilter(filter);
@@ -152,6 +203,10 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
         LoadTask();
     }
 
+    /// <summary>
+    /// Adds tasks to the collection of displayed tasks.
+    /// </summary>
+    /// <param name="newTasks">The tasks to add.</param>
     private void AddTasks(IEnumerable<ITask> newTasks)
     {
         Tasks.Clear();
@@ -161,6 +216,9 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
         }
     }
 
+    /// <summary>
+    /// Loads tasks based on the applied filters and order.
+    /// </summary>
     private void LoadTask()
     {
         if (_daoService is IDaoQueryService DaoService)
@@ -175,16 +233,26 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
         }
     }
 
+    /// <summary>
+    /// Called when the view is navigated to.
+    /// </summary>
+    /// <param name="parameter">The navigation parameter.</param>
     public async void OnNavigatedTo(object parameter)
     {
         LoadTask();
     }
 
+    /// <summary>
+    /// Called when the view is navigated from.
+    /// </summary>
     public void OnNavigatedFrom()
     {
 
     }
 
+    /// <summary>
+    /// Ensures that a task is selected.
+    /// </summary>
     public void EnsureItemSelected()
     {
         Selected ??= Tasks.First();

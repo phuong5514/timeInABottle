@@ -6,13 +6,19 @@ using TimeInABottle.ViewModels;
 
 namespace TimeInABottle.Views;
 
+/// <summary>
+/// Represents the TaskListPage which displays a list of tasks and allows filtering and other operations.
+/// </summary>
 public sealed partial class TaskListPage : Page
 {
-    public TaskListViewModel ViewModel
-    {
-        get;
-    }
+    /// <summary>
+    /// Gets the ViewModel for the TaskListPage.
+    /// </summary>
+    public TaskListViewModel ViewModel { get; }
 
+    /// <summary>
+    /// Initializes a new instance of the TaskListPage class.
+    /// </summary>
     public TaskListPage()
     {
         ViewModel = App.GetService<TaskListViewModel>();
@@ -21,6 +27,11 @@ public sealed partial class TaskListPage : Page
         InitializeComponent();
     }
 
+    /// <summary>
+    /// Handles the view state change event.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void OnViewStateChanged(object sender, ListDetailsViewState e)
     {
         if (e == ListDetailsViewState.Both)
@@ -29,6 +40,11 @@ public sealed partial class TaskListPage : Page
         }
     }
 
+    /// <summary>
+    /// Handles the text changed event of the AutoSuggestBox.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="args">The event arguments.</param>
     private void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
     {
         // Only get results when it was a user typing, 
@@ -41,13 +57,21 @@ public sealed partial class TaskListPage : Page
         }
     }
 
-
+    /// <summary>
+    /// Handles the suggestion chosen event of the AutoSuggestBox.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="args">The event arguments.</param>
     private void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
     {
         // Set sender.Text. You can use args.SelectedItem to build your text string.
     }
 
-
+    /// <summary>
+    /// Handles the query submitted event of the AutoSuggestBox.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="args">The event arguments.</param>
     private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
     {
         if (args.ChosenSuggestion != null)
@@ -65,21 +89,37 @@ public sealed partial class TaskListPage : Page
         }
     }
 
+    /// <summary>
+    /// Handles the click event of the Add button.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void OnAddButtonClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
-
     }
 
+    /// <summary>
+    /// Handles the click event of the Delete button.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void OnDeleteButtonClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
-
     }
 
+    /// <summary>
+    /// Handles the click event of the Change button.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void OnChangeButtonClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
-
     }
 
+    /// <summary>
+    /// Creates and shows a filter dialog.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     private async Task CreateFilterDialog()
     {
         var dialog = new ContentDialog
@@ -105,6 +145,11 @@ public sealed partial class TaskListPage : Page
         ViewModel.resetFilterChoice();
     }
 
+    /// <summary>
+    /// Handles the item click event of the FilterGrid.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void FilterGrid_ItemClick(object sender, ItemClickEventArgs e)
     {
         if (e.ClickedItem is IFilter selectedFilter)
@@ -113,15 +158,14 @@ public sealed partial class TaskListPage : Page
         }
     }
 
-    private void OnFilterButtonClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e) {
+    /// <summary>
+    /// Handles the click event of the Filter button.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
+    private void OnFilterButtonClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
         _ = CreateFilterDialog();
     }
-
-
-
-    //private void OnFilterRemoveClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
-    //{
-
-    //}
 }
 

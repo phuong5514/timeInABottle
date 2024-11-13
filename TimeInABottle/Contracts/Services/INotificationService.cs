@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace TimeInABottle.Contracts.Services;
-public class INotificationService
+/// <summary>
+/// Interface for notification services.
+/// </summary>
+public interface INotificationService
 {
 }
