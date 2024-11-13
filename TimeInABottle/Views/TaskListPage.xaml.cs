@@ -101,6 +101,8 @@ public sealed partial class TaskListPage : Page
         {
             // left blank
         }
+
+        ViewModel.resetFilterChoice();
     }
 
     private void FilterGrid_ItemClick(object sender, ItemClickEventArgs e)

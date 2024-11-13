@@ -94,7 +94,7 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
         foreach (var filterType in filterTypes)
         {
             // skip the composite filter
-            if (filterType == typeof(CompositeFilter))
+            if (filterType == typeof(CompositeFilter) || filterType == typeof(KeywordFilter))
             {
                 continue;
             }
@@ -104,10 +104,12 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
             // register the filter types with the filter factory
             FilterFactory.RegisterFilter(filterType.Name, filterType);
         }
+    }
 
-        
-
+    public void resetFilterChoice()
+    {
         SelectedFilterOption = FilterOptions.First();
+        FilterParameter = "";
     }
 
     private void SwitchOrder(bool value)
