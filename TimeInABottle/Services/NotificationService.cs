@@ -9,8 +9,15 @@ using Windows.Data.Xml.Dom;
 using Windows.UI.Notifications;
 
 namespace TimeInABottle.Services;
+/// <summary>
+/// Service for handling notifications.
+/// </summary>
 public class NotificationService : INotificationService
 {
+    /// <summary>
+    /// Displays a notification for the next task.
+    /// </summary>
+    /// <param name="task">The task to be displayed in the notification.</param>
     public void ShowNextTask(ITask task)
     {
         var title = "No more tasks left!";
@@ -24,17 +31,22 @@ public class NotificationService : INotificationService
         ShowToast(title, message);
     }
 
+    /// <summary>
+    /// Displays a toast notification with the specified title and message.
+    /// </summary>
+    /// <param name="title">The title of the toast notification.</param>
+    /// <param name="message">The message of the toast notification.</param>
     private void ShowToast(string title, string message)
     {
         var toastXmlString = $@"
-        <toast>
-            <visual>
-                <binding template='ToastGeneric'>
-                    <text>{title}</text>
-                    <text>{message}</text>
-                </binding>
-            </visual>
-        </toast>";
+            <toast>
+                <visual>
+                    <binding template='ToastGeneric'>
+                        <text>{title}</text>
+                        <text>{message}</text>
+                    </binding>
+                </visual>
+            </toast>";
 
         var toastXml = new XmlDocument();
         toastXml.LoadXml(toastXmlString);

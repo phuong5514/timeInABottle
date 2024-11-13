@@ -6,6 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:models="using:TimeInABottle.Core.Models"
+    xmlns:filters="using:TimeInABottle.Core.Models.Filters"
     xmlns:views="using:TimeInABottle.Views"
     xmlns:behaviors="using:TimeInABottle.Behaviors"
     xmlns:helpers="using:TimeInABottle.Helpers"
@@ -15,7 +16,8 @@
         <!--
         <helpers:TimeRangeConverter x:Key="TimeRangeConverter" />
         -->
-        
+        <helpers:FilterToStringConverter x:Key="FilterConverter"/>
+
         <DataTemplate x:Key="ItemTemplate" x:DataType="models:ITask">
             <Grid Height="60">
                 <Grid.ColumnDefinitions>
@@ -79,22 +81,22 @@
             </Grid>
         </DataTemplate>
 
-        <!--
-        <DataTemplate x:Key="FilterTagTemplate">
-           
-            <Button
-                Style="{StaticResource FilterTag}"
-                Content="{Binding}" />
+        
+
+        <DataTemplate x:Key="FilterTagTemplate" x:DataType="filters:IFilter">
+            <TextBlock
+                Text="{Binding Converter= {StaticResource FilterConverter}}"
+                ToolTipService.ToolTip="Click to remove filter criteria"/>
         </DataTemplate>
-        -->
+
+
+
     </Page.Resources>
 
     <Grid x:Name="ContentArea">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <!--
             <RowDefinition Height="Auto"/>
-            -->
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -124,6 +126,7 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
+        <!--Header: search bar, filter button, command buttons-->
         <Grid Grid.Row="0" Margin="{StaticResource MediumMargin}" x:Name="Header" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="312"/>
@@ -167,11 +170,20 @@
             
         </Grid>
 
-        <!--
-        <ItemsControl Grid.Row="1" ItemsSource="{Binding FilterCollection}" ItemTemplate="{StaticResource FilterTagTemplate}">
-        </ItemsControl>
-        -->
-        
+        <!--Filters list-->
+        <GridView
+            Grid.Row="1"
+            x:Name="FilterGrid"
+            ItemsSource="{x:Bind ViewModel.DisplayedFilters}"
+            ItemTemplate="{StaticResource FilterTagTemplate}"
+            IsItemClickEnabled="True"
+            ItemClick="FilterGrid_ItemClick"
+            SelectionMode="Single"
+            Background="{StaticResource CardBackgroundFillColorDefault}"
+            Padding="0"/>
+
+
+
         <!-- List view with details -->
         <controls:ListDetailsView
             Grid.Row="2"
@@ -190,5 +202,5 @@
             />
     </Grid>
 
-    
+  
 </Page>

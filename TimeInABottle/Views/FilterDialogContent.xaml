@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="TimeInABottle.Views.FilterDialogContent"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TimeInABottle.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:helper="using:TimeInABottle.Helpers"
+    xmlns:filters="using:TimeInABottle.Core.Models.Filters"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <helper:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <helper:FilterToNameConverter x:Key="FilterToNameConverter"/>
+    </UserControl.Resources>
+    
+    <Grid>
+        <StackPanel>
+            <TextBlock Text="Filter by:" Style="{StaticResource SubtitleTextBlockStyle}" />
+            <ComboBox
+                x:Name="FilterComboBox"
+                ItemsSource="{Binding FilterOptions}"
+                SelectedItem="{Binding SelectedFilterOption, Mode=TwoWay}"
+                PlaceholderText="Select a filter option"
+                Width="200">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate x:DataType="filters:IFilter">
+                        <TextBlock Text="{Binding Converter={StaticResource FilterToNameConverter}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+                
+                
+                
+            <!-- input for IValueFilters-->
+            <TextBox Visibility="{Binding IsFilterParameterVisible, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                     Text="{Binding FilterParameter, Mode=TwoWay}"
+                     x:Name="filterParam"/>
+
+            
+        </StackPanel>
+    </Grid>
+</UserControl>
