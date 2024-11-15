@@ -1,3 +1,5 @@
+**NOTE**: Branch đã được port và merge vào nhánh development, không tiếp tục phát triển trên branch này nữa. Branch này được giữ lại với mục đích ghi chép lịch sử.
+
 # Time in a Bottle
 
 ## Overview
