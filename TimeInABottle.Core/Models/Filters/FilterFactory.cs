@@ -19,7 +19,9 @@ public class FilterFactory
     /// <param name="filterType">The type of the filter.</param>
     public static void RegisterFilter(string filterName, Type filterType)
     {
-        _filters.Add(filterName, filterType);
+        if (_filters.ContainsKey(filterName) == false) { 
+            _filters.Add(filterName, filterType);
+        }
     }
 
     /// <summary>
