@@ -25,10 +25,15 @@ public sealed partial class DashboardPage : Page
     public DashboardPage()
     {
         ViewModel = App.GetService<DashboardViewModel>();
+        //ViewModel.Innit();
         InitializeComponent();
+
+
+
         SetGrid();
         SetTitles();
         LoadData();
+
     }
 
     /// <summary>
@@ -161,7 +166,9 @@ public sealed partial class DashboardPage : Page
             Grid.SetRow(columnTitle, 0);
             Grid.SetColumn(columnTitle, i);
 
+
             CalendarContainer.Children.Add(columnTitle);
+
         }
 
         // Add time labels in the first column (0)
@@ -189,6 +196,7 @@ public sealed partial class DashboardPage : Page
         var rows = 49;
         for (var i = 0; i < columns; i++)
         {
+
             for (var j = 0; j < rows; j++)
             {
                 Border emptyCell = new Border
@@ -199,6 +207,7 @@ public sealed partial class DashboardPage : Page
                 Grid.SetRow(emptyCell, j);
                 CalendarContainer.Children.Add(emptyCell);
             }
+
         }
     }
 
@@ -219,7 +228,7 @@ public sealed partial class DashboardPage : Page
     /// <param name="e">The event data.</param>
     private void DebugButton_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.ShowNextTaskNotification();
+        ViewModel.ShowNextTaskNotification(); 
     }
 
     /// <summary>
@@ -233,12 +242,15 @@ public sealed partial class DashboardPage : Page
         {
             // Show the sidebar
             SideBar.Visibility = Visibility.Visible;
+            //Canvas.SetZIndex(SideBar, 10);
+            //set ZIndex so that the bar is over other component
             ColumnDefinitionSideBar.Width = new GridLength(3, GridUnitType.Star);
         }
         else
         {
             // Hide the sidebar
             SideBar.Visibility = Visibility.Collapsed;
+            //Canvas.SetZIndex(SideBar, 0);
             ColumnDefinitionSideBar.Width = new GridLength(0);
         }
     }

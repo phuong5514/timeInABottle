@@ -39,6 +39,7 @@ public partial class DashboardViewModel : ObservableRecipient
         set; get;
     }
 
+
     private ITask? _nextTask;
     public ITask? NextTask
     {
