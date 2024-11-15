@@ -25,6 +25,12 @@
     <None Remove="Styles\MarginsAndPaddingValues.xaml" />
     <None Remove="Views\FilterDialogContent.xaml" />
   </ItemGroup>
+  <ItemGroup>
+    <Page Remove="Views\NotificationView.xaml" />
+    <Page Remove="Views\SearchFilterView.xaml" />
+    <Page Remove="Views\TaskListView.xaml" />
+    <Page Remove="Views\UpcomingTasksView.xaml" />
+  </ItemGroup>
 
   <ItemGroup>
     <Manifest Include="$(ApplicationManifest)" />
@@ -59,18 +65,38 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+	  
+    <None Update="Views\NotificationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+	  
+    <None Update="Views\SearchFilterView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+	  
+    <None Update="Views\TaskListView.xaml">
+		<Generator>MSBuild:Compile</Generator>
+    </None>
+    <Page Update="Styles\Buttons.xaml">
+		<Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\FilterDialogContent.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="Styles\Buttons.xaml">
+	  
+	  
+    <None Update="Views\UpcomingTasksView.xaml">
       <Generator>MSBuild:Compile</Generator>
-    </Page>
+    </None>
+	  
     <Page Update="Styles\GridCells.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+	  
     <Page Update="Styles\MarginsAndPaddingValues.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+	  
     <Page Update="Styles\ListItems.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

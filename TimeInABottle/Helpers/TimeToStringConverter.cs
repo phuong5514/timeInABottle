@@ -28,6 +28,7 @@ public class TimeToStringConverter : IValueConverter
             return new ArgumentNullException();
         }
 
+
         var hours = timeValue.Hour;
         var minutes = timeValue.Minute;
         var result = string.Format("{0:00}:{1:00}", hours, minutes);
