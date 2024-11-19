@@ -12,7 +12,7 @@ namespace TimeInABottle.Services;
 /// <summary>
 /// Service for handling notifications.
 /// </summary>
-public class NotificationService : INotificationService
+public partial class NotificationService : INotificationService
 {
     /// <summary>
     /// Displays a notification for the next task.

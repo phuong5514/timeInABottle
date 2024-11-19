@@ -11,6 +11,7 @@ using TimeInABottle.Models;
 using TimeInABottle.Services;
 using TimeInABottle.ViewModels;
 using TimeInABottle.Views;
+using Windows.ApplicationModel.Background;
 
 namespace TimeInABottle;
 
@@ -108,5 +109,25 @@ public partial class App : Application
         base.OnLaunched(args);
 
         await App.GetService<IActivationService>().ActivateAsync(args);
+
+        //RegisterBackgroundTask();
+        var notificationService = App.GetService<INotificationService>();
     }
+
+    //private async void RegisterBackgroundTask()
+    //{
+    //    var access = await BackgroundExecutionManager.RequestAccessAsync();
+    //    if (access == BackgroundAccessStatus.AllowedSubjectToSystemPolicy ||
+    //        access == BackgroundAccessStatus.AlwaysAllowed)
+    //    {
+    //        var builder = new BackgroundTaskBuilder
+    //        {
+    //            Name = "NotificationTask",
+    //            TaskEntryPoint = "YourAppNamespace.BackgroundTasks.NotificationBackgroundTask"
+    //        };
+
+    //        builder.SetTrigger(new TimeTrigger(15, false)); // Runs every 15 minutes
+    //        builder.Register();
+    //    }
+    //}
 }
