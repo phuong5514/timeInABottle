@@ -111,6 +111,7 @@ public partial class DashboardViewModel : ObservableRecipient
         getTodayTasks();
         getWeekTasks();
         UpdateDate();
+        Time = TimeOnly.FromDateTime(DateTime.Now);
         StartTimer();
     }
 
