@@ -54,24 +54,22 @@ public partial class NotificationService : INotificationService
     {
         await Task.Run(() =>
         {
-            while (true) // Simulate a long-running task
+            var now = DateTime.Now;
+            CallibrateIndex();
+
+            // Check for notifications to push
+            if (ShouldSendNotification(now))
             {
-                var now = DateTime.Now;
-                CallibrateIndex();
-
-                // Check for notifications to push
-                if (ShouldSendNotification(now))
-                {
-                    //SendNotification("It's time for your task!");
-
-                    this.ShowNextTask(_todayTasks[_index]);
-                }
-
-
-                // Sleep for a while to reduce CPU usage
-                // also double served as a reminder notification
-                Task.Delay(300000).Wait(); // Sleep for 5 minutes (300000 milliseconds) TODO: config
+                this.ShowNextTask(_todayTasks[_index]);
             }
+
+
+            // Sleep for a while to reduce CPU usage
+            // also double served as a reminder notification
+            //Task.Delay(300000).Wait(); // Sleep for 5 minutes (300000 milliseconds) TODO: config
+            //while (true) // Simulate a long-running task
+            //{
+            //}
         });
     }
 

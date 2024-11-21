@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
 
 using TimeInABottle.Activation;
+using TimeInABottle.BackgroundTasks;
 using TimeInABottle.Contracts.Services;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Services;
@@ -110,24 +111,49 @@ public partial class App : Application
 
         await App.GetService<IActivationService>().ActivateAsync(args);
 
-        //RegisterBackgroundTask();
-        var notificationService = App.GetService<INotificationService>();
+        RegisterBackgroundTask();
+        // activate the background task
+        NotificationBackgroundTasks task = new NotificationBackgroundTasks();
+        task.Run(null); // Directly invoke the task for immediate execution
+
+        //var notificationService = App.GetService<INotificationService>();
+
     }
 
-    //private async void RegisterBackgroundTask()
-    //{
-    //    var access = await BackgroundExecutionManager.RequestAccessAsync();
-    //    if (access == BackgroundAccessStatus.AllowedSubjectToSystemPolicy ||
-    //        access == BackgroundAccessStatus.AlwaysAllowed)
-    //    {
-    //        var builder = new BackgroundTaskBuilder
-    //        {
-    //            Name = "NotificationTask",
-    //            TaskEntryPoint = "YourAppNamespace.BackgroundTasks.NotificationBackgroundTask"
-    //        };
+    private async void RegisterBackgroundTask()
+    {
+        var access = await BackgroundExecutionManager.RequestAccessAsync();
+        if (access == BackgroundAccessStatus.AllowedSubjectToSystemPolicy ||
+            access == BackgroundAccessStatus.AlwaysAllowed)
+        {
+            var intervalNotificationBackgroundTaskName = "NotificationBackgroundTasks";
+            // interval notification register
+            if (!IsTaskRegistered(intervalNotificationBackgroundTaskName)) {
+                var builder = new BackgroundTaskBuilder
+                {
+                    Name = intervalNotificationBackgroundTaskName,
+                    TaskEntryPoint = "TimeInABottle.BackgroundTasks.NotificationBackgroundTasks"
+                };
 
-    //        builder.SetTrigger(new TimeTrigger(15, false)); // Runs every 15 minutes
-    //        builder.Register();
-    //    }
-    //}
+                builder.SetTrigger(new TimeTrigger(15, false)); // Runs every 15 minutes
+                                                                //builder.SetTrigger(new SystemTrigger(SystemTriggerType.UserPresent, false));
+                builder.Register();
+            }
+        }
+    }
+
+    private bool IsTaskRegistered(string name)
+    {
+        var taskRegistered = false;
+
+        foreach (var task in BackgroundTaskRegistration.AllTasks)
+        {
+            if (task.Value.Name == name)
+            {
+                taskRegistered = true;
+                break;
+            }
+        }
+        return taskRegistered;
+    }
 }

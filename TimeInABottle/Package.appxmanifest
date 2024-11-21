@@ -65,7 +65,14 @@
                   </com:ExeServer>
               </com:ComServer>
           </com:Extension>
+          <Extension Category="windows.backgroundTasks" EntryPoint="TimeInABottle.BackgroundTasks.NotificationBackgroundTasks">
+              <BackgroundTasks>
+                  <Task Type="systemEvent"/>
+              </BackgroundTasks>
+          </Extension>
 		  
+
+
 		  
       </Extensions>
     </Application>
@@ -74,6 +81,20 @@
   <Capabilities>
     <rescap:Capability Name="runFullTrust" />
   </Capabilities>
+
+	<!--this is too much voodoo for me to explain-->
+	<!--but it just work-->
+	<!--somehow-->
+	<!--Phuong-->
+    <Extensions>
+        <Extension Category="windows.activatableClass.inProcessServer">
+            <InProcessServer>
+                <Path>TimeInABottle.BackgroundTasks.dll</Path>
+                <ActivatableClass ActivatableClassId="TimeInABottle.BackgroundTasks.NotificationBackgroundTasks" ThreadingModel="both" />
+            </InProcessServer>
+        </Extension>
+    </Extensions>
+	<!--so dont delete it-->
 
   <genTemplate:Metadata>
     <genTemplate:Item Name="generator" Value="Template Studio"/>
