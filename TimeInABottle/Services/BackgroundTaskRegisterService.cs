@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Data.Xml.Dom;
 using TimeInABottle.Contracts.Services;
 using Windows.ApplicationModel.Background;
+using Windows.UI.Notifications;
+using WinUIEx.Messaging;
 
 namespace TimeInABottle.Services;
 public class BackgroundTaskRegisterService : IBackgroundTaskRegisterService
@@ -18,13 +21,13 @@ public class BackgroundTaskRegisterService : IBackgroundTaskRegisterService
 
         if (CheckBackgroundTaskRegistration(name))
         {
-            return;
+            return; 
         }
 
-        if (!CheckPermissionAsync().Result)
-        {
-            return;
-        }
+        //if (!CheckPermissionAsync().Result)
+        //{
+        //    return;
+        //}
 
         var builder = new BackgroundTaskBuilder
         {
@@ -47,10 +50,10 @@ public class BackgroundTaskRegisterService : IBackgroundTaskRegisterService
             return;
         }
 
-        if (!CheckPermissionAsync().Result)
-        {
-            return;
-        }
+        //if (!CheckPermissionAsync().Result)
+        //{
+        //    return;
+        //}
 
         var builder = new BackgroundTaskBuilder
         {
@@ -72,6 +75,13 @@ public class BackgroundTaskRegisterService : IBackgroundTaskRegisterService
                 task.Value.Unregister(true);
                 break;
             }
+        }
+    }
+
+    public void CleanRegister()
+    {
+        foreach (var task in BackgroundTaskRegistration.AllTasks) {
+            task.Value.Unregister(true);
         }
     }
 

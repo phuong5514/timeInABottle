@@ -117,8 +117,13 @@ public partial class App : Application
     private void RegisterBackgroundTask()
     {
         var backgroundTaskRegisterService = App.GetService<IBackgroundTaskRegisterService>();
+
+        //backgroundTaskRegisterService.CleanRegister();
+
         backgroundTaskRegisterService.RegisterBackgroundTask("NotificationBackgroundTasks", "TimeInABottle.BackgroundTasks.NotificationBackgroundTasks", new TimeTrigger(15, false));
-        backgroundTaskRegisterService.RegisterBackgroundTask("NotificationBackgroundTasks", "TimeInABottle.BackgroundTasks.NotificationBackgroundTasks", new SystemTrigger(SystemTriggerType.UserPresent, true));
+        backgroundTaskRegisterService.RegisterBackgroundTask("NotificationBackgroundTasksImmediate", "TimeInABottle.BackgroundTasks.NotificationBackgroundTasks", new SystemTrigger(SystemTriggerType.UserPresent, true));
+        //backgroundTaskRegisterService.RegisterBackgroundTask("Test", "TimeInABottle.BackgroundTasks.NotificationBackgroundTasks", new ApplicationTrigger());
+
     }
 
 }
