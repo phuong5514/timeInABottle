@@ -24,6 +24,7 @@
     <None Remove="Styles\ListItems.xaml" />
     <None Remove="Styles\MarginsAndPaddingValues.xaml" />
     <None Remove="Views\FilterDialogContent.xaml" />
+    <None Remove="Views\UserControl1.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Page Remove="Views\NotificationView.xaml" />
@@ -77,6 +78,10 @@
     <None Update="Views\TaskListView.xaml">
 		<Generator>MSBuild:Compile</Generator>
     </None>
+	  
+    <Page Update="Views\UserControl1.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Styles\Buttons.xaml">
 		<Generator>MSBuild:Compile</Generator>
     </Page>

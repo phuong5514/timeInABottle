@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Xaml;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Helpers;
 using TimeInABottle.Core.Models;
@@ -27,7 +28,20 @@ public partial class DashboardViewModel : ObservableRecipient
         }
     }
 
-    private void UpdateTime() => Time = TimeOnly.FromDateTime(DateTime.Now);
+    private DispatcherTimer _timer;
+    private void UpdateTime(object sender, object e) => Time = TimeOnly.FromDateTime(DateTime.Now);
+
+    private void StartTimer()
+    {
+        _timer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(15) // TODO: config file / setting page options
+        };
+        _timer.Tick += UpdateTime;
+        _timer.Start();
+    }
+
+    
 
 
     public FullObservableCollection<ITask> TodayTasks
@@ -96,8 +110,9 @@ public partial class DashboardViewModel : ObservableRecipient
         _dao = new MockDaoService();
         getTodayTasks();
         getWeekTasks();
-        UpdateTime();
         UpdateDate();
+        Time = TimeOnly.FromDateTime(DateTime.Now);
+        StartTimer();
     }
 
     private void getTodayTasks() {
@@ -127,6 +142,5 @@ public partial class DashboardViewModel : ObservableRecipient
     public DashboardViewModel()
     {
         Innit();
-        UpdateTime();
     }
 }

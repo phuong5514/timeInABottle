@@ -1,9 +1,11 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
+using Microsoft.UI.Xaml;
 using Newtonsoft.Json;
 using TimeInABottle.Contracts.ViewModels;
 using TimeInABottle.Core.Contracts.Services;
@@ -68,6 +70,26 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
     private readonly CompositeFilter _filter = new();
 
     private bool _isInvertOrder = false;
+
+
+    private DispatcherTimer _timer;
+    private void StartTimer()
+    {
+        _timer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(30) // TODO: config file / setting page options
+        };
+        _timer.Tick += reloadTasks;
+        _timer.Start();
+    }
+
+
+    private void reloadTasks(object sender, object e)
+    {
+        LoadTask();
+    }
+
+
 
     /// <summary>
     /// Command to add a filter.
@@ -240,6 +262,7 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
     public async void OnNavigatedTo(object parameter)
     {
         LoadTask();
+        StartTimer();
     }
 
     /// <summary>
