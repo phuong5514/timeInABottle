@@ -28,17 +28,17 @@ public partial class DashboardViewModel : ObservableRecipient
         }
     }
 
-    private DispatcherTimer timer;
+    private DispatcherTimer _timer;
     private void UpdateTime(object sender, object e) => Time = TimeOnly.FromDateTime(DateTime.Now);
 
     private void StartTimer()
     {
-        timer = new DispatcherTimer
+        _timer = new DispatcherTimer
         {
             Interval = TimeSpan.FromSeconds(15) // TODO: config file / setting page options
         };
-        timer.Tick += UpdateTime;
-        timer.Start();
+        _timer.Tick += UpdateTime;
+        _timer.Start();
     }
 
     

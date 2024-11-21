@@ -68,7 +68,7 @@ public partial class App : Application
             services.AddSingleton<IPageService, PageService>();
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<INotificationService, NotificationService>();
-
+            services.AddSingleton<IBackgroundTaskRegisterService, BackgroundTaskRegisterService>();
 
 
             // Core Services
@@ -112,48 +112,13 @@ public partial class App : Application
         await App.GetService<IActivationService>().ActivateAsync(args);
 
         RegisterBackgroundTask();
-        // activate the background task
-        NotificationBackgroundTasks task = new NotificationBackgroundTasks();
-        task.Run(null); // Directly invoke the task for immediate execution
-
-        //var notificationService = App.GetService<INotificationService>();
-
     }
 
-    private async void RegisterBackgroundTask()
+    private void RegisterBackgroundTask()
     {
-        var access = await BackgroundExecutionManager.RequestAccessAsync();
-        if (access == BackgroundAccessStatus.AllowedSubjectToSystemPolicy ||
-            access == BackgroundAccessStatus.AlwaysAllowed)
-        {
-            var intervalNotificationBackgroundTaskName = "NotificationBackgroundTasks";
-            // interval notification register
-            if (!IsTaskRegistered(intervalNotificationBackgroundTaskName)) {
-                var builder = new BackgroundTaskBuilder
-                {
-                    Name = intervalNotificationBackgroundTaskName,
-                    TaskEntryPoint = "TimeInABottle.BackgroundTasks.NotificationBackgroundTasks"
-                };
-
-                builder.SetTrigger(new TimeTrigger(15, false)); // Runs every 15 minutes
-                                                                //builder.SetTrigger(new SystemTrigger(SystemTriggerType.UserPresent, false));
-                builder.Register();
-            }
-        }
+        var backgroundTaskRegisterService = App.GetService<IBackgroundTaskRegisterService>();
+        backgroundTaskRegisterService.RegisterBackgroundTask("NotificationBackgroundTasks", "TimeInABottle.BackgroundTasks.NotificationBackgroundTasks", new TimeTrigger(15, false));
+        backgroundTaskRegisterService.RegisterBackgroundTask("NotificationBackgroundTasks", "TimeInABottle.BackgroundTasks.NotificationBackgroundTasks", new SystemTrigger(SystemTriggerType.UserPresent, true));
     }
 
-    private bool IsTaskRegistered(string name)
-    {
-        var taskRegistered = false;
-
-        foreach (var task in BackgroundTaskRegistration.AllTasks)
-        {
-            if (task.Value.Name == name)
-            {
-                taskRegistered = true;
-                break;
-            }
-        }
-        return taskRegistered;
-    }
 }
