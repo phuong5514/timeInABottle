@@ -10,4 +10,5 @@ namespace TimeInABottle.Contracts.Services;
 /// </summary>
 public interface INotificationService
 {
+    public void SendNotification();
 }

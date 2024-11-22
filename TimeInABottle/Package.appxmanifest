@@ -8,7 +8,8 @@
   xmlns:genTemplate="http://schemas.microsoft.com/appx/developer/templatestudio"
   xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
   xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
-  IgnorableNamespaces="uap rescap genTemplate">
+  xmlns:uap4="http://schemas.microsoft.com/appx/manifest/uap/windows10/4"
+  IgnorableNamespaces="uap rescap genTemplate uap4">
 
   <Identity
     Name="00ddbb54-326e-4348-bff5-cc5dc433c04b"
@@ -68,6 +69,8 @@
           <Extension Category="windows.backgroundTasks" EntryPoint="TimeInABottle.BackgroundTasks.NotificationBackgroundTasks">
               <BackgroundTasks>
                   <Task Type="systemEvent"/>
+                  <Task Type="timer"/>
+                  <Task Type="pushNotification"/>
               </BackgroundTasks>
           </Extension>
 		  
@@ -80,6 +83,9 @@
 
   <Capabilities>
     <rescap:Capability Name="runFullTrust" />
+    <Capability Name="internetClient"/>
+    <uap4:Capability Name="offlineMapsManagement"/>
+    <DeviceCapability Name="location"/>
   </Capabilities>
 
 	<!--this is too much voodoo for me to explain-->

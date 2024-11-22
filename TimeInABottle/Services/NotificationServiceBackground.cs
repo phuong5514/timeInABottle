@@ -22,7 +22,7 @@ public partial class NotificationService : INotificationService
     {
         InnitDao();
         LoadTasksList();
-        StartNotificationScheduler();
+        //StartNotificationScheduler();
     }
 
     private void InnitDao()
@@ -38,39 +38,49 @@ public partial class NotificationService : INotificationService
         }
         //_todayTasks = _dao.GetTodayTasks();
         _todayTasks = _dao.GetAllTasks();
-        CallibrateIndex();
     }
 
     private void CallibrateIndex()
     {
-        for (_index = 0; _index < _todayTasks.Count; _index++) {
-            if (_todayTasks[_index].Start > TimeOnly.FromDateTime(DateTime.Now)) {
+        for (_index = 0; _index < _todayTasks.Count; _index++)
+        {
+            if (_todayTasks[_index].Start > TimeOnly.FromDateTime(DateTime.Now))
+            {
                 break;
             }
         }
     }
 
-    private async void StartNotificationScheduler()
+    //public void StartNotificationScheduler()
+    //{
+    //    Task.Run(async () =>
+    //    {
+    //        while (true)
+    //        {
+    //            var now = DateTime.Now;
+    //            CallibrateIndex();
+
+    //            // Check for notifications to push
+    //            if (ShouldSendNotification(now))
+    //            {
+    //                this.ShowNextTask(_todayTasks[_index]);
+    //            }
+    //            // Sleep for a while to reduce CPU usage
+    //            // also double served as a reminder notification
+    //            Task.Delay(300000).Wait(); // Sleep for 5 minutes (300000 milliseconds) TODO: config
+    //        }
+    //    });
+    //}
+
+    public void SendNotification()
     {
-        await Task.Run(() =>
+        var now = DateTime.Now;
+        CallibrateIndex();
+        // Check for notifications to push
+        if (ShouldSendNotification(now))
         {
-            var now = DateTime.Now;
-            CallibrateIndex();
-
-            // Check for notifications to push
-            if (ShouldSendNotification(now))
-            {
-                this.ShowNextTask(_todayTasks[_index]);
-            }
-
-
-            // Sleep for a while to reduce CPU usage
-            // also double served as a reminder notification
-            //Task.Delay(300000).Wait(); // Sleep for 5 minutes (300000 milliseconds) TODO: config
-            //while (true) // Simulate a long-running task
-            //{
-            //}
-        });
+            ShowNextTask(_todayTasks[_index]);
+        }
     }
 
     private bool ShouldSendNotification(DateTime now)

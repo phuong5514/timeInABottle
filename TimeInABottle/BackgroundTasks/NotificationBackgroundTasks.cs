@@ -20,6 +20,9 @@ partial class NotificationBackgroundTasks : IBackgroundTask
        
        
         var service = App.GetService<INotificationService>();
+        service.SendNotification();
+       
+
         if (_deferral != null)
         {
             _deferral.Complete();

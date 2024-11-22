@@ -12,7 +12,7 @@ using WinUIEx.Messaging;
 namespace TimeInABottle.Services;
 public class BackgroundTaskRegisterService : IBackgroundTaskRegisterService
 {
-    public void RegisterBackgroundTask(string name, string entrypoint, IBackgroundTrigger trigger)
+    public async void RegisterBackgroundTask(string name, string entrypoint, IBackgroundTrigger trigger)
     {
         if (string.IsNullOrEmpty(name))
         {
@@ -24,10 +24,11 @@ public class BackgroundTaskRegisterService : IBackgroundTaskRegisterService
             return; 
         }
 
-        //if (!CheckPermissionAsync().Result)
-        //{
-        //    return;
-        //}
+        var permission = await CheckPermissionAsync();
+        if (!permission)
+        {
+            return;
+        }
 
         var builder = new BackgroundTaskBuilder
         {
@@ -38,7 +39,7 @@ public class BackgroundTaskRegisterService : IBackgroundTaskRegisterService
         builder.Register();
     }
 
-    public void RegisterBackgroundTask(string name, string entrypoint, IBackgroundTrigger trigger, IBackgroundCondition condition)
+    public async void RegisterBackgroundTaskAsync(string name, string entrypoint, IBackgroundTrigger trigger, IBackgroundCondition condition)
     {
         if (string.IsNullOrEmpty(name))
         {
@@ -50,10 +51,12 @@ public class BackgroundTaskRegisterService : IBackgroundTaskRegisterService
             return;
         }
 
-        //if (!CheckPermissionAsync().Result)
-        //{
-        //    return;
-        //}
+        var permission = await CheckPermissionAsync();
+        if (!permission)
+        {
+            return;
+        }
+
 
         var builder = new BackgroundTaskBuilder
         {
