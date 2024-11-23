@@ -14,7 +14,7 @@
   <Identity
     Name="00ddbb54-326e-4348-bff5-cc5dc433c04b"
     Publisher="CN=LENOVO"
-    Version="1.0.0.0" />
+    Version="1.0.1.0" />
     
   <mp:PhoneIdentity PhoneProductId="00ddbb54-326e-4348-bff5-cc5dc433c04b" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
     
@@ -68,13 +68,13 @@
           </com:Extension>
           <Extension Category="windows.backgroundTasks" EntryPoint="TimeInABottle.Background.NotificationBackgroundTasks">
               <BackgroundTasks>
-                  <Task Type="systemEvent"/>
-                  <Task Type="timer"/>
+                  <Task Type="general"/>
                   <Task Type="pushNotification"/>
               </BackgroundTasks>
           </Extension>
-		  
 
+
+		
 
 		  
       </Extensions>
@@ -88,19 +88,15 @@
     <DeviceCapability Name="location"/>
   </Capabilities>
 
-	<!--this is too much voodoo for me to explain-->
-	<!--but it just work-->
-	<!--somehow-->
-	<!--Phuong-->
+
     <Extensions>
-        <Extension Category="windows.activatableClass.inProcessServer">
-            <InProcessServer>
-                <Path>TimeInABottle.BackgroundTasks.dll</Path>
-                <ActivatableClass ActivatableClassId="TimeInABottle.Background.NotificationBackgroundTasks" ThreadingModel="both" />
-            </InProcessServer>
-        </Extension>
+		<Extension Category="windows.activatableClass.inProcessServer">
+			<InProcessServer>
+				<Path>WinRT.Host.dll</Path>
+				<ActivatableClass ActivatableClassId="TimeInABottle.Background.NotificationBackgroundTasks" ThreadingModel="both" />
+			</InProcessServer>
+		</Extension>
     </Extensions>
-	<!--so dont delete it-->
 
   <genTemplate:Metadata>
     <genTemplate:Item Name="generator" Value="Template Studio"/>

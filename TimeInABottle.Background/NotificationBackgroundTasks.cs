@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 using Windows.Data.Xml.Dom;
 using Windows.UI.Notifications;
@@ -6,26 +7,40 @@ using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Helpers;
 using TimeInABottle.Core.Models;
 using TimeInABottle.Core.Services;
+using System;
+
+
 namespace TimeInABottle.Background;
 
 public sealed class NotificationBackgroundTasks : IBackgroundTask
 {
-    private static IDaoService _dao;
-    private FullObservableCollection<ITask> _todayTasks;
-    private int _index;
 
-    public void Run(IBackgroundTaskInstance? taskInstance)
+    private BackgroundTaskDeferral? _taskDeferral;
+    private static IDaoService _dao;
+    private static FullObservableCollection<ITask> _todayTasks;
+    private static int _index;
+
+    public async void Run(IBackgroundTaskInstance? taskInstance)
     {
+        taskInstance.Canceled += TaskInstance_Canceled;
+        Debug.WriteLine("Background " + taskInstance.Task.Name + " Starting...");
+        _taskDeferral = taskInstance.GetDeferral();
+
         Debug.WriteLine("Background " + taskInstance.Task.Name + " Starting...");
         _dao = new MockDaoService();
         LoadTasksList();
+
         if (ShouldSendNotification())
         {
             SendToast();
         }
+
+
+        Debug.WriteLine("Background " + taskInstance.Task.Name + " Completed.");
+        _taskDeferral.Complete();
     }
 
-    private void SendToast()
+    private static void SendToast()
     {
         var taskToSend = _todayTasks[_index];
 
@@ -74,4 +89,16 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
             }
         }
     }
+
+
+
+    private void TaskInstance_Canceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
+    {
+        if (_taskDeferral != null)
+        {
+            _taskDeferral.Complete();
+            Debug.WriteLine("Background task terminated");
+        }
+    }
 }
+

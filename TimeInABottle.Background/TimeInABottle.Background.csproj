@@ -1,27 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0-windows10.0.19041</TargetFramework>
-	  <!--<TargetFramework>net6.0-windows10.0.22000.0: </TargetFramework>-->
-	<Platforms>x64</Platforms>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+	  <TargetFramework>net7.0-windows10.0.19041</TargetFramework>
+	  <RootNamespace>TimeInABottle.Background</RootNamespace>
 
-	<CsWinRTComponent>true</CsWinRTComponent>
+	  <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+	  <Platforms>x64;x86;arm64</Platforms>
+	  <PlatformTarget>x64</PlatformTarget>
+	 
+	  <Nullable>enable</Nullable>
   </PropertyGroup>
+
+	<PropertyGroup>
+		<CsWinRTComponent>true</CsWinRTComponent>
+		<CsWinRTWindowsMetadata>10.0.22621.0</CsWinRTWindowsMetadata>
+	</PropertyGroup>	
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
-  </ItemGroup>
+  </ItemGroup>	
 
   <ItemGroup>
     <ProjectReference Include="..\TimeInABottle.Core\TimeInABottle.Core.csproj" />
-
-	<None Update="WinRT.Host.runtimeconfig.json">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>  
   </ItemGroup>
-
-
 
 </Project>
