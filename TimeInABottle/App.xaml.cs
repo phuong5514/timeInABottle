@@ -3,11 +3,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
 
 using TimeInABottle.Activation;
-using TimeInABottle.BackgroundTasks;
 using TimeInABottle.Contracts.Services;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Services;
-using TimeInABottle.Helpers;
 using TimeInABottle.Models;
 using TimeInABottle.Services;
 using TimeInABottle.ViewModels;
@@ -120,10 +118,7 @@ public partial class App : Application
 
         backgroundTaskRegisterService.CleanRegister();
 
-        backgroundTaskRegisterService.RegisterBackgroundTask("NotificationBackgroundTasks", "TimeInABottle.BackgroundTasks.NotificationBackgroundTasks", new TimeTrigger(15, false));
-        //backgroundTaskRegisterService.RegisterBackgroundTask("NotificationBackgroundTasksImmediate", "TimeInABottle.BackgroundTasks.NotificationBackgroundTasks", new SystemTrigger(SystemTriggerType.UserPresent, true));
-        //backgroundTaskRegisterService.RegisterBackgroundTask("Test", "TimeInABottle.BackgroundTasks.NotificationBackgroundTasks", new ApplicationTrigger());
-
+        backgroundTaskRegisterService.RegisterBackgroundTask("NotificationBackgroundTasks", "TimeInABottle.Background.NotificationBackgroundTasks", new TimeTrigger(15, false));
     }
 
 }

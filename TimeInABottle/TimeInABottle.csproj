@@ -54,6 +54,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TimeInABottle.Background\TimeInABottle.Background.csproj" />
     <ProjectReference Include="..\TimeInABottle.Core\TimeInABottle.Core.csproj" />
   </ItemGroup>
 
