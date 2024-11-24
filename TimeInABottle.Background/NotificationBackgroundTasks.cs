@@ -46,9 +46,8 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
 
         XmlDocument toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastImageAndText02);
         XmlNodeList textElements = toastXml.GetElementsByTagName("text");
-        textElements[0].AppendChild(toastXml.CreateTextNode("Up next"));
+        textElements[0].AppendChild(toastXml.CreateTextNode($"Up next at {taskToSend.Start}"));
         textElements[1].AppendChild(toastXml.CreateTextNode($"{taskToSend.Name}"));
-        textElements[2].AppendChild(toastXml.CreateTextNode($"At {taskToSend.Start}"));
 
         ToastNotification notification = new(toastXml);
         ToastNotificationManager.CreateToastNotifier().Show(notification);
@@ -61,6 +60,9 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
         {
             return false;
         }
+
+        // debug only
+        return true;
 
         var now = DateTime.Now;
         var taskStartTime = _todayTasks[_index].Start;
