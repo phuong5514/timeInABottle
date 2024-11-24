@@ -1,13 +1,13 @@
 ﻿using System.Diagnostics;
-using System.Threading.Tasks;
-using Windows.ApplicationModel.Background;
-using Windows.Data.Xml.Dom;
-using Windows.UI.Notifications;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Helpers;
 using TimeInABottle.Core.Models;
 using TimeInABottle.Core.Services;
 using System;
+
+using Windows.ApplicationModel.Background;
+using Windows.Data.Xml.Dom;
+using Windows.UI.Notifications;
 
 
 namespace TimeInABottle.Background;
