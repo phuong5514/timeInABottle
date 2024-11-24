@@ -61,8 +61,8 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
             return false;
         }
 
-        // debug only
-        return true;
+        //// debug only
+        //return true;
 
         var now = DateTime.Now;
         var taskStartTime = _todayTasks[_index].Start;
