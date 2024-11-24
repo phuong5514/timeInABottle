@@ -3,11 +3,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
 
 using TimeInABottle.Activation;
-using TimeInABottle.BackgroundTasks;
 using TimeInABottle.Contracts.Services;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Services;
-using TimeInABottle.Helpers;
 using TimeInABottle.Models;
 using TimeInABottle.Services;
 using TimeInABottle.ViewModels;
@@ -67,7 +65,6 @@ public partial class App : Application
             services.AddSingleton<IActivationService, ActivationService>();
             services.AddSingleton<IPageService, PageService>();
             services.AddSingleton<INavigationService, NavigationService>();
-            services.AddSingleton<INotificationService, NotificationService>();
             services.AddSingleton<IBackgroundTaskRegisterService, BackgroundTaskRegisterService>();
 
 
@@ -117,8 +114,10 @@ public partial class App : Application
     private void RegisterBackgroundTask()
     {
         var backgroundTaskRegisterService = App.GetService<IBackgroundTaskRegisterService>();
-        backgroundTaskRegisterService.RegisterBackgroundTask("NotificationBackgroundTasks", "TimeInABottle.BackgroundTasks.NotificationBackgroundTasks", new TimeTrigger(15, false));
-        backgroundTaskRegisterService.RegisterBackgroundTask("NotificationBackgroundTasks", "TimeInABottle.BackgroundTasks.NotificationBackgroundTasks", new SystemTrigger(SystemTriggerType.UserPresent, true));
+
+        backgroundTaskRegisterService.CleanRegister();
+
+        backgroundTaskRegisterService.RegisterBackgroundTask("NotificationBackgroundTasks", "TimeInABottle.Background.NotificationBackgroundTasks", new TimeTrigger(15, false));
     }
 
 }

@@ -101,18 +101,7 @@
 
 			<!-- SideBar: chua cac nut thuc hien cac chuc nang -->
             <StackPanel x:Name="SideBar" Grid.Column="1" Grid.RowSpan="2" Orientation="Vertical">
-                <Button x:Name="DebugButton" Click="DebugButton_Click">Debug</Button>
-                
                 <TextBlock Style="{StaticResource VerticalListTitleStyle}">Today's Tasks</TextBlock>
-                <!--
-                
-                <TextBlock Style="{StaticResource VerticalListTitleStyle}"> 08:00 - abc</TextBlock>
-                <TextBlock Style="{StaticResource VerticalListTitleStyle}"> 09:00 - xyz</TextBlock>
-                <TextBlock Style="{StaticResource VerticalListTitleStyle}"> 10:00 - tyhdssd</TextBlock>
-                <TextBlock Style="{StaticResource VerticalListTitleStyle}"> 14:00 - adsf</TextBlock>
-                <TextBlock Style="{StaticResource VerticalListTitleStyle}"> 15:00 - 24vflgn</TextBlock>
-                <TextBlock Style="{StaticResource VerticalListTitleStyle}"> 21:00 - sdfsdf</TextBlock>
-                -->
 
                 <ListView Name="TaskList"
                     ItemsSource="{x:Bind ViewModel.TodayTasks, Mode=OneWay}"

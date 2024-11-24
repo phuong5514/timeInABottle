@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Data.Xml.Dom;
 using TimeInABottle.Contracts.Services;
 using Windows.ApplicationModel.Background;
+using Windows.UI.Notifications;
+using WinUIEx.Messaging;
 
 namespace TimeInABottle.Services;
 public class BackgroundTaskRegisterService : IBackgroundTaskRegisterService
 {
-    public void RegisterBackgroundTask(string name, string entrypoint, IBackgroundTrigger trigger)
+    public async void RegisterBackgroundTask(string name, string entrypoint, IBackgroundTrigger trigger)
     {
         if (string.IsNullOrEmpty(name))
         {
@@ -18,10 +21,11 @@ public class BackgroundTaskRegisterService : IBackgroundTaskRegisterService
 
         if (CheckBackgroundTaskRegistration(name))
         {
-            return;
+            return; 
         }
 
-        if (!CheckPermissionAsync().Result)
+        var permission = await CheckPermissionAsync();
+        if (!permission)
         {
             return;
         }
@@ -35,7 +39,7 @@ public class BackgroundTaskRegisterService : IBackgroundTaskRegisterService
         builder.Register();
     }
 
-    public void RegisterBackgroundTask(string name, string entrypoint, IBackgroundTrigger trigger, IBackgroundCondition condition)
+    public async void RegisterBackgroundTaskAsync(string name, string entrypoint, IBackgroundTrigger trigger, IBackgroundCondition condition)
     {
         if (string.IsNullOrEmpty(name))
         {
@@ -47,10 +51,12 @@ public class BackgroundTaskRegisterService : IBackgroundTaskRegisterService
             return;
         }
 
-        if (!CheckPermissionAsync().Result)
+        var permission = await CheckPermissionAsync();
+        if (!permission)
         {
             return;
         }
+
 
         var builder = new BackgroundTaskBuilder
         {
@@ -72,6 +78,13 @@ public class BackgroundTaskRegisterService : IBackgroundTaskRegisterService
                 task.Value.Unregister(true);
                 break;
             }
+        }
+    }
+
+    public void CleanRegister()
+    {
+        foreach (var task in BackgroundTaskRegistration.AllTasks) {
+            task.Value.Unregister(true);
         }
     }
 

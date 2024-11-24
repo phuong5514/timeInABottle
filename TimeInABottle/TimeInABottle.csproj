@@ -1,17 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0-windows10.0.19041.0</TargetFramework>
+    <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <RootNamespace>TimeInABottle</RootNamespace>
     <ApplicationIcon>Assets/WindowIcon.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x86;x64;arm64</Platforms>
-    <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
-    <PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>
-	<ImplicitUsings>enable</ImplicitUsings>
-	<Nullable>enable</Nullable>
-	<UseWinUI>true</UseWinUI>
+	<RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+    <PlatformTarget>x64</PlatformTarget>
+    <PublishProfile>Properties\PublishProfiles\win-$(Platform).pubxml</PublishProfile>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
   </PropertyGroup>
@@ -32,11 +33,9 @@
     <Page Remove="Views\TaskListView.xaml" />
     <Page Remove="Views\UpcomingTasksView.xaml" />
   </ItemGroup>
-
   <ItemGroup>
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Animations" Version="7.1.2" />
@@ -52,11 +51,10 @@
     <PackageReference Include="PropertyChanged.Fody" Version="4.1.0" />
     <PackageReference Include="WinUIEx" Version="2.4.2" />
   </ItemGroup>
-
   <ItemGroup>
+    <ProjectReference Include="..\TimeInABottle.Background\TimeInABottle.Background.csproj" />
     <ProjectReference Include="..\TimeInABottle.Core\TimeInABottle.Core.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <None Update="Assets\LockScreenLogo.scale-200.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -66,51 +64,40 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-	  
     <None Update="Views\NotificationView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
-	  
     <None Update="Views\SearchFilterView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
-	  
     <None Update="Views\TaskListView.xaml">
-		<Generator>MSBuild:Compile</Generator>
+      <Generator>MSBuild:Compile</Generator>
     </None>
-	  
     <Page Update="Views\UserControl1.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Styles\Buttons.xaml">
-		<Generator>MSBuild:Compile</Generator>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\FilterDialogContent.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-	  
-	  
     <None Update="Views\UpcomingTasksView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
-	  
     <Page Update="Styles\GridCells.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-	  
     <Page Update="Styles\MarginsAndPaddingValues.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-	  
     <Page Update="Styles\ListItems.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-
   <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <ProjectCapability Include="Msix" />
   </ItemGroup>
-  
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
   </PropertyGroup>
