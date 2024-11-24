@@ -70,6 +70,7 @@
               <BackgroundTasks>
                   <Task Type="general"/>
                   <Task Type="pushNotification"/>
+				  <Task Type="timer" />
               </BackgroundTasks>
           </Extension>
 
