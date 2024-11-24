@@ -92,10 +92,10 @@ public partial class DashboardViewModel : ObservableRecipient
         NextTask = null;
     }
 
-    public void ShowNextTaskNotification() {
-        var notificationService = new NotificationService();
-        notificationService.ShowNextTask(NextTask);
-    }
+    //public void ShowNextTaskNotification() {
+    //    var notificationService = new NotificationService();
+    //    notificationService.ShowNextTask(NextTask);
+    //}
 
 
     public DateOnly Date

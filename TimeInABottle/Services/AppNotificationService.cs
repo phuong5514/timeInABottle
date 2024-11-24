@@ -11,12 +11,10 @@ namespace TimeInABottle.Notifications;
 public class AppNotificationService : IAppNotificationService
 {
     private readonly INavigationService _navigationService;
-    private readonly INotificationService _notificationService;
 
-    public AppNotificationService(INavigationService navigationService, INotificationService notificationService)
+    public AppNotificationService(INavigationService navigationService)
     {
         _navigationService = navigationService;
-        _notificationService = notificationService;
     }
 
     ~AppNotificationService()

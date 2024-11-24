@@ -222,16 +222,6 @@ public sealed partial class DashboardPage : Page
     }
 
     /// <summary>
-    /// Handles the click event of the debug button.
-    /// </summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="e">The event data.</param>
-    private void DebugButton_Click(object sender, RoutedEventArgs e)
-    {
-        ViewModel.ShowNextTaskNotification(); 
-    }
-
-    /// <summary>
     /// Handles the click event of the toggle button to show or hide the sidebar.
     /// </summary>
     /// <param name="sender">The source of the event.</param>
