@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TimeInABottle.Core.Models;
+namespace TimeInABottle.Core.Models.Tasks;
 
 /// <summary>
 /// Represents an abstract task with a name, description, start time, and end time.
@@ -31,22 +31,34 @@ public abstract class ITask : INotifyPropertyChanged
     /// <summary>
     /// Gets or sets the name of the task.
     /// </summary>
-    public string Name { get; set; }
+    public string Name
+    {
+        get; set;
+    }
 
     /// <summary>
     /// Gets or sets the description of the task.
     /// </summary>
-    public string Description { get; set; }
+    public string Description
+    {
+        get; set;
+    }
 
     /// <summary>
     /// Gets or sets the start time of the task.
     /// </summary>
-    public TimeOnly Start { get; set; }
+    public TimeOnly Start
+    {
+        get; set;
+    }
 
     /// <summary>
     /// Gets or sets the end time of the task.
     /// </summary>
-    public TimeOnly End { get; set; }
+    public TimeOnly End
+    {
+        get; set;
+    }
 
     /// <summary>
     /// Occurs when a property value changes.

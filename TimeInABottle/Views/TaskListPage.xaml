@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
-    xmlns:models="using:TimeInABottle.Core.Models"
+    xmlns:task="using:TimeInABottle.Core.Models.Tasks"
     xmlns:filters="using:TimeInABottle.Core.Models.Filters"
     xmlns:views="using:TimeInABottle.Views"
     xmlns:behaviors="using:TimeInABottle.Behaviors"
@@ -18,7 +18,7 @@
         -->
         <helpers:FilterToStringConverter x:Key="FilterConverter"/>
 
-        <DataTemplate x:Key="ItemTemplate" x:DataType="models:ITask">
+        <DataTemplate x:Key="ItemTemplate" x:DataType="task:ITask">
             <Grid Height="60">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />

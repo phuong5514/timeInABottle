@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TimeInABottle.Core.Models;
+namespace TimeInABottle.Core.Models.Tasks;
 /// <summary>
 /// Represents a non-repeated task with a specific date.
 /// Inherits from the abstract ITask class.

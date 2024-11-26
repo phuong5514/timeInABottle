@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Helpers;
-using TimeInABottle.Core.Models;
+using TimeInABottle.Core.Models.Tasks;
 using TimeInABottle.Core.Services;
 using TimeInABottle.Services;
 namespace TimeInABottle.ViewModels;

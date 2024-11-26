@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Helpers;
-using TimeInABottle.Core.Models;
 using TimeInABottle.Core.Models.Filters;
+using TimeInABottle.Core.Models.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TimeInABottle.Core.Services;

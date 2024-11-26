@@ -10,8 +10,8 @@ using Newtonsoft.Json;
 using TimeInABottle.Contracts.ViewModels;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Helpers;
-using TimeInABottle.Core.Models;
 using TimeInABottle.Core.Models.Filters;
+using TimeInABottle.Core.Models.Tasks;
 
 namespace TimeInABottle.ViewModels;
 

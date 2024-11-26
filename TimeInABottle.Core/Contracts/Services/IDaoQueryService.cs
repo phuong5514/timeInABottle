@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TimeInABottle.Core.Helpers;
-using TimeInABottle.Core.Models;
 using TimeInABottle.Core.Models.Filters;
+using TimeInABottle.Core.Models.Tasks;
 
 namespace TimeInABottle.Core.Contracts.Services;
 /// <summary>

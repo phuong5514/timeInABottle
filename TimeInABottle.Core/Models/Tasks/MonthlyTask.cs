@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TimeInABottle.Core.Models;
+namespace TimeInABottle.Core.Models.Tasks;
 /// <summary>
 /// Represents a task that occurs monthly on a specific date.
 /// </summary>
@@ -17,7 +17,10 @@ public class MonthlyTask : IRepeatedTask
     /// <summary>
     /// Gets or sets the date of the month on which the task occurs.
     /// </summary>
-    public int Date { get; set; }
+    public int Date
+    {
+        get; set;
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MonthlyTask"/> class.
