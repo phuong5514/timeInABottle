@@ -362,3 +362,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /TimeInABottle.Core/secret.config
+/TimeInABottle.Core/secret.config
