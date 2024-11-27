@@ -12,10 +12,13 @@ using Newtonsoft.Json;
 using TimeInABottle.Core.Helpers;
 
 namespace TimeInABottle.Core.Services;
-internal class ApiWeatherService : IWeatherService
+public class ApiWeatherService : IWeatherService
 {
     private string _url;
     private string _apiKey;
+    private string _startTime;
+    private string _endTime;
+
 
     private WeatherTimeline _weatherTimeline;
 
@@ -34,14 +37,18 @@ internal class ApiWeatherService : IWeatherService
         get; set;
     }
 
-    public async Task FetchTodayWeatherInfosAsync(double latitude, double longitude, string startTime, string endTime)
+    private async Task FetchTodayWeatherInfosAsync()
     {
+        var (latitude, longitude) = await GeoLocationFetcher.GetCoordinatesAsync();
+
         var options = new RestClientOptions($"{_url}/timelines?apikey={_apiKey}");
         var client = new RestClient(options);
         var request = new RestRequest("");
         request.AddHeader("accept", "application/json");
         request.AddHeader("Accept-Encoding", "gzip");
-        request.AddJsonBody($"{{\"location\":\"{latitude}, {longitude}\",\"fields\":[\"temperature\",\"weatherCode\"],\"units\":\"metric\",\"timesteps\":[\"1h\"],\"startTime\":\"{startTime}\",\"endTime\":\"{endTime}\"}}", false);
+
+
+        request.AddJsonBody($"{{\"location\":\"{latitude}, {longitude}\",\"fields\":[\"temperature\",\"weatherCode\"],\"units\":\"metric\",\"timesteps\":[\"1h\"],\"startTime\":\"{_startTime}\",\"endTime\":\"{_endTime}\"}}", false);
         var response = await client.PostAsync(request);
 
         var weatherApiResponse = JsonConvert.DeserializeObject<WeatherApiResponse>(response.Content);
@@ -75,6 +82,25 @@ internal class ApiWeatherService : IWeatherService
             {
                 throw new Exception("BaseAddress not found in configuration file.");
             }
+
+
+            var today = DateTime.Now;
+
+            _startTime = config.Element("WeatherApi")?.Element("StartTime")?.Value;
+            // replace the date in the startTime with today's date
+            _startTime = _startTime.Replace("2021-09-01", today.ToString("yyyy-MM-dd"));
+            if (string.IsNullOrEmpty(_startTime))
+            {
+                throw new Exception("StartTime not found in configuration file.");
+            }
+
+            _endTime = config.Element("WeatherApi")?.Element("EndTime")?.Value;
+            // replace the date in the endTime with today's date
+            _endTime = _endTime.Replace("2021-09-01", today.ToString("yyyy-MM-dd"));
+            if (string.IsNullOrEmpty(_endTime))
+            {
+                throw new Exception("EndTime not found in configuration file.");
+            }
         }
         catch (Exception ex)
         {
@@ -82,7 +108,7 @@ internal class ApiWeatherService : IWeatherService
         }
     }
 
-    public WeatherInfo getNextHourWeatherInfo()
+    public WeatherInfo GetNextHourWeatherInfo()
     {
         DateTime now = DateTime.Now;
         foreach (var weather in _weatherTimeline.Intervals) {
@@ -93,6 +119,10 @@ internal class ApiWeatherService : IWeatherService
         }
 
         return null;
+    }
+
+    public async void LoadWeatherData() {
+        await FetchTodayWeatherInfosAsync();
     }
 
     // tomorrow.io doesn't provide an api endpoint to fetch weathercode mapping

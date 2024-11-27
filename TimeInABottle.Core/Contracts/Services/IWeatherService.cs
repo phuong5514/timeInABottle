@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using TimeInABottle.Core.Models.Weather;
 
 namespace TimeInABottle.Core.Contracts.Services;
-internal interface IWeatherService
+public interface IWeatherService
 {
-    WeatherInfo getNextHourWeatherInfo();
+    WeatherInfo GetNextHourWeatherInfo();
+    void LoadWeatherData();
 }
