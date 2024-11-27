@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TimeInABottle.Core.Models.Weather;
 
 namespace TimeInABottle.Core.Contracts.Services;
-internal interface IWeatherService
+internal interface IBufferService
 {
-    WeatherInfo getNextHourWeatherInfo();
+    public int BufferSize { get; }
+    public void LoadBuffer();
+
 }
