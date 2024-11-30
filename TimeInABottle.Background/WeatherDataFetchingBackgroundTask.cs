@@ -12,17 +12,21 @@ namespace TimeInABottle.Background;
 public sealed class WeatherDataFetchingBackgroundTask : IBackgroundTask
 {
     private BackgroundTaskDeferral? _taskDeferral;
-    private IWeatherService _apiWeatherService;
+    private readonly IWeatherService _weatherService;
 
     public WeatherDataFetchingBackgroundTask()
     {
-        _apiWeatherService = ApiWeatherService.Instance;
+        _weatherService = ApiWeatherService.Instance;
     }
 
     public void Run(IBackgroundTaskInstance taskInstance)
     {
         _taskDeferral = taskInstance.GetDeferral();
-        _apiWeatherService.LoadWeatherData();
+        if (BackgroundTaskExecuteController.ShouldRunToday())
+        {
+            _weatherService.LoadWeatherData();
+            BackgroundTaskExecuteController.UpdateLastRunDate();
+        }
         _taskDeferral.Complete();
     }
 }

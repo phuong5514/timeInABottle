@@ -76,6 +76,11 @@
                     <!--TODO: data binding-->
                     <TextBlock Style="{StaticResource PageTitleStyle}" Text="{x:Bind ViewModel.Time, Mode=OneWay, Converter={StaticResource TimeToGreetingConverter}}"/>
                     <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="{x:Bind ViewModel.Date, Mode=OneWay}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="{x:Bind ViewModel.Weather.Temperature}"/>
+                        <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="°C"/>
+                    </StackPanel>
+                    <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="{x:Bind ViewModel.Weather.WeatherType}"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Vertical" Grid.Column="1" Padding="16, 8, 16, 8">

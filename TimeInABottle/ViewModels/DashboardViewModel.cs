@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Helpers;
 using TimeInABottle.Core.Models.Tasks;
+using TimeInABottle.Core.Models.Weather;
 using TimeInABottle.Core.Services;
 using TimeInABottle.Services;
 namespace TimeInABottle.ViewModels;
@@ -30,6 +31,21 @@ public partial class DashboardViewModel : ObservableRecipient
 
     private DispatcherTimer _timer;
     private void UpdateTime(object sender, object e) => Time = TimeOnly.FromDateTime(DateTime.Now);
+    
+    private WeatherInfoWrapper _weather;
+    public WeatherInfoWrapper Weather
+    {
+        get => _weather;
+        private set
+        {
+            if (_weather!= value)
+            {
+                _weather = value;
+                OnPropertyChanged(nameof(WeatherInfoWrapper));
+            }
+        }
+    }
+    private void UpdateWeather(object sender, object e) => Weather = ApiWeatherService.Instance.GetCurrentWeather();
 
     private void StartTimer()
     {
@@ -38,6 +54,7 @@ public partial class DashboardViewModel : ObservableRecipient
             Interval = TimeSpan.FromSeconds(15) // TODO: config file / setting page options
         };
         _timer.Tick += UpdateTime;
+        _timer.Tick += UpdateWeather;
         _timer.Start();
     }
 

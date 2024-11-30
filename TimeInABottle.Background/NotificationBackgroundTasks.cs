@@ -16,12 +16,17 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
 {
 
     private BackgroundTaskDeferral? _taskDeferral;
-    private static IDaoService _dao;
-    private static FullObservableCollection<ITask> _todayTasks;
+    private static IDaoService? _dao;
+    private static FullObservableCollection<ITask>? _todayTasks;
     private static int _index;
 
-    public async void Run(IBackgroundTaskInstance? taskInstance)
+    public void Run(IBackgroundTaskInstance? taskInstance)
     {
+        if (taskInstance == null)
+        {
+            throw new ArgumentNullException(nameof(taskInstance));
+        }
+
         taskInstance.Canceled += TaskInstance_Canceled;
         Debug.WriteLine("Background " + taskInstance.Task.Name + " Starting...");
         _taskDeferral = taskInstance.GetDeferral();
@@ -35,13 +40,18 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
             SendToast();
         }
 
-
         Debug.WriteLine("Background " + taskInstance.Task.Name + " Completed.");
         _taskDeferral.Complete();
     }
 
     private static void SendToast()
     {
+        if (_todayTasks == null || _todayTasks.Count == 0)
+        {
+            Debug.WriteLine("No tasks available to send notification.");
+            return;
+        }
+
         var taskToSend = _todayTasks[_index];
 
         XmlDocument toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastImageAndText02);
@@ -56,13 +66,10 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
     private bool ShouldSendNotification()
     {
         CallibrateIndex();
-        if (_index >= _todayTasks.Count)
+        if (_todayTasks == null || _index >= _todayTasks.Count)
         {
             return false;
         }
-
-        //// debug only
-        //return true;
 
         var now = DateTime.Now;
         var taskStartTime = _todayTasks[_index].Start;
@@ -83,6 +90,11 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
 
     private void CallibrateIndex()
     {
+        if (_todayTasks == null)
+        {
+            return;
+        }
+
         for (_index = 0; _index < _todayTasks.Count; _index++)
         {
             if (_todayTasks[_index].Start > TimeOnly.FromDateTime(DateTime.Now))

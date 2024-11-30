@@ -10,4 +10,7 @@ public interface IWeatherService
 {
     WeatherInfo GetNextHourWeatherInfo();
     void LoadWeatherData();
+
+    public WeatherInfoWrapper GetCurrentWeather();
+    public WeatherInfoWrapper GetNextHourWeather();
 }

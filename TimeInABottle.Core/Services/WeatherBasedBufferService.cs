@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TimeInABottle.Core.Contracts.Services;
-using TimeInABottle.Core.Models.Weather;
+﻿using TimeInABottle.Core.Contracts.Services;
+
 
 namespace TimeInABottle.Core.Services;
 internal class WeatherBasedBufferService : IBufferService
@@ -22,7 +17,7 @@ internal class WeatherBasedBufferService : IBufferService
 
     public void LoadBuffer()
     {
-        var info = _weatherService.getNextHourWeatherInfo();
+        var info = _weatherService.GetNextHourWeatherInfo();
         var code = info.Values.WeatherCode;
 
         BufferSize = DetermineBufferSize(code);
@@ -35,7 +30,7 @@ internal class WeatherBasedBufferService : IBufferService
 
         return type switch
         {
-            1 => weatherCode == 1000 ? 0 : 5, // Clear/Sunny vs Partly Cloudy
+            1 => 5, // Clear/Sunny, Partly Cloudy
             2 => 10, // Fog
             4 => weatherCode == 4000 ? 10 : 20, // Drizzle vs Rain
             5 => weatherCode == 5000 ? 15 : 25, // Light Snow vs Heavy Snow

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Models.Weather;
 using RestSharp;
@@ -18,6 +12,7 @@ public class ApiWeatherService : IWeatherService
     private string _apiKey;
     private string _startTime;
     private string _endTime;
+    private string _timeZone;
 
 
     private WeatherTimeline _weatherTimeline;
@@ -47,8 +42,7 @@ public class ApiWeatherService : IWeatherService
         request.AddHeader("accept", "application/json");
         request.AddHeader("Accept-Encoding", "gzip");
 
-
-        request.AddJsonBody($"{{\"location\":\"{latitude}, {longitude}\",\"fields\":[\"temperature\",\"weatherCode\"],\"units\":\"metric\",\"timesteps\":[\"1h\"],\"startTime\":\"{_startTime}\",\"endTime\":\"{_endTime}\"}}", false);
+        request.AddJsonBody($"{{\"location\":\"{latitude}, {longitude}\",\"fields\":[\"temperature\",\"weatherCode\"],\"units\":\"metric\",\"timesteps\":[\"1h\"],\"startTime\":\"{_startTime}\",\"endTime\":\"{_endTime}\",\"timezone\":\"auto\"}}", false);
         var response = await client.PostAsync(request);
 
         var weatherApiResponse = JsonConvert.DeserializeObject<WeatherApiResponse>(response.Content);
@@ -66,6 +60,9 @@ public class ApiWeatherService : IWeatherService
 
         try
         {
+            // get today string in the format of "yyyy-MM-dd"
+            var todayString = DateTime.Now.ToString("yyyy-MM-dd");
+
             // Load the XML file
             var config = XElement.Load(configPath);
 
@@ -83,24 +80,29 @@ public class ApiWeatherService : IWeatherService
                 throw new Exception("BaseAddress not found in configuration file.");
             }
 
+            // Read the TimeZone
+            _timeZone = config.Element("WeatherApi")?.Element("TimeZone")?.Value;
+            if (string.IsNullOrEmpty(_timeZone))
+            {
+                throw new Exception("TimeZone not found in configuration file.");
+            }
 
-            var today = DateTime.Now;
 
-            _startTime = config.Element("WeatherApi")?.Element("StartTime")?.Value;
-            // replace the date in the startTime with today's date
-            _startTime = _startTime.Replace("2021-09-01", today.ToString("yyyy-MM-dd"));
-            if (string.IsNullOrEmpty(_startTime))
+            // Read the StartTime
+            var startTimeString = config.Element("WeatherApi")?.Element("StartTime")?.Value;
+            if (string.IsNullOrEmpty(startTimeString))
             {
                 throw new Exception("StartTime not found in configuration file.");
             }
+            _startTime = $"{todayString}T{startTimeString}{_timeZone}";
 
-            _endTime = config.Element("WeatherApi")?.Element("EndTime")?.Value;
-            // replace the date in the endTime with today's date
-            _endTime = _endTime.Replace("2021-09-01", today.ToString("yyyy-MM-dd"));
-            if (string.IsNullOrEmpty(_endTime))
+            // Read the EndTime
+            var endTimeString = config.Element("WeatherApi")?.Element("EndTime")?.Value;
+            if (string.IsNullOrEmpty(endTimeString))
             {
                 throw new Exception("EndTime not found in configuration file.");
             }
+            _endTime = $"{todayString}T{endTimeString}{_timeZone}";
         }
         catch (Exception ex)
         {
@@ -125,33 +127,34 @@ public class ApiWeatherService : IWeatherService
         await FetchTodayWeatherInfosAsync();
     }
 
+    public WeatherInfoWrapper GetCurrentWeather() { 
+        DateTime now = DateTime.Now;
+        foreach (var weather in _weatherTimeline.Intervals)
+        {
+            DateTime weatherDateTime = DateTime.Parse(weather.Time);
+            // check if now and weatherDateTime is in the same hour
+            if (now.Hour == weatherDateTime.Hour)
+            {
+                return new WeatherInfoWrapper(weather);
+            }
+        }
+        return null;
+    }
+
+    public WeatherInfoWrapper GetNextHourWeather() {
+        DateTime now = DateTime.Now;
+        foreach (var weather in _weatherTimeline.Intervals)
+        {
+            DateTime weatherDateTime = DateTime.Parse(weather.Time);
+            if (weatherDateTime > now)
+            {
+                return new WeatherInfoWrapper(weather);
+            }
+        }
+        return null;
+    }
+
     // tomorrow.io doesn't provide an api endpoint to fetch weathercode mapping
-    public static Dictionary<int, string> WeatherDictionary = new()
-    {
-        { 0, "Unknown" },
-        { 1000, "Clear, Sunny" },
-        { 1100, "Mostly Clear" },
-        { 1101, "Partly Cloudy" },
-        { 1102, "Mostly Cloudy" },
-        { 1001, "Cloudy" },
-        { 2000, "Fog" },
-        { 2100, "Light Fog" },
-        { 4000, "Drizzle" },
-        { 4001, "Rain" },
-        { 4200, "Light Rain" },
-        { 4201, "Heavy Rain" },
-        { 5000, "Snow" },
-        { 5001, "Flurries" },
-        { 5100, "Light Snow" },
-        { 5101, "Heavy Snow" },
-        { 6000, "Freezing Drizzle" },
-        { 6001, "Freezing Rain" },
-        { 6200, "Light Freezing Rain" },
-        { 6201, "Heavy Freezing Rain" },
-        { 7000, "Ice Pellets" },
-        { 7101, "Heavy Ice Pellets" },
-        { 7102, "Light Ice Pellets" },
-        { 8000, "Thunderstorm" }
-    };
+
 
 }
