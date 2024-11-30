@@ -14,6 +14,9 @@ public class ApiWeatherService : IWeatherService
     private string _endTime;
     private string _timeZone;
 
+    private double _latitude;
+    private double _longitude;
+
 
     private WeatherTimeline _weatherTimeline;
 
@@ -34,15 +37,13 @@ public class ApiWeatherService : IWeatherService
 
     private async Task FetchTodayWeatherInfosAsync()
     {
-        var (latitude, longitude) = await GeoLocationFetcher.GetCoordinatesAsync();
-
         var options = new RestClientOptions($"{_url}/timelines?apikey={_apiKey}");
         var client = new RestClient(options);
         var request = new RestRequest("");
         request.AddHeader("accept", "application/json");
         request.AddHeader("Accept-Encoding", "gzip");
 
-        request.AddJsonBody($"{{\"location\":\"{latitude}, {longitude}\",\"fields\":[\"temperature\",\"weatherCode\"],\"units\":\"metric\",\"timesteps\":[\"1h\"],\"startTime\":\"{_startTime}\",\"endTime\":\"{_endTime}\",\"timezone\":\"auto\"}}", false);
+        request.AddJsonBody($"{{\"location\":\"{_latitude}, {_longitude}\",\"fields\":[\"temperature\",\"weatherCode\"],\"units\":\"metric\",\"timesteps\":[\"1h\"],\"startTime\":\"{_startTime}\",\"endTime\":\"{_endTime}\",\"timezone\":\"auto\"}}", false);
         var response = await client.PostAsync(request);
 
         var weatherApiResponse = JsonConvert.DeserializeObject<WeatherApiResponse>(response.Content);
@@ -51,7 +52,8 @@ public class ApiWeatherService : IWeatherService
 
     private void ReadApiConfig()
     {
-        var configPath = "secret.config";
+        var configPath = Path.Combine(AppContext.BaseDirectory, "secret.config");
+
 
         if (!File.Exists(configPath))
         {
@@ -103,6 +105,22 @@ public class ApiWeatherService : IWeatherService
                 throw new Exception("EndTime not found in configuration file.");
             }
             _endTime = $"{todayString}T{endTimeString}{_timeZone}";
+
+            // Read the Latitude
+            var latitudeString = config.Element("WeatherApi")?.Element("Latitude")?.Value;
+            if (string.IsNullOrEmpty(latitudeString))
+            {
+                throw new Exception("Latitude not found in configuration file.");
+            }
+            _latitude = double.Parse(latitudeString);
+
+            // Read the Longitude
+            var longitudeString = config.Element("WeatherApi")?.Element("Longitude")?.Value;
+            if (string.IsNullOrEmpty(longitudeString))
+            {
+                throw new Exception("Longitude not found in configuration file.");
+            }
+            _longitude = double.Parse(longitudeString);
         }
         catch (Exception ex)
         {
@@ -129,6 +147,10 @@ public class ApiWeatherService : IWeatherService
 
     public WeatherInfoWrapper GetCurrentWeather() { 
         DateTime now = DateTime.Now;
+
+        if (_weatherTimeline == null) {
+            return null;
+        }
         foreach (var weather in _weatherTimeline.Intervals)
         {
             DateTime weatherDateTime = DateTime.Parse(weather.Time);

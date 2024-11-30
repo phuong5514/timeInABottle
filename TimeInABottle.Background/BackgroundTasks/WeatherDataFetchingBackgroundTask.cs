@@ -7,8 +7,9 @@ using Windows.ApplicationModel.Background;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Services;
 using TimeInABottle.Core.Helpers;
+using TimeInABottle.Background.Helpers;
 
-namespace TimeInABottle.Background;
+namespace TimeInABottle.Background.BackgroundTasks;
 public sealed class WeatherDataFetchingBackgroundTask : IBackgroundTask
 {
     private BackgroundTaskDeferral? _taskDeferral;

@@ -15,6 +15,9 @@ The Core project contains code that can be [reused across multiple application p
 	<WeatherAPI>
 		<APIkey>{your api key}</APIkey>
 		<URl>{api base url, the service is designed based on tomorrow.io's api}</URl>
+		<StartTime>05:00:00</StartTime> // weather data start point
+		<EndTime>22:00:00</EndTime>  // weather data end point
+		<TimeZone>+07:00</TimeZone> // timezone
 	</WeatherAPI>
 </configuration>
 ```

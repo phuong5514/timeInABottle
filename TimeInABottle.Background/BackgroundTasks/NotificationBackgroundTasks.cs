@@ -10,7 +10,7 @@ using Windows.UI.Notifications;
 using TimeInABottle.Core.Models.Tasks;
 
 
-namespace TimeInABottle.Background;
+namespace TimeInABottle.Background.BackgroundTasks;
 
 public sealed class NotificationBackgroundTasks : IBackgroundTask
 {
@@ -54,8 +54,8 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
 
         var taskToSend = _todayTasks[_index];
 
-        XmlDocument toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastImageAndText02);
-        XmlNodeList textElements = toastXml.GetElementsByTagName("text");
+        var toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastImageAndText02);
+        var textElements = toastXml.GetElementsByTagName("text");
         textElements[0].AppendChild(toastXml.CreateTextNode($"Up next at {taskToSend.Start}"));
         textElements[1].AppendChild(toastXml.CreateTextNode($"{taskToSend.Name}"));
 

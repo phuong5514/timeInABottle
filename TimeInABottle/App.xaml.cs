@@ -117,9 +117,9 @@ public partial class App : Application
 
         backgroundTaskRegisterService.CleanRegister();
 
-        backgroundTaskRegisterService.RegisterBackgroundTask("NotificationBackgroundTasks", "TimeInABottle.Background.NotificationBackgroundTasks", new TimeTrigger(15, false));
+        backgroundTaskRegisterService.RegisterBackgroundTask("NotificationBackgroundTasks", "TimeInABottle.Background.BackgroundTasks.NotificationBackgroundTasks", new TimeTrigger(15, false));
         //// trigger once a day
-        backgroundTaskRegisterService.RegisterBackgroundTask("WeatherDataFetchingBackgroundTask", "TimeInABottle.Background.WeatherDataFetchingBackgroundTask", new TimeTrigger(299, false));
+        //backgroundTaskRegisterService.RegisterBackgroundTask("WeatherDataFetchingBackgroundTask", "TimeInABottle.Background.BackgroundTasks.WeatherDataFetchingBackgroundTask", new TimeTrigger(299, false));
     }
 
 }

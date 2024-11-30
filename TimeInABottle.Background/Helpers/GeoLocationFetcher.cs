@@ -1,9 +1,12 @@
 ﻿using Windows.Devices.Geolocation;
 
-namespace TimeInABottle.Core.Helpers;
-public class GeoLocationFetcher
+
+using System.Threading.Tasks;
+using System;
+namespace TimeInABottle.Background.Helpers;
+public sealed class GeoLocationFetcher
 {
-    public static async Task<(double Latitude, double Longitude)> GetCoordinatesAsync()
+    public async Task<(double Latitude, double Longitude)> GetCoordinatesAsync()
     {
         var geolocator = new Geolocator
         {
