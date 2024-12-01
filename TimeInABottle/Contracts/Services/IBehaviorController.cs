@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 namespace TimeInABottle.Contracts.Services;
 public interface IBehaviorController
 {
-    public bool CanRun();
+    public Task<bool> CanRunAsync();
     public bool CanStop();
     public void Update();
-    public void Run();
+    public Task RunAsync();
 }

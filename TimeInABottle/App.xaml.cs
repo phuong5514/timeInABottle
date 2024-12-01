@@ -67,6 +67,7 @@ public partial class App : Application
             services.AddSingleton<IPageService, PageService>();
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<IBackgroundTaskRegisterService, BackgroundTaskRegisterService>();
+            services.AddSingleton<ILocationService, LocationService>();
             services.AddSingleton<IWeatherService, ApiWeatherService>();
             services.AddSingleton<IBehaviorController, ApiWeatherServiceBehaviorController>();
             services.AddSingleton<IStorageService, LocalStorageService>();
@@ -118,7 +119,7 @@ public partial class App : Application
         RegisterBackgroundTask();
 
         var behaviorController = App.GetService<IBehaviorController>();
-        behaviorController.Run();
+        await behaviorController.RunAsync();
     }
 
     private void RegisterBackgroundTask()

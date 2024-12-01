@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 namespace TimeInABottle.Contracts.Services;
 public interface ILocationService
 {
-    public (double Latitude, double Longitude) GetCoordinates();
+    public Task<(double Latitude, double Longitude)> GetCoordinatesAsync();
 }

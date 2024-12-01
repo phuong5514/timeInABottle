@@ -9,7 +9,7 @@ using Windows.Devices.Geolocation;
 namespace TimeInABottle.Services;
 public class LocationService : ILocationService
 {
-    public (double Latitude, double Longitude) GetCoordinates() => GetCoordinatesAsync().GetAwaiter().GetResult();
+    //public (double Latitude, double Longitude) GetCoordinates() => GetCoordinatesAsync().GetAwaiter().GetResult();
 
     public async Task<(double Latitude, double Longitude)> GetCoordinatesAsync()
     {

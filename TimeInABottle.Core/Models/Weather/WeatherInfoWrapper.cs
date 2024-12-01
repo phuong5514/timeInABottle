@@ -13,7 +13,7 @@ public class WeatherInfoWrapper
         _weatherInfo = weatherInfo;
     }
 
-    public TimeOnly Time => TimeOnly.Parse(_weatherInfo.Time);
+    public TimeOnly Time => TimeOnly.Parse(_weatherInfo.StartTime);
     public double Temperature => _weatherInfo.Values.Temperature;
     public string WeatherType => WeatherDictionary[_weatherInfo.Values.WeatherCode];
 
