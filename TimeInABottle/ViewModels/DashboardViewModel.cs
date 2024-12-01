@@ -45,7 +45,7 @@ public partial class DashboardViewModel : ObservableRecipient
             }
         }
     }
-    private void UpdateWeather(object sender, object e) => Weather = ApiWeatherService.Instance.GetCurrentWeather();
+    private void UpdateWeather(object sender, object e) => Weather = App.GetService<IWeatherService>().GetCurrentWeather();
 
     private void StartTimer()
     {

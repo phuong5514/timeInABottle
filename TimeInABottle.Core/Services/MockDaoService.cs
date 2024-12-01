@@ -24,6 +24,12 @@ public class MockDaoService : IDaoService, IDaoQueryService
         // daily tasks
         new DailyTask("Morning routines", "Brush teeth, wash face, boil water, make breakfast", new TimeOnly(5, 30), new TimeOnly(6, 0)),
         new DailyTask("Lunch", "Eat at: abc place with friends", new TimeOnly(11, 0), new TimeOnly(12, 0)),
+        new DailyTask("Test 12h", "Eat at: abc place with friends", new TimeOnly(12, 0), new TimeOnly(13, 0)),
+        new DailyTask("Test 13h", "Eat at: abc place with friends", new TimeOnly(13, 0), new TimeOnly(14, 0)),
+        new DailyTask("Test 14h", "Eat at: abc place with friends", new TimeOnly(14, 0), new TimeOnly(15, 0)),
+        new DailyTask("Test 15h", "Eat at: abc place with friends", new TimeOnly(15, 0), new TimeOnly(16, 0)),
+        new DailyTask("Test 16h", "Eat at: abc place with friends", new TimeOnly(16, 0), new TimeOnly(17, 0)),
+
         new DailyTask("Dinner and freetime", "none", new TimeOnly(17, 0), new TimeOnly(18, 30)),
         new DailyTask("Pre bedtime", "Brush teeth", new TimeOnly(21, 0), new TimeOnly(21, 30)),
 

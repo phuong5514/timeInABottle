@@ -8,6 +8,12 @@ using TimeInABottle.Core.Models.Weather;
 namespace TimeInABottle.Core.Contracts.Services;
 public interface IWeatherService
 {
+
+    public WeatherTimeline WeatherTimeline
+    {
+        get; set;
+    }
+
     WeatherInfo GetNextHourWeatherInfo();
     void LoadWeatherData();
 

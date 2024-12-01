@@ -17,23 +17,17 @@ public class ApiWeatherService : IWeatherService
     private double _latitude;
     private double _longitude;
 
+    public WeatherTimeline WeatherTimeline
+    {
+        get; set;
+    }
 
-    private WeatherTimeline _weatherTimeline;
 
-    // implement singleton pattern
-    private static readonly Lazy<ApiWeatherService> instance = new(() => new ApiWeatherService());
-
-    private ApiWeatherService() {
+    public ApiWeatherService() {
         // read secret.config file to get the API key and base URL
         ReadApiConfig();
     }
 
-    public static ApiWeatherService Instance => instance.Value;
-
-    public WeatherInfo TodayWeatherInfos
-    {
-        get; set;
-    }
 
     private async Task FetchTodayWeatherInfosAsync()
     {
@@ -47,7 +41,7 @@ public class ApiWeatherService : IWeatherService
         var response = await client.PostAsync(request);
 
         var weatherApiResponse = JsonConvert.DeserializeObject<WeatherApiResponse>(response.Content);
-        _weatherTimeline = weatherApiResponse.Data;
+        WeatherTimeline = weatherApiResponse.Data;
     }
 
     private void ReadApiConfig()
@@ -131,7 +125,7 @@ public class ApiWeatherService : IWeatherService
     public WeatherInfo GetNextHourWeatherInfo()
     {
         DateTime now = DateTime.Now;
-        foreach (var weather in _weatherTimeline.Intervals) {
+        foreach (var weather in WeatherTimeline.Intervals) {
             DateTime weatherDateTime = DateTime.Parse(weather.Time);
             if (weatherDateTime > now) {
                 return weather;
@@ -148,10 +142,10 @@ public class ApiWeatherService : IWeatherService
     public WeatherInfoWrapper GetCurrentWeather() { 
         DateTime now = DateTime.Now;
 
-        if (_weatherTimeline == null) {
+        if (WeatherTimeline == null) {
             return null;
         }
-        foreach (var weather in _weatherTimeline.Intervals)
+        foreach (var weather in WeatherTimeline.Intervals)
         {
             DateTime weatherDateTime = DateTime.Parse(weather.Time);
             // check if now and weatherDateTime is in the same hour
@@ -165,7 +159,7 @@ public class ApiWeatherService : IWeatherService
 
     public WeatherInfoWrapper GetNextHourWeather() {
         DateTime now = DateTime.Now;
-        foreach (var weather in _weatherTimeline.Intervals)
+        foreach (var weather in WeatherTimeline.Intervals)
         {
             DateTime weatherDateTime = DateTime.Parse(weather.Time);
             if (weatherDateTime > now)
