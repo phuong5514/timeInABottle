@@ -17,4 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TimeInABottle.Core\TimeInABottle.Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="BackgroundTasks\" />
+  </ItemGroup>
 </Project>

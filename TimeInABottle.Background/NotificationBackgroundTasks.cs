@@ -10,7 +10,7 @@ using Windows.UI.Notifications;
 using TimeInABottle.Core.Models.Tasks;
 
 
-namespace TimeInABottle.Background.BackgroundTasks;
+namespace TimeInABottle.Background;
 
 public sealed class NotificationBackgroundTasks : IBackgroundTask
 {

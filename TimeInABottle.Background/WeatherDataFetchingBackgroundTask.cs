@@ -9,7 +9,7 @@ using TimeInABottle.Core.Services;
 using TimeInABottle.Core.Helpers;
 using TimeInABottle.Background.Helpers;
 
-namespace TimeInABottle.Background.BackgroundTasks;
+namespace TimeInABottle.Background;
 public sealed class WeatherDataFetchingBackgroundTask : IBackgroundTask
 {
     private BackgroundTaskDeferral? _taskDeferral;
