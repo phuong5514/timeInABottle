@@ -29,20 +29,29 @@ public class ApiWeatherService : IWeatherService
     }
 
 
-    public async Task LoadWeatherDataAsync()
+    public async Task<bool> LoadWeatherDataAsync()
     {
-        var options = new RestClientOptions($"{_url}/timelines?apikey={_apiKey}");
-        var client = new RestClient(options);
-        var request = new RestRequest("");
-        request.AddHeader("accept", "application/json");
-        request.AddHeader("Accept-Encoding", "gzip");
+        try
+        {
+            var options = new RestClientOptions($"{_url}/timelines?apikey={_apiKey}");
+            var client = new RestClient(options);
+            var request = new RestRequest("");
+            request.AddHeader("accept", "application/json");
+            request.AddHeader("Accept-Encoding", "gzip");
 
-        request.AddJsonBody($"{{\"location\":\"{_latitude}, {_longitude}\",\"fields\":[\"temperature\",\"weatherCode\"],\"units\":\"metric\",\"timesteps\":[\"1h\"],\"startTime\":\"{_startTime}\",\"endTime\":\"{_endTime}\",\"timezone\":\"auto\"}}", false);
-        var response = await client.PostAsync(request);
+            request.AddJsonBody($"{{\"location\":\"{_latitude}, {_longitude}\",\"fields\":[\"temperature\",\"weatherCode\"],\"units\":\"metric\",\"timesteps\":[\"1h\"],\"startTime\":\"{_startTime}\",\"endTime\":\"{_endTime}\",\"timezone\":\"auto\"}}", false);
+            var response = await client.PostAsync(request);
 
-        var weatherApiResponse = JsonConvert.DeserializeObject<WeatherApiResponse>(response.Content);
-        var data = weatherApiResponse.Data;
-        WeatherTimeline = data.Timelines.First();
+            var weatherApiResponse = JsonConvert.DeserializeObject<WeatherApiResponse>(response.Content);
+            var data = weatherApiResponse.Data;
+            WeatherTimeline = data.Timelines.First();
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+        
     }
 
     private void ReadApiConfig()

@@ -50,29 +50,38 @@ public class ApiWeatherServiceBehaviorController : IBehaviorController
 
     private async Task<bool> IsLocationChangeSignificantAsync()
     {
-        var (newLatitude, newLongtitude) = await App.GetService<ILocationService>().GetCoordinatesAsync();
-        var storage = App.GetService<IStorageService>();
-
-        var keyLongtitude = "LastLongtitude";
-        var keyLatitude = "LastLatitude";
-
-        var lastLongtitude = storage.Read<double?>(keyLongtitude);
-        var lastLatitude = storage.Read<double?>(keyLatitude);
-
-        if (lastLongtitude == null || lastLatitude == null)
+        try
         {
-            UpdateLocation(newLatitude, newLongtitude);
-            return true;
-        }
-        else
-        {
-            if (GeoUtils.CalculateDistance((double)lastLongtitude, (double)lastLatitude, newLatitude, newLongtitude) > 1)
+            var (newLatitude, newLongtitude) = await App.GetService<ILocationService>().GetCoordinatesAsync();
+            var storage = App.GetService<IStorageService>();
+
+            var keyLongtitude = "LastLongtitude";
+            var keyLatitude = "LastLatitude";
+
+            var lastLongtitude = storage.Read<double?>(keyLongtitude);
+            var lastLatitude = storage.Read<double?>(keyLatitude);
+
+            if (lastLongtitude == null || lastLatitude == null)
             {
                 UpdateLocation(newLatitude, newLongtitude);
                 return true;
             }
-            return false; // Only run if the distance is greater than 1 km
+            else
+            {
+                if (GeoUtils.CalculateDistance((double)lastLongtitude, (double)lastLatitude, newLatitude, newLongtitude) > 1)
+                {
+                    UpdateLocation(newLatitude, newLongtitude);
+                    return true;
+                }
+                return false; // Only run if the distance is greater than 1 km
+            }
+
         }
+        catch (Exception) {
+            return false;
+        }
+        
+        
     }
 
     public bool CanStop()
@@ -107,8 +116,15 @@ public class ApiWeatherServiceBehaviorController : IBehaviorController
 
         if (await CanRunAsync())
         {
-            await weatherService.LoadWeatherDataAsync();
-            storage.Write(key, weatherService.WeatherTimeline);
+            if (await weatherService.LoadWeatherDataAsync())
+            {
+                storage.Write(key, weatherService.WeatherTimeline);
+            }
+            else {
+                weatherService.WeatherTimeline = storage.Read<WeatherTimeline>(key);
+            }
+            
+            
         }
         else
         {

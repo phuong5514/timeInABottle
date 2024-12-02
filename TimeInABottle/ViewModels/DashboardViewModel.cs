@@ -41,7 +41,7 @@ public partial class DashboardViewModel : ObservableRecipient
             if (_weather!= value)
             {
                 _weather = value;
-                OnPropertyChanged(nameof(WeatherInfoWrapper));
+                OnPropertyChanged(nameof(Weather));
             }
         }
     }
@@ -129,6 +129,7 @@ public partial class DashboardViewModel : ObservableRecipient
         getWeekTasks();
         UpdateDate();
         Time = TimeOnly.FromDateTime(DateTime.Now);
+        Weather = App.GetService<IWeatherService>().GetCurrentWeather();
         StartTimer();
     }
 

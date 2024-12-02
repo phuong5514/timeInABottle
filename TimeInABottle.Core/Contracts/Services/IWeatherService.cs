@@ -15,7 +15,7 @@ public interface IWeatherService
     }
 
     WeatherInfo GetNextHourWeatherInfo();
-    Task LoadWeatherDataAsync();
+    Task<bool> LoadWeatherDataAsync();
 
     public WeatherInfoWrapper GetCurrentWeather();
     public WeatherInfoWrapper GetNextHourWeather();
