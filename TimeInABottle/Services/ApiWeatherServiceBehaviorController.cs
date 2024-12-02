@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Windows.Storage;
+using Newtonsoft.Json;
 using TimeInABottle.Contracts.Services;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Models.Weather;
@@ -91,7 +92,11 @@ public class ApiWeatherServiceBehaviorController : IBehaviorController
 
     public void Update()
     {
-
+        // write to file so that the background task can access it
+        var filename = "weather.json";
+        var path = Path.Combine(AppContext.BaseDirectory, filename);
+        var weatherService = App.GetService<IWeatherService>();
+        File.WriteAllText(path, JsonConvert.SerializeObject(weatherService.WeatherTimeline));
     }
 
     public void UpdateLocation(double newLongtitude, double newLatitude)
@@ -119,16 +124,23 @@ public class ApiWeatherServiceBehaviorController : IBehaviorController
             if (await weatherService.LoadWeatherDataAsync())
             {
                 storage.Write(key, weatherService.WeatherTimeline);
+                Update();
             }
             else {
+
                 weatherService.WeatherTimeline = storage.Read<WeatherTimeline>(key);
+                // debug only
+                //Update();
             }
-            
-            
+
+
         }
         else
         {
             weatherService.WeatherTimeline = storage.Read<WeatherTimeline>(key);
+            // debug only
+            //Update();
+
         }
     }
 }

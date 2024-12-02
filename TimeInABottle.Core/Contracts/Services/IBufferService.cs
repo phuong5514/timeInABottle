@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace TimeInABottle.Core.Contracts.Services;
-internal interface IBufferService
+public interface IBufferService
 {
     public int BufferSize { get; }
     public void LoadBuffer();
