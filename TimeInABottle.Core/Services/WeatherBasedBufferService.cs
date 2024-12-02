@@ -1,28 +1,37 @@
 ﻿using TimeInABottle.Core.Contracts.Services;
+using TimeInABottle.Core.Models.Weather;
 
 
 namespace TimeInABottle.Core.Services;
-internal class WeatherBasedBufferService : IBufferService
+public class WeatherBasedBufferService : IBufferService
 {
-    private readonly IWeatherService _weatherService;
-
-    public WeatherBasedBufferService(IWeatherService weatherService)
-    {
-        _weatherService = weatherService;
-    }
-
     public int BufferSize {
         get; private set;
     }
 
-    public void LoadBuffer()
+    public async void LoadBuffer()
     {
-        var info = _weatherService.GetNextHourWeatherInfo();
-        var code = info.Values.WeatherCode;
+        try
+        {
 
-        BufferSize = DetermineBufferSize(code);
+            IWeatherService weatherService = new LocalStorageWeatherService();
+            await weatherService.LoadWeatherDataAsync();
+
+            var info = weatherService.GetNextHourWeatherInfo();
+            if (info == null)
+            {
+                throw new Exception("No weather info available");
+            }
+
+            var code = info.Values.WeatherCode;
+
+            BufferSize = DetermineBufferSize(code);
+        }
+        catch (Exception)
+        {
+            BufferSize = 0;
+        }
     }
-
 
     private int DetermineBufferSize(int weatherCode)
     {
@@ -41,4 +50,6 @@ internal class WeatherBasedBufferService : IBufferService
         };
     }
 
+
+  
 }

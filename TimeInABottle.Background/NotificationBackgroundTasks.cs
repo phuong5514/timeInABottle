@@ -17,6 +17,7 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
 
     private BackgroundTaskDeferral? _taskDeferral;
     private static IDaoService? _dao;
+    private static IBufferService? bufferService;
     private static FullObservableCollection<ITask>? _todayTasks;
     private static int _index;
 
@@ -35,6 +36,9 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
         _dao = new MockDaoService();
         LoadTasksList();
 
+        bufferService = new WeatherBasedBufferService();
+        bufferService.LoadBuffer();
+
         if (ShouldSendNotification())
         {
             SendToast();
@@ -46,9 +50,9 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
 
     private static void SendToast()
     {
-        if (_todayTasks == null || _todayTasks.Count == 0)
+        if (_todayTasks == null || _todayTasks.Count == 0 || bufferService == null)
         {
-            Debug.WriteLine("No tasks available to send notification.");
+            Debug.WriteLine("No tasks available to send notification or bufferService is null.");
             return;
         }
 
@@ -56,8 +60,24 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
 
         var toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastImageAndText02);
         var textElements = toastXml.GetElementsByTagName("text");
-        textElements[0].AppendChild(toastXml.CreateTextNode($"Up next at {taskToSend.Start}"));
+
+        var buffer = bufferService.BufferSize;
+        var adjustedStartTime = taskToSend.Start.AddMinutes(-buffer);
+        var notificationText = buffer > 0
+            ? $"Up next at {taskToSend.Start}, should start {buffer}m earlier at {adjustedStartTime}"
+            : $"Up next at {taskToSend.Start}";
+
+        textElements[0].AppendChild(toastXml.CreateTextNode(notificationText));
         textElements[1].AppendChild(toastXml.CreateTextNode($"{taskToSend.Name}"));
+
+        //var buffer = bufferService.BufferSize;
+        //if (buffer > 0) {
+        //    var adjustedStartTime = taskToSend.Start.AddMinutes(-bufferService.BufferSize);
+        //    textElements[0].AppendChild(toastXml.CreateTextNode($"Up next at {taskToSend.Start}, should start {buffer}m earlier at {adjustedStartTime}"));
+        //} else {
+        //    textElements[0].AppendChild(toastXml.CreateTextNode($"Up next at {taskToSend.Start}"));
+        //}
+        //textElements[1].AppendChild(toastXml.CreateTextNode($"{taskToSend.Name}"));
 
         ToastNotification notification = new(toastXml);
         ToastNotificationManager.CreateToastNotifier().Show(notification);
@@ -66,17 +86,20 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
     private bool ShouldSendNotification()
     {
         CallibrateIndex();
-        if (_todayTasks == null || _index >= _todayTasks.Count)
+        if (_todayTasks == null || _index >= _todayTasks.Count || bufferService == null)
         {
             return false;
         }
 
         var now = DateTime.Now;
+
         var taskStartTime = _todayTasks[_index].Start;
+        var adjustedStartTime = taskStartTime.AddMinutes(-bufferService.BufferSize);
+
         var currentTime = TimeOnly.FromDateTime(now);
         var notificationTime = currentTime.AddMinutes(60);
 
-        return taskStartTime <= notificationTime;
+        return adjustedStartTime <= notificationTime;
     }
 
     private void LoadTasksList()
