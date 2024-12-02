@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TimeInABottle.Core.Models;
+namespace TimeInABottle.Core.Models.Tasks;
 /// <summary>
 /// Represents an abstract repeated task that inherits from the ITask class.
 /// </summary>

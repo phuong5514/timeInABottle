@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:helpers="using:TimeInABottle.Helpers"
-    xmlns:models="using:TimeInABottle.Core.Models"
+    xmlns:task="using:TimeInABottle.Core.Models.Tasks"
     xmlns:xaml="using:Microsoft.UI.Xaml"
     mc:Ignorable="d">
 
@@ -13,8 +13,10 @@
         <helpers:TimeToGreetingConverter x:Key="TimeToGreetingConverter"/>
         <helpers:TimeToStringConverter x:Key="TimeToStringConverter"/>
         <helpers:TaskToNotificationConverter x:Key="TaskToNotificationConverter"/>
+        <helpers:WeatherInfoWrapperToTemperatureConverter x:Key="WeatherInfoWrapperToTemperatureConverter"/>
+        <helpers:WeatherInfoWrapperToWeatherTypeConverter x:Key="WeatherInfoWrapperToWeatherTypeConverter"/>
 
-        <DataTemplate x:Key ="ListItem" x:DataType="models:ITask">
+        <DataTemplate x:Key ="ListItem" x:DataType="task:ITask">
             <StackPanel Orientation="Horizontal" Style="{StaticResource BaseListItemContainerStyle}">
                 <TextBlock Style="{StaticResource ListSubTitleStyle}">
                     <Run Text="{x:Bind Start, Converter={StaticResource TimeToStringConverter}}"/>: <Run Text="{x:Bind Name}"/>
@@ -75,7 +77,13 @@
                 <StackPanel Orientation="Vertical" Padding="16, 8, 16, 8">
                     <!--TODO: data binding-->
                     <TextBlock Style="{StaticResource PageTitleStyle}" Text="{x:Bind ViewModel.Time, Mode=OneWay, Converter={StaticResource TimeToGreetingConverter}}"/>
-                    <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="{x:Bind ViewModel.Date, Mode=OneWay}"/>
+                    
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="{x:Bind ViewModel.Date, Mode=OneWay}"/>
+                        <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="{x:Bind ViewModel.Weather, Mode=OneWay, Converter={StaticResource WeatherInfoWrapperToTemperatureConverter}}"/>
+                        <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="{x:Bind ViewModel.Weather, Mode=OneWay, Converter={StaticResource WeatherInfoWrapperToWeatherTypeConverter}}"/>
+                    </StackPanel>
+                    
                 </StackPanel>
 
                 <StackPanel Orientation="Vertical" Grid.Column="1" Padding="16, 8, 16, 8">

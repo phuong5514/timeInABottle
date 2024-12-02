@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
 
 using TimeInABottle.Activation;
+using TimeInABottle.Background;
 using TimeInABottle.Contracts.Services;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Services;
@@ -66,6 +67,10 @@ public partial class App : Application
             services.AddSingleton<IPageService, PageService>();
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<IBackgroundTaskRegisterService, BackgroundTaskRegisterService>();
+            services.AddSingleton<ILocationService, LocationService>();
+            services.AddSingleton<IWeatherService, ApiWeatherService>();
+            services.AddSingleton<IBehaviorController, ApiWeatherServiceBehaviorController>();
+            services.AddSingleton<IStorageService, LocalStorageService>();
 
 
             // Core Services
@@ -88,6 +93,9 @@ public partial class App : Application
             services.AddTransient<ShellPage>();
             services.AddTransient<ShellViewModel>();
 
+            // BackgroundTask
+
+
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
         }).
@@ -109,6 +117,9 @@ public partial class App : Application
         await App.GetService<IActivationService>().ActivateAsync(args);
 
         RegisterBackgroundTask();
+
+        var behaviorController = App.GetService<IBehaviorController>();
+        await behaviorController.RunAsync();
     }
 
     private void RegisterBackgroundTask()

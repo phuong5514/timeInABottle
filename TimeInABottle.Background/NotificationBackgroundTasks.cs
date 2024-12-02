@@ -1,13 +1,13 @@
 ﻿using System.Diagnostics;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Helpers;
-using TimeInABottle.Core.Models;
 using TimeInABottle.Core.Services;
 using System;
 
 using Windows.ApplicationModel.Background;
 using Windows.Data.Xml.Dom;
 using Windows.UI.Notifications;
+using TimeInABottle.Core.Models.Tasks;
 
 
 namespace TimeInABottle.Background;
@@ -16,12 +16,17 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
 {
 
     private BackgroundTaskDeferral? _taskDeferral;
-    private static IDaoService _dao;
-    private static FullObservableCollection<ITask> _todayTasks;
+    private static IDaoService? _dao;
+    private static FullObservableCollection<ITask>? _todayTasks;
     private static int _index;
 
-    public async void Run(IBackgroundTaskInstance? taskInstance)
+    public void Run(IBackgroundTaskInstance? taskInstance)
     {
+        if (taskInstance == null)
+        {
+            throw new ArgumentNullException(nameof(taskInstance));
+        }
+
         taskInstance.Canceled += TaskInstance_Canceled;
         Debug.WriteLine("Background " + taskInstance.Task.Name + " Starting...");
         _taskDeferral = taskInstance.GetDeferral();
@@ -35,17 +40,22 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
             SendToast();
         }
 
-
         Debug.WriteLine("Background " + taskInstance.Task.Name + " Completed.");
         _taskDeferral.Complete();
     }
 
     private static void SendToast()
     {
+        if (_todayTasks == null || _todayTasks.Count == 0)
+        {
+            Debug.WriteLine("No tasks available to send notification.");
+            return;
+        }
+
         var taskToSend = _todayTasks[_index];
 
-        XmlDocument toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastImageAndText02);
-        XmlNodeList textElements = toastXml.GetElementsByTagName("text");
+        var toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastImageAndText02);
+        var textElements = toastXml.GetElementsByTagName("text");
         textElements[0].AppendChild(toastXml.CreateTextNode($"Up next at {taskToSend.Start}"));
         textElements[1].AppendChild(toastXml.CreateTextNode($"{taskToSend.Name}"));
 
@@ -56,13 +66,10 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
     private bool ShouldSendNotification()
     {
         CallibrateIndex();
-        if (_index >= _todayTasks.Count)
+        if (_todayTasks == null || _index >= _todayTasks.Count)
         {
             return false;
         }
-
-        //// debug only
-        //return true;
 
         var now = DateTime.Now;
         var taskStartTime = _todayTasks[_index].Start;
@@ -83,6 +90,11 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
 
     private void CallibrateIndex()
     {
+        if (_todayTasks == null)
+        {
+            return;
+        }
+
         for (_index = 0; _index < _todayTasks.Count; _index++)
         {
             if (_todayTasks[_index].Start > TimeOnly.FromDateTime(DateTime.Now))

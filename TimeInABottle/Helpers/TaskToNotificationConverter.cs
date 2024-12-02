@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Data;
-using TimeInABottle.Core.Models;
+using TimeInABottle.Core.Models.Tasks;
 
 namespace TimeInABottle.Helpers;
 /// <summary>

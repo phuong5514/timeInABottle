@@ -74,6 +74,14 @@
               </BackgroundTasks>
           </Extension>
 
+          <Extension Category="windows.backgroundTasks" EntryPoint="TimeInABottle.Background.WeatherDataFetchingBackgroundTask">
+              <BackgroundTasks>
+                  <Task Type="location"/>
+                  <Task Type="timer"/>
+                  <Task Type="general"/>
+              </BackgroundTasks>
+          </Extension>
+		  
 
 		
 
@@ -95,6 +103,13 @@
 			<InProcessServer>
 				<Path>WinRT.Host.dll</Path>
 				<ActivatableClass ActivatableClassId="TimeInABottle.Background.NotificationBackgroundTasks" ThreadingModel="both" />
+			</InProcessServer>
+		</Extension>
+		
+		<Extension Category="windows.activatableClass.inProcessServer">
+			<InProcessServer>
+				<Path>WinRT.Host.dll</Path>
+				<ActivatableClass ActivatableClassId="TimeInABottle.Background.WeatherDataFetchingBackgroundTask" ThreadingModel="both"/>
 			</InProcessServer>
 		</Extension>
     </Extensions>

@@ -12,6 +12,16 @@
     <CsWinRTWindowsMetadata>10.0.22621.0</CsWinRTWindowsMetadata>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Helpers\**" />
+    <EmbeddedResource Remove="Helpers\**" />
+    <None Remove="Helpers\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="BackgroundTaskExecuteController.cs" />
+    <Compile Remove="GeoLocationFetcher.cs" />
+    <Compile Remove="GeoUtils.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>

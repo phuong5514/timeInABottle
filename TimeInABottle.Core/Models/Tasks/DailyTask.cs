@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TimeInABottle.Core.Models;
+namespace TimeInABottle.Core.Models.Tasks;
 /// <summary>
 /// Represents a daily task that repeats every day.
 /// </summary>

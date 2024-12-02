@@ -4,11 +4,10 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using TimeInABottle.Core.Helpers;
 
 
-namespace TimeInABottle.Core.Models;
+namespace TimeInABottle.Core.Models.Tasks;
 /// <summary>
 /// Represents a task that occurs on a weekly basis.
 /// Inherits from the <see cref="IRepeatedTask"/> class.
@@ -44,7 +43,10 @@ public class WeeklyTask : IRepeatedTask
     /// <summary>
     /// Gets or sets the list of weekdays on which the task occurs.
     /// </summary>
-    public List<Values.Weekdays> WeekDays { get; set; }
+    public List<Values.Weekdays> WeekDays
+    {
+        get; set;
+    }
 
     /// <summary>
     /// Returns a string that represents the current weekly task.
