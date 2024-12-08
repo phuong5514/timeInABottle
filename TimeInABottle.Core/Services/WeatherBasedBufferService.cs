@@ -3,17 +3,26 @@ using TimeInABottle.Core.Models.Weather;
 
 
 namespace TimeInABottle.Core.Services;
+/// <summary>
+/// Service for determining buffer size based on weather conditions.
+/// </summary>
 public class WeatherBasedBufferService : IBufferService
 {
-    public int BufferSize {
+    /// <summary>
+    /// Gets the buffer size based on the weather conditions.
+    /// </summary>
+    public int BufferSize
+    {
         get; private set;
     }
 
+    /// <summary>
+    /// Loads the buffer size based on the next hour's weather information.
+    /// </summary>
     public async void LoadBuffer()
     {
         try
         {
-
             IWeatherService weatherService = new LocalStorageWeatherService();
             await weatherService.LoadWeatherDataAsync();
 
@@ -33,6 +42,11 @@ public class WeatherBasedBufferService : IBufferService
         }
     }
 
+    /// <summary>
+    /// Determines the buffer size based on the weather code.
+    /// </summary>
+    /// <param name="weatherCode">The weather code.</param>
+    /// <returns>The buffer size.</returns>
     private int DetermineBufferSize(int weatherCode)
     {
         var type = weatherCode / 1000;
@@ -49,7 +63,4 @@ public class WeatherBasedBufferService : IBufferService
             _ => 0 // Default for unknown
         };
     }
-
-
-  
 }
