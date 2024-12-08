@@ -9,10 +9,7 @@
         Name="ForegroundElement"
         HorizontalAlignment="Stretch"
         VerticalScrollMode="Enabled"
-        IsTabStop="True"
-        HorizontalScrollMode="Disabled"
-        VerticalScrollMode="Auto"
-        VerticalScrollBarVisibility="Auto">
+        IsTabStop="True">
         <StackPanel HorizontalAlignment="Left">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                 <!--

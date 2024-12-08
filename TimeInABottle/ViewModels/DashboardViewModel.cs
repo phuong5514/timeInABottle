@@ -24,7 +24,7 @@ public partial class DashboardViewModel : ObservableRecipient
                 _time = value;
                 OnPropertyChanged(nameof(Time)); // Notify UI of changes
 
-                UpdateNextTask(); // Update next task whenever time changes
+                UpdateNextTask();
             }
         }
     }
