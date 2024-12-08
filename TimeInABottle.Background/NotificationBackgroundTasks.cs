@@ -17,7 +17,7 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
 
     private BackgroundTaskDeferral? _taskDeferral;
     private static IDaoService? _dao;
-    private static IBufferService? bufferService;
+    private static IBufferService? _bufferService;
     private static FullObservableCollection<ITask>? _todayTasks;
     private static int _index;
 
@@ -29,45 +29,48 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
         }
 
         taskInstance.Canceled += TaskInstance_Canceled;
+
         Debug.WriteLine("Background " + taskInstance.Task.Name + " Starting...");
         _taskDeferral = taskInstance.GetDeferral();
 
-        Debug.WriteLine("Background " + taskInstance.Task.Name + " Starting...");
-        _dao = new MockDaoService();
-        LoadTasksList();
-
-        bufferService = new WeatherBasedBufferService();
-        bufferService.LoadBuffer();
-
-        if (ShouldSendNotification())
+        try
         {
-            SendToast();
-        }
+            _dao = new MockDaoService();
+            LoadTasksList();
 
-        Debug.WriteLine("Background " + taskInstance.Task.Name + " Completed.");
-        _taskDeferral.Complete();
+            _bufferService = new WeatherBasedBufferService();
+            _bufferService.LoadBuffer();
+
+            if (ShouldSendNotification()) SendToast();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error in background task: {ex.Message}");
+        }
+        finally
+        {
+            Debug.WriteLine($"Background {taskInstance.Task.Name} Completed.");
+            _taskDeferral.Complete();
+        }
     }
 
     private static void SendToast()
     {
-        if (_todayTasks == null || _todayTasks.Count == 0 || bufferService == null)
+        if (_todayTasks == null || _todayTasks.Count == 0 || _bufferService == null)
         {
             Debug.WriteLine("No tasks available to send notification or bufferService is null.");
             return;
         }
 
         var taskToSend = _todayTasks[_index];
+        var buffer = _bufferService.BufferSize;
+        if (buffer < 0) buffer = 0; // Ensure buffer size is non-negative
 
         var toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastImageAndText02);
         var textElements = toastXml.GetElementsByTagName("text");
 
-        var buffer = bufferService.BufferSize;
         var adjustedStartTime = taskToSend.Start.AddMinutes(-buffer);
-        var notificationText = buffer > 0
-            ? $"Up next at {taskToSend.Start}, should start {buffer}m earlier at {adjustedStartTime}"
-            : $"Up next at {taskToSend.Start}";
-
-        textElements[0].AppendChild(toastXml.CreateTextNode(notificationText));
+        textElements[0].AppendChild(toastXml.CreateTextNode($"Up next at {taskToSend.Start}, should start {buffer}m earlier at {adjustedStartTime}"));
         textElements[1].AppendChild(toastXml.CreateTextNode($"{taskToSend.Name}"));
 
         //var buffer = bufferService.BufferSize;
@@ -79,33 +82,36 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
         //}
         //textElements[1].AppendChild(toastXml.CreateTextNode($"{taskToSend.Name}"));
 
-        ToastNotification notification = new(toastXml);
-        ToastNotificationManager.CreateToastNotifier().Show(notification);
+        try
+        {
+            var notification = new ToastNotification(toastXml);
+            ToastNotificationManager.CreateToastNotifier().Show(notification);
+            Debug.WriteLine("Notification sent successfully.");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error sending notification: {ex.Message}");
+        }
+    
     }
 
     private bool ShouldSendNotification()
     {
         CallibrateIndex();
-        if (_todayTasks == null || _index >= _todayTasks.Count || bufferService == null)
-        {
-            return false;
-        }
+
+        if (_todayTasks == null || _index >= _todayTasks.Count || _bufferService == null) return false;
 
         var now = DateTime.Now;
+        var adjustedStartTime = _todayTasks[_index].Start.AddMinutes(-_bufferService.BufferSize);
 
-        var taskStartTime = _todayTasks[_index].Start;
-        var adjustedStartTime = taskStartTime.AddMinutes(-bufferService.BufferSize);
-
-        var currentTime = TimeOnly.FromDateTime(now);
-        var notificationTime = currentTime.AddMinutes(60);
-
-        return adjustedStartTime <= notificationTime;
+        return adjustedStartTime <= TimeOnly.FromDateTime(now).AddMinutes(60);
     }
 
     private void LoadTasksList()
     {
         if (_dao == null)
         {
+            Debug.WriteLine("DaoService is null. Cannot load tasks.");
             return;
         }
         _todayTasks = _dao.GetAllTasks();

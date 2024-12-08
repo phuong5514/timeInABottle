@@ -16,6 +16,10 @@ public interface INavigationService
     {
         get; set;
     }
+    string? CurrentPage
+    {
+        get;
+    }
 
     bool NavigateTo(string pageKey, object? parameter = null, bool clearNavigation = false);
 

@@ -3,6 +3,8 @@
 using Microsoft.UI.Xaml.Controls;
 using TimeInABottle.Core.Models.Filters;
 using TimeInABottle.ViewModels;
+using System;
+using System.Threading.Tasks;
 
 namespace TimeInABottle.Views;
 
@@ -122,27 +124,35 @@ public sealed partial class TaskListPage : Page
     /// <returns>A task that represents the asynchronous operation.</returns>
     private async Task CreateFilterDialog()
     {
-        var dialog = new ContentDialog
+        try
         {
-            Title = "Filters",
-            Content = new FilterDialogContent(),
-            PrimaryButtonText = "Add",
-            CloseButtonText = "Cancel",
-            XamlRoot = this.Content.XamlRoot, // Ensure the dialog is shown in the correct XAML root
-            DataContext = (TaskListViewModel)ViewModel
-        };
+            var dialog = new ContentDialog
+            {
+                Title = "Filters",
+                Content = new FilterDialogContent(),
+                PrimaryButtonText = "Add",
+                CloseButtonText = "Cancel",
+                XamlRoot = this.Content.XamlRoot, // Ensure the dialog is shown in the correct XAML root
+                DataContext = (TaskListViewModel)ViewModel
+            };
 
-        var result = await dialog.ShowAsync(); // went to this yet doesnt show dialog
-        if (result == ContentDialogResult.Primary)
-        {
-            ViewModel.AddFilterCommand.Execute(null);
-        }
-        else
-        {
-            // left blank
+            var result = await dialog.ShowAsync(); // went to this yet doesnt show dialog
+            if (result == ContentDialogResult.Primary)
+            {
+                ViewModel.AddFilterCommand.Execute(null);
+            }
+            else
+            {
+                // left blank
+            }
+
+            ViewModel.resetFilterChoice();
         }
 
-        ViewModel.resetFilterChoice();
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error showing filter dialog: {ex.Message}");
+        }
     }
 
     /// <summary>
@@ -161,8 +171,6 @@ public sealed partial class TaskListPage : Page
     /// <summary>
     /// Handles the click event of the Filter button.
     /// </summary>
-    /// <param name="sender">The event sender.</param>
-    /// <param name="e">The event arguments.</param>
     private void OnFilterButtonClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         _ = CreateFilterDialog();

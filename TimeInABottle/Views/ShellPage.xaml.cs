@@ -2,12 +2,13 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-
+using Microsoft.UI.Xaml.Navigation;
 using TimeInABottle.Contracts.Services;
 using TimeInABottle.Helpers;
 using TimeInABottle.ViewModels;
 
 using Windows.System;
+using Windows.UI.Core;
 
 namespace TimeInABottle.Views;
 
@@ -34,7 +35,11 @@ public sealed partial class ShellPage : Page
         App.MainWindow.SetTitleBar(AppTitleBar);
         App.MainWindow.Activated += MainWindow_Activated;
         AppTitleBarText.Text = "AppDisplayName".GetLocalized();
+        // Subscribe to navigation event to update title dynamically
+        ViewModel.NavigationService.Navigated += OnNavigated;
     }
+
+    private void OnNavigated(object sender, NavigationEventArgs e) => throw new NotImplementedException();
 
     private void OnLoaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
@@ -44,10 +49,14 @@ public sealed partial class ShellPage : Page
         KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoBack));
     }
 
-    private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
+    private void MainWindow_Activated(object sender, Microsoft.UI.Xaml.WindowActivatedEventArgs args)
     {
         App.AppTitlebar = AppTitleBarText as UIElement;
+
+        // Update title bar opacity based on window activation state
+        AppTitleBar.Opacity = args.WindowActivationState == WindowActivationState.Deactivated ? 0.5 : 1.0;
     }
+
 
     private void NavigationViewControl_DisplayModeChanged(NavigationView sender, NavigationViewDisplayModeChangedEventArgs args)
     {
@@ -81,5 +90,11 @@ public sealed partial class ShellPage : Page
         var result = navigationService.GoBack();
 
         args.Handled = result;
+    }
+    private void OnNavigated(object sender, object e)
+    {
+        // Dynamically update the title based on the current page
+        var currentPage = ViewModel.NavigationService.CurrentPage;
+        AppTitleBarText.Text = !string.IsNullOrEmpty(currentPage) ? currentPage : "Default Title";
     }
 }
