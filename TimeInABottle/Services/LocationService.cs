@@ -7,15 +7,10 @@ using TimeInABottle.Contracts.Services;
 using Windows.Devices.Geolocation;
 
 namespace TimeInABottle.Services;
-/// <summary>
-/// Service for obtaining the device's geographic location.
-/// </summary>
 public class LocationService : ILocationService
 {
-    /// <summary>
-    /// Asynchronously gets the geographic coordinates (latitude and longitude) of the device.
-    /// </summary>
-    /// <returns>A task that represents the asynchronous operation. The task result contains a tuple with the latitude and longitude.</returns>
+    //public (double Latitude, double Longitude) GetCoordinates() => GetCoordinatesAsync().GetAwaiter().GetResult();
+
     public async Task<(double Latitude, double Longitude)> GetCoordinatesAsync()
     {
         var geolocator = new Geolocator

@@ -8,23 +8,13 @@ using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Models.Weather;
 
 namespace TimeInABottle.Core.Services;
-/// <summary>
-/// Service for loading weather data from local storage.
-/// </summary>
 internal class LocalStorageWeatherService : IWeatherService
 {
-    /// <summary>
-    /// Gets or sets the weather timeline.
-    /// </summary>
     public WeatherTimeline WeatherTimeline
     {
         get; set;
     }
 
-    /// <summary>
-    /// Asynchronously loads weather data from local storage.
-    /// </summary>
-    /// <returns>A task that represents the asynchronous operation. The task result contains a boolean indicating whether the data was loaded successfully.</returns>
     public Task<bool> LoadWeatherDataAsync()
     {
         var filename = "weather.json";

@@ -1,77 +1,71 @@
-﻿/** 
- * 
- * Unused
-**/ 
+﻿using System.Collections.Specialized;
+using System.Web;
 
+using Microsoft.Windows.AppNotifications;
 
-//using System.Collections.Specialized;
-//using System.Web;
+using TimeInABottle.Contracts.Services;
+using TimeInABottle.ViewModels;
 
-//using Microsoft.Windows.AppNotifications;
+namespace TimeInABottle.Notifications;
 
-//using TimeInABottle.Contracts.Services;
-//using TimeInABottle.ViewModels;
+public class AppNotificationService : IAppNotificationService
+{
+    private readonly INavigationService _navigationService;
 
-//namespace TimeInABottle.Notifications;
+    public AppNotificationService(INavigationService navigationService)
+    {
+        _navigationService = navigationService;
+    }
 
-//public class AppNotificationService : IAppNotificationService
-//{
-//    private readonly INavigationService _navigationService;
+    ~AppNotificationService()
+    {
+        Unregister();
+    }
 
-//    public AppNotificationService(INavigationService navigationService)
-//    {
-//        _navigationService = navigationService;
-//    }
+    public void Initialize()
+    {
+        AppNotificationManager.Default.NotificationInvoked += OnNotificationInvoked;
 
-//    ~AppNotificationService()
-//    {
-//        Unregister();
-//    }
+        AppNotificationManager.Default.Register();
+    }
 
-//    public void Initialize()
-//    {
-//        AppNotificationManager.Default.NotificationInvoked += OnNotificationInvoked;
+    public void OnNotificationInvoked(AppNotificationManager sender, AppNotificationActivatedEventArgs args)
+    {
+        // TODO: Handle notification invocations when your app is already running.
 
-//        AppNotificationManager.Default.Register();
-//    }
+        //// // Navigate to a specific page based on the notification arguments.
+        //// if (ParseArguments(args.Argument)["action"] == "Settings")
+        //// {
+        ////    App.MainWindow.DispatcherQueue.TryEnqueue(() =>
+        ////    {
+        ////        _navigationService.NavigateTo(typeof(SettingsViewModel).FullName!);
+        ////    });
+        //// }
 
-//    public void OnNotificationInvoked(AppNotificationManager sender, AppNotificationActivatedEventArgs args)
-//    {
-//        // TODO: Handle notification invocations when your app is already running.
+        App.MainWindow.DispatcherQueue.TryEnqueue(() =>
+        {
+            App.MainWindow.ShowMessageDialogAsync("TODO: Handle notification invocations when your app is already running.", "Notification Invoked");
 
-//        //// // Navigate to a specific page based on the notification arguments.
-//        //// if (ParseArguments(args.Argument)["action"] == "Settings")
-//        //// {
-//        ////    App.MainWindow.DispatcherQueue.TryEnqueue(() =>
-//        ////    {
-//        ////        _navigationService.NavigateTo(typeof(SettingsViewModel).FullName!);
-//        ////    });
-//        //// }
+            App.MainWindow.BringToFront();
+        });
+    }
 
-//        App.MainWindow.DispatcherQueue.TryEnqueue(() =>
-//        {
-//            App.MainWindow.ShowMessageDialogAsync("TODO: Handle notification invocations when your app is already running.", "Notification Invoked");
+    public bool Show(string payload)
+    {
+        var appNotification = new AppNotification(payload);
 
-//            App.MainWindow.BringToFront();
-//        });
-//    }
+        AppNotificationManager.Default.Show(appNotification);
 
-//    public bool Show(string payload)
-//    {
-//        var appNotification = new AppNotification(payload);
+        return appNotification.Id != 0;
+    }
 
-//        AppNotificationManager.Default.Show(appNotification);
+    public NameValueCollection ParseArguments(string arguments)
+    {
+        return HttpUtility.ParseQueryString(arguments);
+    }
 
-//        return appNotification.Id != 0;
-//    }
-
-//    public NameValueCollection ParseArguments(string arguments)
-//    {
-//        return HttpUtility.ParseQueryString(arguments);
-//    }
-
-//    public void Unregister()
-//    {
-//        AppNotificationManager.Default.Unregister();
-//    }
-//}
+    public void Unregister()
+    {
+        AppNotificationManager.Default.Unregister();
+    }
+}

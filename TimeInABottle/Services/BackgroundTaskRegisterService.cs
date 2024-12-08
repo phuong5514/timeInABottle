@@ -10,18 +10,8 @@ using Windows.UI.Notifications;
 using WinUIEx.Messaging;
 
 namespace TimeInABottle.Services;
-/// <summary>
-/// Service for registering and managing background tasks.
-/// </summary>
 public class BackgroundTaskRegisterService : IBackgroundTaskRegisterService
 {
-    /// <summary>
-    /// Registers a background task with the specified name, entry point, and trigger.
-    /// </summary>
-    /// <param name="name">The name of the background task.</param>
-    /// <param name="entrypoint">The entry point of the background task.</param>
-    /// <param name="trigger">The trigger for the background task.</param>
-    /// <exception cref="ArgumentException">Thrown when the task name is null or empty.</exception>
     public async void RegisterBackgroundTask(string name, string entrypoint, IBackgroundTrigger trigger)
     {
         if (string.IsNullOrEmpty(name))
@@ -31,7 +21,7 @@ public class BackgroundTaskRegisterService : IBackgroundTaskRegisterService
 
         if (CheckBackgroundTaskRegistration(name))
         {
-            return;
+            return; 
         }
 
         var permission = await CheckPermissionAsync();
@@ -49,14 +39,6 @@ public class BackgroundTaskRegisterService : IBackgroundTaskRegisterService
         builder.Register();
     }
 
-    /// <summary>
-    /// Registers a background task with the specified name, entry point, trigger, and condition.
-    /// </summary>
-    /// <param name="name">The name of the background task.</param>
-    /// <param name="entrypoint">The entry point of the background task.</param>
-    /// <param name="trigger">The trigger for the background task.</param>
-    /// <param name="condition">The condition for the background task.</param>
-    /// <exception cref="ArgumentException">Thrown when the task name is null or empty.</exception>
     public async void RegisterBackgroundTaskAsync(string name, string entrypoint, IBackgroundTrigger trigger, IBackgroundCondition condition)
     {
         if (string.IsNullOrEmpty(name))
@@ -75,6 +57,7 @@ public class BackgroundTaskRegisterService : IBackgroundTaskRegisterService
             return;
         }
 
+
         var builder = new BackgroundTaskBuilder
         {
             Name = name,
@@ -85,10 +68,6 @@ public class BackgroundTaskRegisterService : IBackgroundTaskRegisterService
         builder.Register();
     }
 
-    /// <summary>
-    /// Unregisters a background task with the specified name.
-    /// </summary>
-    /// <param name="name">The name of the background task to unregister.</param>
     public void UnregisterBackgroundTask(string name)
     {
         for (var i = 0; i < BackgroundTaskRegistration.AllTasks.Count; i++)
@@ -102,22 +81,13 @@ public class BackgroundTaskRegisterService : IBackgroundTaskRegisterService
         }
     }
 
-    /// <summary>
-    /// Unregisters all background tasks.
-    /// </summary>
     public void CleanRegister()
     {
-        foreach (var task in BackgroundTaskRegistration.AllTasks)
-        {
+        foreach (var task in BackgroundTaskRegistration.AllTasks) {
             task.Value.Unregister(true);
         }
     }
 
-    /// <summary>
-    /// Checks if a background task with the specified name is already registered.
-    /// </summary>
-    /// <param name="name">The name of the background task.</param>
-    /// <returns>True if the background task is already registered; otherwise, false.</returns>
     protected bool CheckBackgroundTaskRegistration(string name)
     {
         var taskRegistered = false;
@@ -133,10 +103,6 @@ public class BackgroundTaskRegisterService : IBackgroundTaskRegisterService
         return taskRegistered;
     }
 
-    /// <summary>
-    /// Checks if the application has permission to run background tasks.
-    /// </summary>
-    /// <returns>A task that represents the asynchronous operation. The task result contains a boolean indicating whether the application has permission to run background tasks.</returns>
     protected async Task<bool> CheckPermissionAsync()
     {
         var accessStatus = await BackgroundExecutionManager.RequestAccessAsync();
