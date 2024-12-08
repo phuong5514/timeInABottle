@@ -6,6 +6,9 @@ using Newtonsoft.Json;
 using TimeInABottle.Core.Helpers;
 
 namespace TimeInABottle.Core.Services;
+/// <summary>
+/// Service for fetching weather data from an API.
+/// </summary>
 public class ApiWeatherService : IWeatherService
 {
     private string _url;
@@ -17,18 +20,27 @@ public class ApiWeatherService : IWeatherService
     private double _latitude;
     private double _longitude;
 
+    /// <summary>
+    /// Gets or sets the weather timeline.
+    /// </summary>
     public WeatherTimeline WeatherTimeline
     {
         get; set;
     }
 
-
-    public ApiWeatherService() {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ApiWeatherService"/> class.
+    /// </summary>
+    public ApiWeatherService()
+    {
         // read secret.config file to get the API key and base URL
         ReadApiConfig();
     }
 
-
+    /// <summary>
+    /// Asynchronously loads weather data from the API.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a boolean indicating whether the data was loaded successfully.</returns>
     public async Task<bool> LoadWeatherDataAsync()
     {
         try
@@ -51,13 +63,16 @@ public class ApiWeatherService : IWeatherService
         {
             return false;
         }
-        
     }
 
+    /// <summary>
+    /// Reads the API configuration from the secret.config file.
+    /// </summary>
+    /// <exception cref="FileNotFoundException">Thrown when the configuration file is not found.</exception>
+    /// <exception cref="Exception">Thrown when there is an error reading the configuration file.</exception>
     private void ReadApiConfig()
     {
         var configPath = Path.Combine(AppContext.BaseDirectory, "secret.config");
-
 
         if (!File.Exists(configPath))
         {
@@ -92,7 +107,6 @@ public class ApiWeatherService : IWeatherService
             {
                 throw new Exception("TimeZone not found in configuration file.");
             }
-
 
             // Read the StartTime
             var startTimeString = config.Element("WeatherApi")?.Element("StartTime")?.Value;
@@ -131,7 +145,4 @@ public class ApiWeatherService : IWeatherService
             throw new Exception("Error reading configuration file.", ex);
         }
     }
-
-   
-
 }

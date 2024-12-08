@@ -1,71 +1,77 @@
-﻿using System.Collections.Specialized;
-using System.Web;
+﻿/** 
+ * 
+ * Unused
+**/ 
 
-using Microsoft.Windows.AppNotifications;
 
-using TimeInABottle.Contracts.Services;
-using TimeInABottle.ViewModels;
+//using System.Collections.Specialized;
+//using System.Web;
 
-namespace TimeInABottle.Notifications;
+//using Microsoft.Windows.AppNotifications;
 
-public class AppNotificationService : IAppNotificationService
-{
-    private readonly INavigationService _navigationService;
+//using TimeInABottle.Contracts.Services;
+//using TimeInABottle.ViewModels;
 
-    public AppNotificationService(INavigationService navigationService)
-    {
-        _navigationService = navigationService;
-    }
+//namespace TimeInABottle.Notifications;
 
-    ~AppNotificationService()
-    {
-        Unregister();
-    }
+//public class AppNotificationService : IAppNotificationService
+//{
+//    private readonly INavigationService _navigationService;
 
-    public void Initialize()
-    {
-        AppNotificationManager.Default.NotificationInvoked += OnNotificationInvoked;
+//    public AppNotificationService(INavigationService navigationService)
+//    {
+//        _navigationService = navigationService;
+//    }
 
-        AppNotificationManager.Default.Register();
-    }
+//    ~AppNotificationService()
+//    {
+//        Unregister();
+//    }
 
-    public void OnNotificationInvoked(AppNotificationManager sender, AppNotificationActivatedEventArgs args)
-    {
-        // TODO: Handle notification invocations when your app is already running.
+//    public void Initialize()
+//    {
+//        AppNotificationManager.Default.NotificationInvoked += OnNotificationInvoked;
 
-        //// // Navigate to a specific page based on the notification arguments.
-        //// if (ParseArguments(args.Argument)["action"] == "Settings")
-        //// {
-        ////    App.MainWindow.DispatcherQueue.TryEnqueue(() =>
-        ////    {
-        ////        _navigationService.NavigateTo(typeof(SettingsViewModel).FullName!);
-        ////    });
-        //// }
+//        AppNotificationManager.Default.Register();
+//    }
 
-        App.MainWindow.DispatcherQueue.TryEnqueue(() =>
-        {
-            App.MainWindow.ShowMessageDialogAsync("TODO: Handle notification invocations when your app is already running.", "Notification Invoked");
+//    public void OnNotificationInvoked(AppNotificationManager sender, AppNotificationActivatedEventArgs args)
+//    {
+//        // TODO: Handle notification invocations when your app is already running.
 
-            App.MainWindow.BringToFront();
-        });
-    }
+//        //// // Navigate to a specific page based on the notification arguments.
+//        //// if (ParseArguments(args.Argument)["action"] == "Settings")
+//        //// {
+//        ////    App.MainWindow.DispatcherQueue.TryEnqueue(() =>
+//        ////    {
+//        ////        _navigationService.NavigateTo(typeof(SettingsViewModel).FullName!);
+//        ////    });
+//        //// }
 
-    public bool Show(string payload)
-    {
-        var appNotification = new AppNotification(payload);
+//        App.MainWindow.DispatcherQueue.TryEnqueue(() =>
+//        {
+//            App.MainWindow.ShowMessageDialogAsync("TODO: Handle notification invocations when your app is already running.", "Notification Invoked");
 
-        AppNotificationManager.Default.Show(appNotification);
+//            App.MainWindow.BringToFront();
+//        });
+//    }
 
-        return appNotification.Id != 0;
-    }
+//    public bool Show(string payload)
+//    {
+//        var appNotification = new AppNotification(payload);
 
-    public NameValueCollection ParseArguments(string arguments)
-    {
-        return HttpUtility.ParseQueryString(arguments);
-    }
+//        AppNotificationManager.Default.Show(appNotification);
 
-    public void Unregister()
-    {
-        AppNotificationManager.Default.Unregister();
-    }
-}
+//        return appNotification.Id != 0;
+//    }
+
+//    public NameValueCollection ParseArguments(string arguments)
+//    {
+//        return HttpUtility.ParseQueryString(arguments);
+//    }
+
+//    public void Unregister()
+//    {
+//        AppNotificationManager.Default.Unregister();
+//    }
+//}
