@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace TimeInABottle.Contracts.Services;
-public class INotificationService
+public interface ILocationService
 {
+    public Task<(double Latitude, double Longitude)> GetCoordinatesAsync();
 }

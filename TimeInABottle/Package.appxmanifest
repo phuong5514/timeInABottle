@@ -8,12 +8,13 @@
   xmlns:genTemplate="http://schemas.microsoft.com/appx/developer/templatestudio"
   xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
   xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
-  IgnorableNamespaces="uap rescap genTemplate">
+  xmlns:uap4="http://schemas.microsoft.com/appx/manifest/uap/windows10/4"
+  IgnorableNamespaces="uap rescap genTemplate uap4">
 
   <Identity
     Name="00ddbb54-326e-4348-bff5-cc5dc433c04b"
     Publisher="CN=LENOVO"
-    Version="1.0.0.0" />
+    Version="1.0.1.0" />
     
   <mp:PhoneIdentity PhoneProductId="00ddbb54-326e-4348-bff5-cc5dc433c04b" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
     
@@ -65,13 +66,53 @@
                   </com:ExeServer>
               </com:ComServer>
           </com:Extension>
+          <Extension Category="windows.backgroundTasks" EntryPoint="TimeInABottle.Background.NotificationBackgroundTasks">
+              <BackgroundTasks>
+                  <Task Type="general"/>
+                  <Task Type="pushNotification"/>
+				  <Task Type="timer" />
+              </BackgroundTasks>
+          </Extension>
+
+          <Extension Category="windows.backgroundTasks" EntryPoint="TimeInABottle.Background.WeatherDataFetchingBackgroundTask">
+              <BackgroundTasks>
+                  <Task Type="location"/>
+                  <Task Type="timer"/>
+                  <Task Type="general"/>
+              </BackgroundTasks>
+          </Extension>
+		  
+
+		
+
+		  
       </Extensions>
     </Application>
   </Applications>
 
   <Capabilities>
     <rescap:Capability Name="runFullTrust" />
+    <Capability Name="internetClient"/>
+    <uap4:Capability Name="offlineMapsManagement"/>
+    <DeviceCapability Name="location"/>
   </Capabilities>
+
+
+    <Extensions>
+		<Extension Category="windows.activatableClass.inProcessServer">
+			<InProcessServer>
+				<Path>WinRT.Host.dll</Path>
+				<ActivatableClass ActivatableClassId="TimeInABottle.Background.NotificationBackgroundTasks" ThreadingModel="both" />
+			</InProcessServer>
+		</Extension>
+		
+		<Extension Category="windows.activatableClass.inProcessServer">
+			<InProcessServer>
+				<Path>WinRT.Host.dll</Path>
+				<ActivatableClass ActivatableClassId="TimeInABottle.Background.WeatherDataFetchingBackgroundTask" ThreadingModel="both"/>
+			</InProcessServer>
+		</Extension>
+    </Extensions>
 
   <genTemplate:Metadata>
     <genTemplate:Item Name="generator" Value="Template Studio"/>

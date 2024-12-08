@@ -5,7 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
-    xmlns:models="using:TimeInABottle.Core.Models"
+    xmlns:task="using:TimeInABottle.Core.Models.Tasks"
+    xmlns:filters="using:TimeInABottle.Core.Models.Filters"
     xmlns:views="using:TimeInABottle.Views"
     xmlns:behaviors="using:TimeInABottle.Behaviors"
     xmlns:helpers="using:TimeInABottle.Helpers"
@@ -15,8 +16,9 @@
         <!--
         <helpers:TimeRangeConverter x:Key="TimeRangeConverter" />
         -->
-        
-        <DataTemplate x:Key="ItemTemplate" x:DataType="models:ITask">
+        <helpers:FilterToStringConverter x:Key="FilterConverter"/>
+
+        <DataTemplate x:Key="ItemTemplate" x:DataType="task:ITask">
             <Grid Height="60">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -78,9 +80,26 @@
                     Text="{Binding}" />
             </Grid>
         </DataTemplate>
+
+        
+
+        <DataTemplate x:Key="FilterTagTemplate" x:DataType="filters:IFilter">
+            <TextBlock
+                Text="{Binding Converter= {StaticResource FilterConverter}}"
+                ToolTipService.ToolTip="Click to remove filter criteria"/>
+        </DataTemplate>
+
+
+
     </Page.Resources>
 
     <Grid x:Name="ContentArea">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
@@ -89,12 +108,85 @@
                         <AdaptiveTrigger MinWindowWidth="641" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="Header.Visibility" Value="Visible"/>
                         <Setter Target="ListDetailsViewControl.ListHeaderTemplate" Value="{StaticResource ListHeaderTemplate}" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="CompactView">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!-- Hide the header in compact view -->
+                        <Setter Target="Header.Visibility" Value="Collapsed"/>
+                        <Setter Target="ListDetailsViewControl.ListHeaderTemplate" Value="{StaticResource MinimalListHeaderTemplate}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
+
+        <!--Header: search bar, filter button, command buttons-->
+        <Grid Grid.Row="0" Margin="{StaticResource MediumMargin}" x:Name="Header" Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="312"/>
+                <!-- Column for the search bar -->
+                <ColumnDefinition Width="*" />
+                <!-- Column for the action buttons -->
+            </Grid.ColumnDefinitions>
+
+            <!-- Search bar -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Padding="{StaticResource MediumPadding}">
+                
+                <AutoSuggestBox
+                    Width="240"
+                    x:Name="Searchbar"
+                    PlaceholderText="Search"
+                    QueryIcon="Find"
+                    TextChanged="AutoSuggestBox_TextChanged"
+                    QuerySubmitted="AutoSuggestBox_QuerySubmitted"
+                    SuggestionChosen="AutoSuggestBox_SuggestionChosen" />
+
+                <Button Click="OnFilterButtonClick" Margin="{StaticResource SmallLeftMargin}">
+                    <FontIcon Glyph="&#xE71C;" FontSize="20" />
+                    <!-- Filter icon (filter) -->
+                </Button>
+            </StackPanel>
+            
+
+            <!-- Action buttons stack -->
+            <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" Grid.Column="1" HorizontalAlignment="Right">
+                <AppBarButton Icon="Add" Label="Add"/>
+                <AppBarButton Icon="Edit" Label="Edit"/>
+                <AppBarButton Icon="Delete" Label="Delete"/>
+                <CommandBar.SecondaryCommands>
+                    <AppBarButton Icon="Setting" Label="Settings">
+                        <AppBarButton.KeyboardAccelerators>
+                            <KeyboardAccelerator Modifiers="Control" Key="I" />
+                        </AppBarButton.KeyboardAccelerators>
+                    </AppBarButton>
+                </CommandBar.SecondaryCommands>
+            </CommandBar>
+            
+        </Grid>
+
+        <!--Filters list-->
+        <GridView
+            Grid.Row="1"
+            x:Name="FilterGrid"
+            ItemsSource="{x:Bind ViewModel.DisplayedFilters}"
+            ItemTemplate="{StaticResource FilterTagTemplate}"
+            IsItemClickEnabled="True"
+            ItemClick="FilterGrid_ItemClick"
+            SelectionMode="Single"
+            Background="{StaticResource CardBackgroundFillColorDefault}"
+            Padding="0"/>
+
+
+
+        <!-- List view with details -->
         <controls:ListDetailsView
+            Grid.Row="2"
             x:Uid="TaskList"
             x:Name="ListDetailsViewControl"
             BackButtonBehavior="Manual"
@@ -106,6 +198,9 @@
             ListHeaderTemplate="{StaticResource MinimalListHeaderTemplate}"
             NoSelectionContentTemplate="{StaticResource NoSelectionContentTemplate}"
             SelectedItem="{x:Bind ViewModel.Selected, Mode=TwoWay}"
-            ViewStateChanged="OnViewStateChanged"/>
+            ViewStateChanged="OnViewStateChanged"
+            />
     </Grid>
+
+  
 </Page>

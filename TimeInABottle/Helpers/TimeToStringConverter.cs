@@ -7,11 +7,24 @@ using Microsoft.UI.Xaml.Data;
 using TimeInABottle.Core.Models;
 
 namespace TimeInABottle.Helpers;
+/// <summary>
+/// Converts a TimeOnly object to a string representation and vice versa.
+/// </summary>
 public class TimeToStringConverter : IValueConverter
 {
-    public object Convert(object value, Type targetType, object parameter, string language) {
+    /// <summary>
+    /// Converts a TimeOnly object to a string representation in the format "HH:mm".
+    /// </summary>
+    /// <param name="value">The TimeOnly object to convert.</param>
+    /// <param name="targetType">The type of the target property. This parameter is not used.</param>
+    /// <param name="parameter">An optional parameter to be used in the converter logic. This parameter is not used.</param>
+    /// <param name="language">The language of the conversion. This parameter is not used.</param>
+    /// <returns>A string representation of the TimeOnly object in the format "HH:mm".</returns>
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
         var timeValue = (TimeOnly)value;
-        if (timeValue == null) {
+        if (timeValue == null)
+        {
             return new ArgumentNullException();
         }
 
@@ -22,7 +35,16 @@ public class TimeToStringConverter : IValueConverter
         return result;
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, string language) {
+    /// <summary>
+    /// Converts a string representation of time in the format "HH:mm" back to a TimeOnly object.
+    /// </summary>
+    /// <param name="value">The string representation of time to convert.</param>
+    /// <param name="targetType">The type of the target property. This parameter is not used.</param>
+    /// <param name="parameter">An optional parameter to be used in the converter logic. This parameter is not used.</param>
+    /// <param name="language">The language of the conversion. This parameter is not used.</param>
+    /// <returns>A TimeOnly object representing the time.</returns>
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
         var stringValue = (string)value;
         if (string.IsNullOrEmpty(stringValue))
         {

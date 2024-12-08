@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TimeInABottle.Core.Models;
+using TimeInABottle.Core.Models.Tasks;
 
 namespace TimeInABottle.Core.Helpers;
+/// <summary>
+/// Provides methods to sort a list of tasks by their start time.
+/// </summary>
 internal class TaskListSorter
 {
-    // selection sort
+    /// <summary>
+    /// Sorts the list of tasks in ascending order by their start time using selection sort.
+    /// </summary>
+    /// <param name="list">The list of tasks to sort.</param>
     public void SortByTimeAscending(List<ITask> list)
     {
         for (var i = 0; i < list.Count; i++)
@@ -30,6 +36,10 @@ internal class TaskListSorter
         }
     }
 
+    /// <summary>
+    /// Sorts the list of tasks in descending order by their start time using selection sort.
+    /// </summary>
+    /// <param name="list">The list of tasks to sort.</param>
     public void SortByTimeDescending(List<ITask> list)
     {
         for (var i = 0; i < list.Count; i++)
@@ -51,5 +61,5 @@ internal class TaskListSorter
         }
     }
 
-    //public void SortByDay
+    // TODO: Implement SortByDay method
 }
