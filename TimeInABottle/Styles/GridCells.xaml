@@ -24,8 +24,10 @@
     </Style>
 
     <Style x:Key="CellContentFlyout" TargetType="StackPanel" BasedOn="{StaticResource CellContentStackPanel}">
-        <Setter Property="Width" Value="120"/>
-        <Setter Property="Height" Value="80"/>
+        <Setter Property="Width" Value="auto"/>
+        <Setter Property="Height" Value="auto"/>
+        <Setter Property="MaxHeight" Value="360"/>
+        <Setter Property="MaxWidth" Value="200"/>
     </Style>
 
 
