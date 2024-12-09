@@ -1,11 +1,16 @@
-﻿using System.Drawing;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Drawing;
+using Microsoft.Extensions.Logging;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
 using TimeInABottle.Core.Models.Tasks;
 using TimeInABottle.Core.Services;
 using TimeInABottle.ViewModels;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TimeInABottle.Views;
 
@@ -52,7 +57,7 @@ public sealed partial class DashboardPage : Page
                 for (var day = 0; day < 7; day++)
                 {
                     var dayEvent = CreateTaskGrid(task);
-                    Grid.SetColumn(dayEvent, day); // Set column based on the day
+                    Grid.SetColumn((FrameworkElement)dayEvent, day); // Set column based on the day
                     CalendarContainer.Children.Add(dayEvent);
                 }
             }
@@ -62,7 +67,7 @@ public sealed partial class DashboardPage : Page
                 foreach (var day in weeklyTask.WeekDays)
                 {
                     var weeklyEvent = CreateTaskGrid(task);
-                    Grid.SetColumn(weeklyEvent, (int)day); // Convert weekday to column index
+                    Grid.SetColumn((FrameworkElement)weeklyEvent, (int)day); // Convert weekday to column index
                     CalendarContainer.Children.Add(weeklyEvent);
                 }
             }
@@ -74,7 +79,7 @@ public sealed partial class DashboardPage : Page
 
                 var monthlyEvent = CreateTaskGrid(task);
 
-                Grid.SetColumn(monthlyEvent, dayOfWeek);
+                Grid.SetColumn((FrameworkElement)monthlyEvent, dayOfWeek);
                 CalendarContainer.Children.Add(monthlyEvent);
             }
             else if (task is NonRepeatedTask nonRepeatedTask)
@@ -87,7 +92,7 @@ public sealed partial class DashboardPage : Page
 
                 var nonRepeatedEvent = CreateTaskGrid(task);
 
-                Grid.SetColumn(nonRepeatedEvent, dayOfWeek);
+                Grid.SetColumn((FrameworkElement)nonRepeatedEvent, dayOfWeek);
                 CalendarContainer.Children.Add(nonRepeatedEvent);
             }
         }
@@ -98,20 +103,54 @@ public sealed partial class DashboardPage : Page
     /// </summary>
     /// <param name="task">The task to create a grid for.</param>
     /// <returns>A grid representing the task.</returns>
-    private Grid CreateTaskGrid(ITask task)
+    private UIElement CreateTaskGrid(ITask task)
     {
-        var eventGrid = new Grid
+        // Retrieve the DataTemplate
+        var template = (DataTemplate)Resources["CalendarTaskItem"];
+        if (template == null)
         {
-            Style = (Style)Application.Current.Resources["CellContent"],
-            Background = new SolidColorBrush(Colors.Blue), // Customize as needed
-        };
+            throw new InvalidOperationException("DataTemplate 'CalendarTaskItem' not found in resources.");
+        }
+
+        // Load the template content
+        var content = (FrameworkElement)template.LoadContent();
+        
+        // Set the data context to bind the task
+        content.DataContext = task;
+
+        // Retrieve the appropriate row and row span
         var row = CalculateRow(task.Start);
         var rowSpan = CalculateRowSpan(task.Start, task.End);
 
-        Grid.SetRow(eventGrid, row);
-        Grid.SetRowSpan(eventGrid, rowSpan);
+        // Apply grid row and row span properties
+        Grid.SetRow(content, row);
+        Grid.SetRowSpan(content, rowSpan);
 
-        return eventGrid;
+        return content;
+    }
+
+    private UIElement CreateTaskGridFlyout(ITask task)
+    {
+        // Retrieve the DataTemplate
+        var template = (DataTemplate)Resources["CalendarTaskItemFlyout"];
+        if (template == null)
+        {
+            throw new InvalidOperationException("DataTemplate 'CalendarTaskItemFlyout' not found in resources.");
+        }
+        // Load the template content
+        try
+        {
+            var content = (FrameworkElement)template.LoadContent();
+            content.DataContext = task;
+            return content;
+        }
+        catch
+        {
+            return null;
+        }
+
+        // Set the data context to bind the task
+
     }
 
     /// <summary>
@@ -218,7 +257,7 @@ public sealed partial class DashboardPage : Page
     /// <returns>The style.</returns>
     private static Style GetStyle(string key)
     {
-        return (Style)Application.Current.Resources[key];
+        return (Style)Microsoft.UI.Xaml.Application.Current.Resources[key];
     }
 
     /// <summary>
@@ -244,4 +283,19 @@ public sealed partial class DashboardPage : Page
             ColumnDefinitionSideBar.Width = new GridLength(0);
         }
     }
+
+    private void CalendarTaskItem_PointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+    {
+        var task = (ITask)((FrameworkElement)sender).DataContext;
+        var content = CreateTaskGridFlyout(task);
+
+        var flyout = new Flyout
+        {
+            Content = content
+        };
+
+        FlyoutBase.SetAttachedFlyout((FrameworkElement)sender, flyout);
+        FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
+    }
+
 }
