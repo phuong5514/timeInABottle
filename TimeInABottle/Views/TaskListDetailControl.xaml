@@ -10,7 +10,7 @@
         HorizontalAlignment="Stretch"
         VerticalScrollMode="Enabled"
         IsTabStop="True">
-        <StackPanel HorizontalAlignment="Left">
+        <StackPanel HorizontalAlignment="Left" Padding="{StaticResource SmallPadding}">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                 <!--
                 <FontIcon

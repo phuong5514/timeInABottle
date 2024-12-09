@@ -161,14 +161,16 @@
                 
 			</Grid>
 
-			<!-- SideBar: chua cac nut thuc hien cac chuc nang -->
+			<!-- SideBar: cac cong viec trong ngay -->
             <StackPanel x:Name="SideBar" Grid.Column="1" Grid.RowSpan="2" Orientation="Vertical">
                 <TextBlock Style="{StaticResource VerticalListTitleStyle}">Today's Tasks</TextBlock>
 
-                <ListView Name="TaskList"
-                    ItemsSource="{x:Bind ViewModel.TodayTasks, Mode=OneWay}"
-                    ItemTemplate="{StaticResource ListItem}">   
-                </ListView>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <ListView Name="TaskList"
+                        ItemsSource="{x:Bind ViewModel.TodayTasks, Mode=OneWay}"
+                        ItemTemplate="{StaticResource ListItem}">
+                    </ListView>
+                </ScrollViewer>
             </StackPanel>
 
 			<!-- CalendarContainer: chua lich chinh -->
