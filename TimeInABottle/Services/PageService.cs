@@ -14,7 +14,6 @@ public class PageService : IPageService
 
     public PageService()
     {
-        Configure<MainViewModel, MainPage>();
         Configure<SettingsViewModel, SettingsPage>();
         Configure<DashboardViewModel, DashboardPage>();
         Configure<TaskListViewModel, TaskListPage>();
