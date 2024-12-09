@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
 using TimeInABottle.Core.Models.Tasks;
@@ -105,7 +106,7 @@ public sealed partial class DashboardPage : Page
     private UIElement CreateTaskGrid(ITask task)
     {
         // Retrieve the DataTemplate
-        var template = (DataTemplate)CalendarContainer.Resources["CalendarTaskItem"];
+        var template = (DataTemplate)Resources["CalendarTaskItem"];
         if (template == null)
         {
             throw new InvalidOperationException("DataTemplate 'CalendarTaskItem' not found in resources.");
@@ -114,9 +115,6 @@ public sealed partial class DashboardPage : Page
         // Load the template content
         var content = (FrameworkElement)template.LoadContent();
         
-        // Set content background color
-        
-
         // Set the data context to bind the task
         content.DataContext = task;
 
@@ -129,6 +127,30 @@ public sealed partial class DashboardPage : Page
         Grid.SetRowSpan(content, rowSpan);
 
         return content;
+    }
+
+    private UIElement CreateTaskGridFlyout(ITask task)
+    {
+        // Retrieve the DataTemplate
+        var template = (DataTemplate)Resources["CalendarTaskItemFlyout"];
+        if (template == null)
+        {
+            throw new InvalidOperationException("DataTemplate 'CalendarTaskItemFlyout' not found in resources.");
+        }
+        // Load the template content
+        try
+        {
+            var content = (FrameworkElement)template.LoadContent();
+            content.DataContext = task;
+            return content;
+        }
+        catch
+        {
+            return null;
+        }
+
+        // Set the data context to bind the task
+
     }
 
     /// <summary>
@@ -261,4 +283,19 @@ public sealed partial class DashboardPage : Page
             ColumnDefinitionSideBar.Width = new GridLength(0);
         }
     }
+
+    private void CalendarTaskItem_PointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+    {
+        var task = (ITask)((FrameworkElement)sender).DataContext;
+        var content = CreateTaskGridFlyout(task);
+
+        var flyout = new Flyout
+        {
+            Content = content
+        };
+
+        FlyoutBase.SetAttachedFlyout((FrameworkElement)sender, flyout);
+        FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
+    }
+
 }

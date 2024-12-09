@@ -23,6 +23,58 @@
                 </TextBlock>
             </StackPanel>
         </DataTemplate>
+
+        <DataTemplate x:Key="CalendarTaskItem" x:DataType="task:ITask">
+            <StackPanel 
+                Orientation="Vertical"
+                Style="{StaticResource CellContentStackPanel}"
+                PointerEntered="CalendarTaskItem_PointerEntered"
+            >
+                <StackPanel.Background>
+                    <AcrylicBrush 
+                        TintColor="#e67c73"
+                        TintOpacity="0.6"
+                        FallbackColor="#fff"
+                        AlwaysUseFallback="False" />
+                </StackPanel.Background>
+
+                <TextBlock Style="{StaticResource CalendarTaskItem}">
+                    <Run Text="{x:Bind Name}"/>
+                </TextBlock>
+                
+                <TextBlock Style="{StaticResource CalendarTaskItem}">
+                    <Run Text="{x:Bind Start, Converter={StaticResource TimeToStringConverter}}"/> - <Run Text="{x:Bind End, Converter={StaticResource TimeToStringConverter}}"/>
+                </TextBlock>
+                
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="CalendarTaskItemFlyout" x:DataType="task:ITask">
+            <StackPanel 
+                Orientation="Vertical"
+                Style="{StaticResource CellContentStackPanel}"
+                >   
+                <StackPanel.Background>
+                    <AcrylicBrush 
+                    TintColor="#e67c73"
+                    TintOpacity="0.6"
+                    FallbackColor="#fff"
+                    AlwaysUseFallback="False" />    
+                </StackPanel.Background>
+
+                <TextBlock>
+                    <Run Text="{x:Bind Name}"/>
+                </TextBlock>
+
+                <TextBlock>
+                    <Run Text="{x:Bind Start, Converter={StaticResource TimeToStringConverter}}"/> - <Run Text="{x:Bind End, Converter={StaticResource TimeToStringConverter}}"/>
+                </TextBlock>
+
+                <TextBlock>
+                    <Run Text="{x:Bind Description}"/>
+                </TextBlock>
+            </StackPanel>
+        </DataTemplate>
     </Page.Resources>
 
     <Grid x:Name="ContentArea">
@@ -120,26 +172,6 @@
 			<!-- CalendarContainer: chua lich chinh -->
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Grid.Row="1">
                 <Grid x:Name="CalendarContainer">
-                    <Grid.Resources>
-                        <DataTemplate x:Key="CalendarTaskItem" x:DataType="task:ITask">
-                            <StackPanel Orientation="Vertical" Style="{StaticResource CellContentStackPanel}">
-                                <StackPanel.Background>
-                                    <AcrylicBrush 
-                                          TintColor="#e67c73"
-                                          TintOpacity="0.6"
-                                          FallbackColor="#fff"
-                                          AlwaysUseFallback="False" />
-                                </StackPanel.Background>
-                                
-                                <TextBlock Style="{StaticResource CalendarTaskItem}">
-                                    <Run Text="{x:Bind Name}"/>
-                                </TextBlock>
-                                <TextBlock Style="{StaticResource CalendarTaskItem}">
-                                    <Run Text="{x:Bind Start, Converter={StaticResource TimeToStringConverter}}"/> - <Run Text="{x:Bind End, Converter={StaticResource TimeToStringConverter}}"/>
-                                </TextBlock>
-                            </StackPanel>
-                        </DataTemplate>
-                    </Grid.Resources>
                 </Grid>
             </ScrollViewer>
             <!-- Basic Grid structure, we will add rows and columns in the code-behind -->
