@@ -62,16 +62,14 @@ public class MockDaoService : IDaoService, IDaoQueryService
     /// <returns>A collection of tasks that match the filter criteria, sorted as specified.</returns>
     public FullObservableCollection<ITask> CustomQuery(IFilter filter, bool isSortAscending)
     {
-        var result = TaskList.Where(task => filter.MatchesCriteria(task)).ToList();
+        var result = TaskList
+            .Where(task => filter.MatchesCriteria(task))
+            .OrderBy(task => task.Start)
+            .ToList();
 
-        var sorter = new TaskListSorter();
-        if (isSortAscending)
+        if (!isSortAscending)
         {
-            sorter.SortByTimeAscending(result);
-        }
-        else
-        {
-            sorter.SortByTimeDescending(result);
+            result.Reverse();
         }
 
         return new FullObservableCollection<ITask>(result);
