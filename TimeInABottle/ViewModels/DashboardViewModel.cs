@@ -124,7 +124,7 @@ public partial class DashboardViewModel : ObservableRecipient
 
     public void Innit()
     {
-        _dao = new MockDaoService();
+        _dao = App.GetService<IDaoService>();
         getTodayTasks();
         getWeekTasks();
         UpdateDate();
