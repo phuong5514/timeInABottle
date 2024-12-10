@@ -36,6 +36,10 @@ public class MonthlyTask : IRepeatedTask
         Date = date;
     }
 
+    public MonthlyTask() : base() // For EF Core
+    {
+    }
+
     /// <summary>
     /// Returns a string that represents the current <see cref="MonthlyTask"/>.
     /// </summary>

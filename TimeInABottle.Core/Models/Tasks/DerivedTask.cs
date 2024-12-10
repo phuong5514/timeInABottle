@@ -22,6 +22,10 @@ public class DerivedTask : ITask
     {
     }
 
+    public DerivedTask() : base() // For EF Core
+    {
+    }
+
     /// <summary>
     /// Returns a string that represents the current object.
     /// </summary>

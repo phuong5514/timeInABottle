@@ -12,7 +12,7 @@ namespace TimeInABottle.Core.Contracts.Services;
 /// Interface for DAO query services.
 /// Provides methods to perform custom queries on tasks.
 /// </summary>
-public interface IDaoQueryService
+public partial interface IDaoService
 {
     /// <summary>
     /// Executes a custom query based on the provided filter and sorting order.

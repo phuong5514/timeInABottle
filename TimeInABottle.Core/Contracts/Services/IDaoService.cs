@@ -10,7 +10,7 @@ namespace TimeInABottle.Core.Contracts.Services;
 /// <summary>
 /// Interface for Data Access Object (DAO) service to manage tasks.
 /// </summary>
-public interface IDaoService
+public partial interface IDaoService
 {
     /// <summary>
     /// Retrieves all tasks.

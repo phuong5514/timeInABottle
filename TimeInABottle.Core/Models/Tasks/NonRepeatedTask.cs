@@ -25,6 +25,10 @@ public class NonRepeatedTask : ITask
         Date = date;
     }
 
+    public NonRepeatedTask() : base() // For EF Core
+    {
+    }
+
     /// <summary>
     /// Gets the date of the task.
     /// The date cannot be set in the past and must be within 3 months from the current date.

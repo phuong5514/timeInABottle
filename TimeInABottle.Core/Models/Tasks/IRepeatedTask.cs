@@ -11,6 +11,10 @@ namespace TimeInABottle.Core.Models.Tasks;
 /// </summary>
 public abstract class IRepeatedTask : ITask
 {
+    protected IRepeatedTask() : base() // For EF Core
+    {
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="IRepeatedTask"/> class.
     /// </summary>

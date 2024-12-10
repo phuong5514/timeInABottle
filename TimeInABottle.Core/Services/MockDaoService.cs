@@ -16,7 +16,7 @@ namespace TimeInABottle.Core.Services;
 /// MockDaoService provides a mock implementation of IDaoService and IDaoQueryService interfaces.
 /// It manages a list of tasks and provides methods to query and sort these tasks.
 /// </summary>
-public class MockDaoService : IDaoService, IDaoQueryService
+public class MockDaoService : IDaoService
 {
     // List of tasks managed by the service
     private readonly List<ITask> _taskList = new()
@@ -54,6 +54,8 @@ public class MockDaoService : IDaoService, IDaoQueryService
     // Property to get the list of tasks
     public List<ITask> TaskList { get => _taskList; private set { } }
 
+    public void AddTask(ITask task) => throw new NotImplementedException();
+
     /// <summary>
     /// CustomQuery filters and sorts the task list based on the provided filter and sort order.
     /// </summary>
@@ -62,20 +64,21 @@ public class MockDaoService : IDaoService, IDaoQueryService
     /// <returns>A collection of tasks that match the filter criteria, sorted as specified.</returns>
     public FullObservableCollection<ITask> CustomQuery(IFilter filter, bool isSortAscending)
     {
-        var result = TaskList.Where(task => filter.MatchesCriteria(task)).ToList();
+        var result = TaskList
+            .Where(task => filter.MatchesCriteria(task))
+            .OrderBy(task => task.Start)
+            .ToList();
 
-        var sorter = new TaskListSorter();
-        if (isSortAscending)
+        if (!isSortAscending)
         {
-            sorter.SortByTimeAscending(result);
-        }
-        else
-        {
-            sorter.SortByTimeDescending(result);
+            result.Reverse();
         }
 
         return new FullObservableCollection<ITask>(result);
     }
+
+    public void DeleteTask(ITask task) => throw new NotImplementedException();
+    public void UpdateTask(ITask task) => throw new NotImplementedException();
 
     /// <summary>
     /// GetAllTasks retrieves all tasks and sorts them in ascending order.
