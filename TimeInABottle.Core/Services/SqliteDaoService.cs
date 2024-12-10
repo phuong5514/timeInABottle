@@ -9,9 +9,9 @@ using TimeInABottle.Core.Models.Filters;
 using TimeInABottle.Core.Models.Tasks;
 
 namespace TimeInABottle.Core.Services;
-internal class SqliteDaoService : IDaoService, IDaoQueryService
+public class SqliteDaoService : IDaoService
 {
-    private TaskContext _db;
+    private readonly TaskContext _db;
 
     public SqliteDaoService()
     {

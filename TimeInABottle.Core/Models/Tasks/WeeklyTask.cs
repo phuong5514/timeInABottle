@@ -26,6 +26,10 @@ public class WeeklyTask : IRepeatedTask
     {
     }
 
+    public WeeklyTask() : base() // For EF Core
+    {
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="WeeklyTask"/> class.
     /// </summary>

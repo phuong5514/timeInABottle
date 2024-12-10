@@ -23,6 +23,10 @@ public class DailyTask : IRepeatedTask
     {
     }
 
+    public DailyTask() : base() // For EF Core
+    {
+    }
+
     /// <summary>
     /// Returns a string that represents the current object.
     /// </summary>

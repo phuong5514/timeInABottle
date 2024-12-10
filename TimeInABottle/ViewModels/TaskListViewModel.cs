@@ -243,16 +243,8 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
     /// </summary>
     private void LoadTask()
     {
-        if (_daoService is IDaoQueryService DaoService)
-        {
-            var newTasks = DaoService.CustomQuery(_filter, !_isInvertOrder);
-            AddTasks(newTasks);
-        }
-        else
-        {
-            var allTasks = _daoService.GetAllTasks();
-            AddTasks(allTasks);
-        }
+        var newTasks = _daoService.CustomQuery(_filter, !_isInvertOrder);
+        AddTasks(newTasks);
     }
 
     /// <summary>
@@ -278,6 +270,13 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
     /// </summary>
     public void EnsureItemSelected()
     {
-        Selected ??= Tasks.First();
+        try
+        {
+            Selected ??= Tasks.First();
+        }
+        catch (InvalidOperationException)
+        {
+            Selected = null;
+        }
     }
 }

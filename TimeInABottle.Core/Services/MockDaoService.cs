@@ -16,7 +16,7 @@ namespace TimeInABottle.Core.Services;
 /// MockDaoService provides a mock implementation of IDaoService and IDaoQueryService interfaces.
 /// It manages a list of tasks and provides methods to query and sort these tasks.
 /// </summary>
-public class MockDaoService : IDaoService, IDaoQueryService
+public class MockDaoService : IDaoService
 {
     // List of tasks managed by the service
     private readonly List<ITask> _taskList = new()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,16 @@ public abstract class ITask : INotifyPropertyChanged
         Description = description;
         Start = start;
         End = end;
+    }
+
+    protected ITask() // For EF Core
+    {
+    }
+
+    [Key]
+    public int Id
+    {
+        get; set;
     }
 
     /// <summary>

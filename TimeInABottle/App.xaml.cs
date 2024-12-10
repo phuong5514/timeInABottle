@@ -74,7 +74,8 @@ public partial class App : Application
 
 
             // Core Services
-            services.AddSingleton<IDaoService, MockDaoService>();
+            //services.AddSingleton<IDaoService, MockDaoService>();
+            services.AddSingleton<IDaoService, SqliteDaoService>();
             services.AddSingleton<ISampleDataService, SampleDataService>();
             services.AddSingleton<IFileService, FileService>();
 
