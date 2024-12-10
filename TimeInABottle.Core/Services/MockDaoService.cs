@@ -54,6 +54,8 @@ public class MockDaoService : IDaoService
     // Property to get the list of tasks
     public List<ITask> TaskList { get => _taskList; private set { } }
 
+    public void AddTask(ITask task) => throw new NotImplementedException();
+
     /// <summary>
     /// CustomQuery filters and sorts the task list based on the provided filter and sort order.
     /// </summary>
@@ -74,6 +76,9 @@ public class MockDaoService : IDaoService
 
         return new FullObservableCollection<ITask>(result);
     }
+
+    public void DeleteTask(ITask task) => throw new NotImplementedException();
+    public void UpdateTask(ITask task) => throw new NotImplementedException();
 
     /// <summary>
     /// GetAllTasks retrieves all tasks and sorts them in ascending order.

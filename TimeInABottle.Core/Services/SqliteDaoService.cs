@@ -71,4 +71,21 @@ public class SqliteDaoService : IDaoService
         return new FullObservableCollection<ITask>(todayTasks);
     }
 
+
+    public void AddTask(ITask task) { 
+        _db.Tasks.Add(task);
+        _db.SaveChanges();
+    }
+
+    // potentially deprecated and unused
+    public void UpdateTask(ITask task) { 
+        _db.Tasks.Update(task);
+        _db.SaveChanges();
+    }
+
+    public void DeleteTask(ITask task)
+    {
+        _db.Tasks.Remove(task);
+        _db.SaveChanges();
+    }
 }
