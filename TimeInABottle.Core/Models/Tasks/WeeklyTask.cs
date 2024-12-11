@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Helpers;
 
 
@@ -57,4 +58,7 @@ public class WeeklyTask : IRepeatedTask
     /// </summary>
     /// <returns>A string that represents the current weekly task.</returns>
     public override string ToString() => "WeeklyTask";
+    public override object Accept(GetTaskSpecialtiesVisitor visitor) { 
+        return visitor.VisitWeeklyTask(this);
+    }
 }

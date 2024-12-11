@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TimeInABottle.Core.Contracts.Services;
+using TimeInABottle.Core.Helpers;
 
 namespace TimeInABottle.Core.Models.Tasks;
 /// <summary>
@@ -45,4 +47,7 @@ public class MonthlyTask : IRepeatedTask
     /// </summary>
     /// <returns>A string that represents the current <see cref="MonthlyTask"/>.</returns>
     public override string ToString() => "MonthlyTask";
+    public override object Accept(GetTaskSpecialtiesVisitor visitor) {
+        return visitor.VisitMonthlyTask(this);   
+    }
 }

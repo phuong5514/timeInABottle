@@ -5,6 +5,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Query.Internal;
+using TimeInABottle.Core.Contracts.Services;
+using TimeInABottle.Core.Helpers;
 
 namespace TimeInABottle.Core.Models.Tasks;
 
@@ -86,4 +89,8 @@ public abstract class ITask : INotifyPropertyChanged
     /// Gets the formatted time range of the task.
     /// </summary>
     public string FormattedTime => $"{Start.ToString()} - {End.ToString()}";
+    
+    public string TypeName() => GetType().Name;
+
+    public abstract object Accept(GetTaskSpecialtiesVisitor visitor);
 }

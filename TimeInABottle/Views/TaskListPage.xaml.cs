@@ -96,6 +96,7 @@ public sealed partial class TaskListPage : Page
     /// <param name="e">The event arguments.</param>
     private void OnAddButtonClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
+        _ = CreateAddDialog();
     }
 
     /// <summary>
@@ -105,6 +106,7 @@ public sealed partial class TaskListPage : Page
     /// <param name="e">The event arguments.</param>
     private void OnDeleteButtonClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
+        _ = CreateDeleteConfirmationDialog();
     }
 
     /// <summary>
@@ -114,6 +116,7 @@ public sealed partial class TaskListPage : Page
     /// <param name="e">The event arguments.</param>
     private void OnChangeButtonClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
+        _ = CreateEditDialog();
     }
 
     /// <summary>
@@ -143,6 +146,80 @@ public sealed partial class TaskListPage : Page
         }
 
         ViewModel.resetFilterChoice();
+    }
+
+    private async Task CreateAddDialog()
+    {
+
+        var dialogViewModel = new CUDDialogViewModel();
+        var dialog = new ContentDialog
+        {
+            Title = "Add Task",
+            Content = new AddTaskDialogControl(),
+            PrimaryButtonText = "Add",
+            CloseButtonText = "Cancel",
+            XamlRoot = this.Content.XamlRoot, // Ensure the dialog is shown in the correct XAML root
+            DataContext = dialogViewModel
+        };
+
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary)
+        {
+            dialogViewModel.SaveChanges();
+        }
+        else
+        {
+            // left blank
+        }
+    }
+
+    private async Task CreateEditDialog()
+    {
+        if (ViewModel.Selected == null)
+        {
+            return;
+        }
+        var dialogViewModel = new CUDDialogViewModel(ViewModel.Selected);
+        var dialog = new ContentDialog
+        {
+            Title = "Edit Task",
+            Content = new EditTaskDialogControl(),
+            PrimaryButtonText = "Edit",
+            CloseButtonText = "Cancel",
+            XamlRoot = this.Content.XamlRoot, // Ensure the dialog is shown in the correct XAML root
+            DataContext = dialogViewModel
+        };
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary)
+        {
+            dialogViewModel.SaveChanges();
+        }
+        else
+        {
+            // left blank
+        }
+    }
+
+    private async Task CreateDeleteConfirmationDialog()
+    {
+        //var dialog = new ContentDialog
+        //{
+        //    Title = "Delete Task",
+        //    Content = new DeleteConfirmationDialogControl(),
+        //    PrimaryButtonText = "Delete",
+        //    CloseButtonText = "Cancel",
+        //    XamlRoot = this.Content.XamlRoot, // Ensure the dialog is shown in the correct XAML root
+        //    //DataContext = ViewModel
+        //};
+        //var result = await dialog.ShowAsync();
+        //if (result == ContentDialogResult.Primary)
+        //{
+        //    //ViewModel.DeleteTaskCommand.Execute(null);
+        //}
+        //else
+        //{
+        //    // left blank
+        //}
     }
 
     /// <summary>

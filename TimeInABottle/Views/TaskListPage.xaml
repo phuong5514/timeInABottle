@@ -156,9 +156,9 @@
 
             <!-- Action buttons stack -->
             <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" Grid.Column="1" HorizontalAlignment="Right">
-                <AppBarButton Icon="Add" Label="Add"/>
-                <AppBarButton Icon="Edit" Label="Edit"/>
-                <AppBarButton Icon="Delete" Label="Delete"/>
+                <AppBarButton Icon="Add" Label="Add" Click="OnAddButtonClick"/>
+                <AppBarButton Icon="Edit" Label="Edit" Click="OnChangeButtonClick"/>
+                <AppBarButton Icon="Delete" Label="Delete" Click="OnDeleteButtonClick"/>
                 <CommandBar.SecondaryCommands>
                     <AppBarButton Icon="Setting" Label="Settings">
                         <AppBarButton.KeyboardAccelerators>
