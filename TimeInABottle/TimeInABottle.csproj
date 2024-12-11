@@ -24,8 +24,6 @@
     <None Remove="Styles\GridCells.xaml" />
     <None Remove="Styles\ListItems.xaml" />
     <None Remove="Styles\MarginsAndPaddingValues.xaml" />
-    <None Remove="Views\AddTaskDialogControl.xaml" />
-    <None Remove="Views\EditTaskDialogControl.xaml" />
     <None Remove="Views\FilterDialogContent.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -63,10 +61,7 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Page Update="Views\EditTaskDialogControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Views\AddTaskDialogControl.xaml">
+    <Page Update="Views\TaskEditorDialogControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Styles\Buttons.xaml">

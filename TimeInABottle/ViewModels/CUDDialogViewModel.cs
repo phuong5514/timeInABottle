@@ -14,8 +14,8 @@ public partial class CUDDialogViewModel : ObservableRecipient
 {
     public string InputName { set; get; }
     public string InputDescription { set; get; }
-    public TimeOnly InputStart { set; get; }
-    public TimeOnly InputEnd { set; get; }
+    public TimeSpan InputStart { set; get; }
+    public TimeSpan InputEnd { set; get; }
 
     public List<ITask> TaskOptions { private set; get; }
     public ITask SelectedTaskOption
@@ -37,6 +37,8 @@ public partial class CUDDialogViewModel : ObservableRecipient
 
     private ITask _task;
 
+    public static readonly List<string> Weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
     // specialized input
     public List<Values.Weekdays> InputWeekDays
     {
@@ -48,9 +50,9 @@ public partial class CUDDialogViewModel : ObservableRecipient
         set; get;
     }
 
-    private static readonly List<int> _daysInMonths = new() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+    private static readonly List<int> _daysInMonths = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
                                                            13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-                                                           25, 26, 27, 28, 29, 30, 31 };
+                                                           25, 26, 27, 28, 29, 30, 31 ];
 
     public List<int> DaysInMonth => _daysInMonths;
 
@@ -63,9 +65,9 @@ public partial class CUDDialogViewModel : ObservableRecipient
         _daoService = App.GetService<IDaoService>();
         InputDescription = "";
         InputName = "";
-        InputStart = new TimeOnly();
-        InputEnd = new TimeOnly();
-        InputWeekDays = new List<Values.Weekdays>();
+        InputStart = new();
+        InputEnd = new();
+        InputWeekDays = [];
         InputMonthlyDay = 0;
         InputSpecificDay = new DateOnly();
         SetTaskOptions();
@@ -73,12 +75,15 @@ public partial class CUDDialogViewModel : ObservableRecipient
 
     public CUDDialogViewModel(ITask task)
     {
+        _daoService = App.GetService<IDaoService>();
+
         _task = task;
         InputName = task.Name;
         InputDescription = task.Description;
-        InputStart = task.Start;
-        InputEnd = task.End;
+        InputStart = task.Start.ToTimeSpan();
+        InputEnd = task.End.ToTimeSpan();
 
+        
         var taskVisitor = new GetTaskSpecialtiesVisitor();
         var specialisedValue = taskVisitor.visitTask(task);
         if (specialisedValue != null)
@@ -98,11 +103,19 @@ public partial class CUDDialogViewModel : ObservableRecipient
         }
 
         SetTaskOptions();
+        foreach (var option in TaskOptions)
+        {
+            if (option.TypeName() == task.TypeName())
+            {
+                SelectedTaskOption = option;
+                break;
+            }
+        }
     }
 
     private void SetTaskOptions()
     {
-        TaskOptions = new();
+        TaskOptions = [];
         var taskType = typeof(ITask);
         var assembly = taskType.Assembly;
 
@@ -123,15 +136,12 @@ public partial class CUDDialogViewModel : ObservableRecipient
     public void SaveChanges()
     {
         var needToCreate = _task == null;
-        if (_task == null)
-        {
-            _task = Core.Models.Tasks.TaskFactory.CreateTask(TypeName);
-        }
+        _task ??= Core.Models.Tasks.TaskFactory.CreateTask(TypeName);
 
         _task.Name = InputName;
         _task.Description = InputDescription;
-        _task.Start = InputStart;
-        _task.End = InputEnd;
+        _task.Start = TimeOnly.FromTimeSpan(InputStart);
+        _task.End = TimeOnly.FromTimeSpan(InputEnd);
         if (_task is WeeklyTask weeklyTask)
         {
             weeklyTask.WeekDays = InputWeekDays;
@@ -149,8 +159,14 @@ public partial class CUDDialogViewModel : ObservableRecipient
         {
             _daoService.AddTask(_task);
         }
-        else { 
+        else
+        {
             _daoService.UpdateTask(_task);
         }
+    }
+
+    public void DeleteTask()
+    {
+        _daoService.DeleteTask(_task);
     }
 }

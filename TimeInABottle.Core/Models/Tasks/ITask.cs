@@ -83,7 +83,7 @@ public abstract class ITask : INotifyPropertyChanged
     /// Returns a string that represents the current object.
     /// </summary>
     /// <returns>A string that represents the current object.</returns>
-    public abstract override string ToString();
+    public override abstract string ToString();
 
     /// <summary>
     /// Gets the formatted time range of the task.

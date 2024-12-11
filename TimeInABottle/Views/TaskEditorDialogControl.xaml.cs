@@ -19,13 +19,13 @@ using Windows.Foundation.Collections;
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace TimeInABottle.Views;
-public sealed partial class AddTaskDialogControl : UserControl
+public sealed partial class TaskEditorDialogControl : UserControl
 {
     public CUDDialogViewModel ViewModel {
         get;
     }
 
-    public AddTaskDialogControl()
+    public TaskEditorDialogControl()
     {
         ViewModel = new CUDDialogViewModel();
         this.InitializeComponent();
