@@ -84,7 +84,7 @@ public partial class App : Application
             services.AddTransient<TaskListPage>();
             services.AddTransient<DashboardViewModel>();
             services.AddTransient<DashboardPage>();
-            services.AddTransient<CUDDialogViewModel>();
+            services.AddTransient<CUDDialogViewModel>(); 
 
             services.AddTransient<SettingsViewModel>();
             services.AddTransient<SettingsPage>();

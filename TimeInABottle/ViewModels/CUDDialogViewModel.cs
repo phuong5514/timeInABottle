@@ -56,7 +56,7 @@ public partial class CUDDialogViewModel : ObservableRecipient
 
     public List<int> DaysInMonth => _daysInMonths;
 
-    public DateOnly InputSpecificDay;
+    public DateTime InputSpecificDay;
 
     private readonly IDaoService _daoService;
 
@@ -69,21 +69,19 @@ public partial class CUDDialogViewModel : ObservableRecipient
         InputEnd = new();
         InputWeekDays = [];
         InputMonthlyDay = 0;
-        InputSpecificDay = new DateOnly();
+        InputSpecificDay = DateTime.Now;
         SetTaskOptions();
     }
 
-    public CUDDialogViewModel(ITask task)
+    public void EditMode(ITask task)
     {
-        _daoService = App.GetService<IDaoService>();
-
         _task = task;
         InputName = task.Name;
         InputDescription = task.Description;
         InputStart = task.Start.ToTimeSpan();
         InputEnd = task.End.ToTimeSpan();
 
-        
+
         var taskVisitor = new GetTaskSpecialtiesVisitor();
         var specialisedValue = taskVisitor.visitTask(task);
         if (specialisedValue != null)
@@ -98,11 +96,10 @@ public partial class CUDDialogViewModel : ObservableRecipient
             }
             else if (specialisedValue is DateOnly specificDay)
             {
-                InputSpecificDay = specificDay;
+                InputSpecificDay = specificDay.ToDateTime(TimeOnly.MinValue);
             }
         }
 
-        SetTaskOptions();
         foreach (var option in TaskOptions)
         {
             if (option.TypeName() == task.TypeName())
@@ -143,6 +140,9 @@ public partial class CUDDialogViewModel : ObservableRecipient
         {
             return false;
         }
+        if (string.IsNullOrWhiteSpace(TypeName)) {
+            return false;
+        }
         if (TypeName == "WeeklyTask" && InputWeekDays.Count == 0)
         {
             return false;
@@ -151,7 +151,7 @@ public partial class CUDDialogViewModel : ObservableRecipient
         {
             return false;
         }
-        if (TypeName == "NonRepeatedTask" && InputSpecificDay == new DateOnly())
+        if (TypeName == "NonRepeatedTask" && DateOnly.FromDateTime(InputSpecificDay) < new DateOnly())
         {
             return false;
         }
@@ -183,7 +183,7 @@ public partial class CUDDialogViewModel : ObservableRecipient
         }
         else if (_task is NonRepeatedTask nonRepeatedTask)
         {
-            nonRepeatedTask.Date = InputSpecificDay;
+            nonRepeatedTask.Date = DateOnly.FromDateTime(InputSpecificDay);
         }
 
         if (needToCreate)

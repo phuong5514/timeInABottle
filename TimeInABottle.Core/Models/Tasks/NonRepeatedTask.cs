@@ -49,6 +49,6 @@ public class NonRepeatedTask : ITask
     /// <returns>A string that represents the current object.</returns>
     public override string ToString() => "NonRepeatedTask";
     public override object Accept(GetTaskSpecialtiesVisitor visitor) {
-        return visitor.VisitNonRepeatedTask(this);   
+        return Date;   
     }
 }

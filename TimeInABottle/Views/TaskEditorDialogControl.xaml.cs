@@ -22,13 +22,12 @@ namespace TimeInABottle.Views;
 public sealed partial class TaskEditorDialogControl : UserControl
 {
     public CUDDialogViewModel ViewModel {
-        get;
+        get; set;
     }
 
     public TaskEditorDialogControl()
     {
-        ViewModel = App.GetService<CUDDialogViewModel>();
-        this.InitializeComponent();
+        InitializeComponent();
     }
 
     private void Option_Checked(object sender, RoutedEventArgs e)

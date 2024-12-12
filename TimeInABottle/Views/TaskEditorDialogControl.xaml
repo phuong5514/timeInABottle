@@ -16,6 +16,7 @@
         <helper:WeeklyTaskToVisibilityConverter x:Key="WeeklyTaskToVisibilityConverter"/>
         <helper:MonthlyTaskToVisibilityConverter x:Key="MonthlyTaskToVisibilityConverter"/>
         <helper:NonRepeatedTaskToVisibilityConverter x:Key="NonRepeatedTaskToVisibilityConverter"/>
+        <helper:DateTimeToDateTimeOffsetConverter x:Key="DateTimeToDateTimeOffsetConverter"/>
     </UserControl.Resources>
 
     <Grid>
@@ -99,10 +100,10 @@
             <!-- NonRepeatedTask: specific day -->
             <StackPanel x:Name="NonRepeatedTaskSpInput"
                         Visibility="{Binding SelectedTaskOption, Mode=OneWay, Converter={StaticResource NonRepeatedTaskToVisibilityConverter}}">
-                <DatePicker 
+                <CalendarDatePicker 
                     x:Name="NonRepeatedTaskDatePicker"
                     Header="Pick a date"
-                    Date="{Binding InputSpecificDay, Mode=TwoWay}"
+                    Date="{Binding InputSpecificDay, Mode=TwoWay, Converter={StaticResource DateTimeToDateTimeOffsetConverter}}"
                     />
             </StackPanel>
             

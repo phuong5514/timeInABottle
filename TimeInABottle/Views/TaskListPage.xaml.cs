@@ -22,6 +22,7 @@ public sealed partial class TaskListPage : Page
     public TaskListPage()
     {
         ViewModel = App.GetService<TaskListViewModel>();
+        
         // set data context for Filter to show
         //DataContext = ViewModel;
         InitializeComponent();
@@ -170,12 +171,15 @@ public sealed partial class TaskListPage : Page
 
     private async Task CreateAddDialog()
     {
-
         var dialogViewModel = App.GetService<CUDDialogViewModel>();
+
+        var dialogContent = new TaskEditorDialogControl();
+        dialogContent.ViewModel = dialogViewModel;
+
         var dialog = new ContentDialog
         {
             Title = "Add Task",
-            Content = new TaskEditorDialogControl(),
+            Content = dialogContent,
             PrimaryButtonText = "Add",
             CloseButtonText = "Cancel",
             XamlRoot = this.Content.XamlRoot, // Ensure the dialog is shown in the correct XAML root
@@ -207,11 +211,17 @@ public sealed partial class TaskListPage : Page
         {
             return;
         }
-        var dialogViewModel = new CUDDialogViewModel(ViewModel.Selected);
+
+        var dialogViewModel = App.GetService<CUDDialogViewModel>();
+        dialogViewModel.EditMode(ViewModel.Selected);
+
+        var dialogContent = new TaskEditorDialogControl();
+        dialogContent.ViewModel = dialogViewModel;
+
         var dialog = new ContentDialog
         {
             Title = "Edit Task",
-            Content = new TaskEditorDialogControl(),
+            Content = dialogContent,
             PrimaryButtonText = "Save changes",
             CloseButtonText = "Cancel",
             XamlRoot = this.Content.XamlRoot, // Ensure the dialog is shown in the correct XAML root
@@ -238,16 +248,20 @@ public sealed partial class TaskListPage : Page
 
     private async Task CreateDeleteConfirmationDialog()
     {
-        var dialogViewModel = new CUDDialogViewModel(ViewModel.Selected);
+        var dialogViewModel = App.GetService<CUDDialogViewModel>();
+        dialogViewModel.EditMode(ViewModel.Selected);
+
         var dialog = new ContentDialog
         {
             Title = "Delete Task",
-            Content = new UserControl() { 
+            Content = new UserControl()
+            {
                 Content = new TextBlock() { Text = $"Are you sure you want to delete {ViewModel.Selected.Name}?" }
             },
             PrimaryButtonText = "Delete",
             CloseButtonText = "Cancel",
             XamlRoot = this.Content.XamlRoot, // Ensure the dialog is shown in the correct XAML root
+            DataContext = dialogViewModel
         };
         var result = await dialog.ShowAsync();
         if (result == ContentDialogResult.Primary)
