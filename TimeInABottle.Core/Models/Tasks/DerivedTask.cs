@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TimeInABottle.Core.Contracts.Services;
+using TimeInABottle.Core.Helpers;
 
 namespace TimeInABottle.Core.Models.Tasks;
 /// <summary>
@@ -30,5 +32,8 @@ public class DerivedTask : ITask
     /// Returns a string that represents the current object.
     /// </summary>
     /// <returns>A string that represents the current object.</returns>
-    public override string ToString() => throw new NotImplementedException();
+    public override string ToString() => "DerivedTask";
+    public override object Accept(GetTaskSpecialtiesVisitor visitor) {
+        return null;
+    }
 }

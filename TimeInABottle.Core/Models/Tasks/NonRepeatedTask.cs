@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TimeInABottle.Core.Contracts.Services;
+using TimeInABottle.Core.Helpers;
 
 namespace TimeInABottle.Core.Models.Tasks;
 /// <summary>
@@ -38,7 +40,7 @@ public class NonRepeatedTask : ITask
         // TODO: hạn chế chỉ set ngày trong 1 giới hạn: ko thể set trong quá khứ,
         // và khoảng cách từ ngày cài đặt đến ngày thực hiện không quá 3 tháng (tùy chỉnh)
         get;
-        private set;
+        set;
     }
 
     /// <summary>
@@ -46,4 +48,7 @@ public class NonRepeatedTask : ITask
     /// </summary>
     /// <returns>A string that represents the current object.</returns>
     public override string ToString() => "NonRepeatedTask";
+    public override object Accept(GetTaskSpecialtiesVisitor visitor) {
+        return Date;   
+    }
 }
