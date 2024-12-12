@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
 
 namespace TimeInABottle.Helpers;
@@ -14,7 +15,7 @@ public class DateTimeToDateTimeOffsetConverter : IValueConverter
         {
             return new DateTimeOffset(dateTime);
         }
-        return null;
+        return DependencyProperty.UnsetValue;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, string language)
@@ -23,6 +24,6 @@ public class DateTimeToDateTimeOffsetConverter : IValueConverter
         {
             return dateTimeOffset.DateTime;
         }
-        return null;
+        return DateTime.Now;
     }
 }

@@ -21,9 +21,21 @@ using Windows.Foundation.Collections;
 namespace TimeInABottle.Views;
 public sealed partial class TaskEditorDialogControl : UserControl
 {
-    public CUDDialogViewModel ViewModel {
-        get; set;
+    
+    public CUDDialogViewModel ViewModel
+    {
+        get => _viewModel;
+        set
+        {
+            _viewModel = value;
+            if (_viewModel != null && NonRepeatedTaskDatePicker != null)
+            {
+                NonRepeatedTaskDatePicker.Date = new DateTimeOffset(_viewModel.InputSpecificDay);
+            }
+        }
     }
+    private CUDDialogViewModel _viewModel;
+    
 
     public TaskEditorDialogControl()
     {
@@ -35,6 +47,10 @@ public sealed partial class TaskEditorDialogControl : UserControl
         // get sender name
         var option = (CheckBox)sender;
         var day = ExtractCheckboxOptionValue(option);
+        if (ViewModel.InputWeekDays.Contains(day))
+        {
+            return;
+        }
         ViewModel.InputWeekDays.Add(day);
     }
 
@@ -80,5 +96,13 @@ public sealed partial class TaskEditorDialogControl : UserControl
     private void SelectAll_Indeterminate(object sender, RoutedEventArgs e)
     {
 
+    }
+
+    private void NonRepeatedTaskDatePicker_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
+    {
+        if (sender.Date.HasValue)
+        {
+            ViewModel.InputSpecificDay = sender.Date.Value.DateTime;
+        }
     }
 }

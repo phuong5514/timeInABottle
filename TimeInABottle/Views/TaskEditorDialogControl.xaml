@@ -17,6 +17,7 @@
         <helper:MonthlyTaskToVisibilityConverter x:Key="MonthlyTaskToVisibilityConverter"/>
         <helper:NonRepeatedTaskToVisibilityConverter x:Key="NonRepeatedTaskToVisibilityConverter"/>
         <helper:DateTimeToDateTimeOffsetConverter x:Key="DateTimeToDateTimeOffsetConverter"/>
+        <helper:ListContainsConverter x:Key="ListContainsConverter"/>
     </UserControl.Resources>
 
     <Grid>
@@ -34,11 +35,11 @@
 
             <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Stretch">
                 <!-- Start -->
-                <TimePicker Header="From" ClockIdentifier="24HourClock" MinuteIncrement="30" Time="{Binding InputStart, Mode=TwoWay}" />
+                <TimePicker Header="From" ClockIdentifier="12HourClock" MinuteIncrement="30" Time="{Binding InputStart, Mode=TwoWay}" />
                 <!-- Seperator -->
-                <TextBlock Text="-" VerticalAlignment="Center" />
+                <TextBlock Text="|" VerticalAlignment="Center" />
                 <!-- End -->
-                <TimePicker Header="To" ClockIdentifier="24HourClock" MinuteIncrement="30" Time="{Binding InputEnd, Mode=TwoWay}" />
+                <TimePicker Header="To" ClockIdentifier="12HourClock" MinuteIncrement="30" Time="{Binding InputEnd, Mode=TwoWay}" />
             </StackPanel>
             
             <!-- Type picker -->
@@ -64,20 +65,15 @@
 
                 <ScrollView HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden" >
                     <StackPanel Orientation="Horizontal" x:Name="Weekdays" Padding="{StaticResource LargePadding}">
-                        <CheckBox Content="Sunday" Checked="Option_Checked" Unchecked="Option_Unchecked"/>
-                        <CheckBox Content="Monday" Checked="Option_Checked" Unchecked="Option_Unchecked"/>
-                        <CheckBox Content="Tuesday" Checked="Option_Checked" Unchecked="Option_Unchecked"/>
-                        <CheckBox Content="Wednesday" Checked="Option_Checked" Unchecked="Option_Unchecked"/>
-                        <CheckBox Content="Thursday" Checked="Option_Checked" Unchecked="Option_Unchecked"/>
-                        <CheckBox Content="Friday" Checked="Option_Checked" Unchecked="Option_Unchecked"/>
-                        <CheckBox Content="Saturday" Checked="Option_Checked" Unchecked="Option_Unchecked"/>
+                        <CheckBox Content="Sunday" Checked="Option_Checked" Unchecked="Option_Unchecked" IsChecked="{Binding InputWeekDays, Mode=OneWay, Converter={StaticResource ListContainsConverter}, ConverterParameter=Sunday}"/>
+                        <CheckBox Content="Monday" Checked="Option_Checked" Unchecked="Option_Unchecked" IsChecked="{Binding InputWeekDays, Mode=OneWay, Converter={StaticResource ListContainsConverter}, ConverterParameter=Monday}"/>
+                        <CheckBox Content="Tuesday" Checked="Option_Checked" Unchecked="Option_Unchecked" IsChecked="{Binding InputWeekDays, Mode=OneWay, Converter={StaticResource ListContainsConverter}, ConverterParameter=Tuesday}"/>
+                        <CheckBox Content="Wednesday" Checked="Option_Checked" Unchecked="Option_Unchecked" IsChecked="{Binding InputWeekDays, Mode=OneWay, Converter={StaticResource ListContainsConverter}, ConverterParameter=Wednesday}"/>
+                        <CheckBox Content="Thursday" Checked="Option_Checked" Unchecked="Option_Unchecked" IsChecked="{Binding InputWeekDays, Mode=OneWay, Converter={StaticResource ListContainsConverter}, ConverterParameter=Thursday}"/>
+                        <CheckBox Content="Friday" Checked="Option_Checked" Unchecked="Option_Unchecked" IsChecked="{Binding InputWeekDays, Mode=OneWay, Converter={StaticResource ListContainsConverter}, ConverterParameter=Friday}"/>
+                        <CheckBox Content="Saturday" Checked="Option_Checked" Unchecked="Option_Unchecked" IsChecked="{Binding InputWeekDays, Mode=OneWay, Converter={StaticResource ListContainsConverter}, ConverterParameter=Saturday}"/>
                     </StackPanel>
                 </ScrollView>
-                
-
-                
-
-
             </StackPanel>
             
             <!-- MonthlyTask: day of month selector -->
@@ -103,8 +99,8 @@
                 <CalendarDatePicker 
                     x:Name="NonRepeatedTaskDatePicker"
                     Header="Pick a date"
-                    Date="{Binding InputSpecificDay, Mode=TwoWay, Converter={StaticResource DateTimeToDateTimeOffsetConverter}}"
-                    />
+                    DateChanged="NonRepeatedTaskDatePicker_DateChanged"
+                />
             </StackPanel>
             
         </StackPanel>
