@@ -27,7 +27,7 @@ public sealed partial class TaskEditorDialogControl : UserControl
 
     public TaskEditorDialogControl()
     {
-        ViewModel = new CUDDialogViewModel();
+        ViewModel = App.GetService<CUDDialogViewModel>();
         this.InitializeComponent();
     }
 

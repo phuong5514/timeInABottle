@@ -241,7 +241,7 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
     /// <summary>
     /// Loads tasks based on the applied filters and order.
     /// </summary>
-    private void LoadTask()
+    public void LoadTask()
     {
         var newTasks = _daoService.CustomQuery(_filter, !_isInvertOrder);
         AddTasks(newTasks);

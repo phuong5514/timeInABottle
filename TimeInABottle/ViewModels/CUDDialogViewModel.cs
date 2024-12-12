@@ -133,9 +133,40 @@ public partial class CUDDialogViewModel : ObservableRecipient
         }
     }
 
-    public void SaveChanges()
+    private bool ValidateInput()
+    {
+        if (string.IsNullOrWhiteSpace(InputName))
+        {
+            return false;
+        }
+        if (InputStart >= InputEnd)
+        {
+            return false;
+        }
+        if (TypeName == "WeeklyTask" && InputWeekDays.Count == 0)
+        {
+            return false;
+        }
+        if (TypeName == "MonthlyTask" && InputMonthlyDay == 0)
+        {
+            return false;
+        }
+        if (TypeName == "NonRepeatedTask" && InputSpecificDay == new DateOnly())
+        {
+            return false;
+        }
+        return true;
+    }
+
+
+    public bool SaveChanges()
     {
         var needToCreate = _task == null;
+        if (!ValidateInput())
+        {
+            return false;
+        }
+
         _task ??= Core.Models.Tasks.TaskFactory.CreateTask(TypeName);
 
         _task.Name = InputName;
@@ -163,10 +194,13 @@ public partial class CUDDialogViewModel : ObservableRecipient
         {
             _daoService.UpdateTask(_task);
         }
+
+        return true;
     }
 
-    public void DeleteTask()
+    public bool DeleteTask()
     {
         _daoService.DeleteTask(_task);
+        return true;
     }
 }

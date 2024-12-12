@@ -148,10 +148,30 @@ public sealed partial class TaskListPage : Page
         ViewModel.resetFilterChoice();
     }
 
+    private async Task CreateFailureDialog()
+    {
+        var dialog = new ContentDialog
+        {
+            Title = "Error",
+            Content = new UserControl() { Content = new TextBlock() { Text = "Failed to save changes" } },
+            CloseButtonText = "Ok",
+            XamlRoot = this.Content.XamlRoot, // Ensure the dialog is shown in the correct XAML root
+        };
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary)
+        {
+            // left blank
+        }
+        else
+        {
+            // left blank
+        }
+    }
+
     private async Task CreateAddDialog()
     {
 
-        var dialogViewModel = new CUDDialogViewModel();
+        var dialogViewModel = App.GetService<CUDDialogViewModel>();
         var dialog = new ContentDialog
         {
             Title = "Add Task",
@@ -165,7 +185,15 @@ public sealed partial class TaskListPage : Page
         var result = await dialog.ShowAsync();
         if (result == ContentDialogResult.Primary)
         {
-            dialogViewModel.SaveChanges();
+            if (dialogViewModel.SaveChanges())
+            {
+                // tell the view model that data is changed
+                ViewModel.LoadTask();
+            }
+            else {
+                _ = CreateFailureDialog();
+            };
+            
         }
         else
         {
@@ -192,7 +220,14 @@ public sealed partial class TaskListPage : Page
         var result = await dialog.ShowAsync();
         if (result == ContentDialogResult.Primary)
         {
-            dialogViewModel.SaveChanges();
+            if (dialogViewModel.SaveChanges())
+            {
+                ViewModel.LoadTask();
+            }
+            else {
+                _ = CreateFailureDialog();
+            }
+            
         }
         else
         {
@@ -217,7 +252,9 @@ public sealed partial class TaskListPage : Page
         var result = await dialog.ShowAsync();
         if (result == ContentDialogResult.Primary)
         {
-            dialogViewModel.DeleteTask();
+            if (dialogViewModel.DeleteTask()) { 
+                ViewModel.LoadTask();
+            }
         }
         else
         {
