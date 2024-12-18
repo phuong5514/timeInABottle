@@ -9,5 +9,6 @@ public interface IAvailableTimesGetter
 {
     public IEnumerable<TimeSpan> GetAvailableTimesForToday();
     public IEnumerable<TimeSpan> GetAvailableTimesForDate(DateOnly date);
-    public IEnumerable<TimeSpan> GetAvailableTimesForWeek();
+    public IEnumerable<TimeSpan> GetAvailableTimesForDate(int date);
+    public IEnumerable<TimeSpan> GetAvailableTimesForWeek(IEnumerable<DayOfWeek> inputWeekDays);
 }

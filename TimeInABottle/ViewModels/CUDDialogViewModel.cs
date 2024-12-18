@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Helpers;
 using TimeInABottle.Core.Models.Tasks;
@@ -143,30 +144,52 @@ public partial class CUDDialogViewModel : ObservableRecipient
 
     private bool ValidateInput()
     {
-        if (string.IsNullOrWhiteSpace(InputName))
+        var result = true;
+        result &= validateEmptyInput();
+        result &= validateTime();
+        return result;
+    }
+
+    private bool validateEmptyInput()
+    {
+        var result = true;
+        result &= !string.IsNullOrWhiteSpace(InputName);
+        result &= InputStart < InputEnd;
+        result &= !string.IsNullOrWhiteSpace(TypeName);
+
+        switch(TypeName)
         {
-            return false;
+            case "WeeklyTask":
+                result &= InputWeekDays.Count > 0;
+                break;
+            case "MonthlyTask":
+                result &= InputMonthlyDay > 0;
+                break;
+            case "NonRepeatedTask":
+                result &= DateOnly.FromDateTime(InputSpecificDay) >= new DateOnly();
+                break;
         }
-        if (InputStart >= InputEnd)
+        return result;
+    }
+
+    private bool validateTime()
+    {
+        var allowedTimeSpans = new List<TimeSpan>();
+        var timeGetter = App.GetService<IAvailableTimesGetter>();
+        switch (TypeName)
         {
-            return false;
+            case "WeeklyTask":
+                allowedTimeSpans = (List<TimeSpan>) timeGetter.GetAvailableTimesForWeek(InputWeekDays);
+                break;
+            case "MonthlyTask":
+                allowedTimeSpans = (List<TimeSpan>) timeGetter.GetAvailableTimesForDate(InputMonthlyDay);
+                break;
+            case "NonRepeatedTask":
+                allowedTimeSpans = (List<TimeSpan>)timeGetter.GetAvailableTimesForDate(DateOnly.FromDateTime(InputSpecificDay));
+                break;
         }
-        if (string.IsNullOrWhiteSpace(TypeName)) {
-            return false;
-        }
-        if (TypeName == "WeeklyTask" && InputWeekDays.Count == 0)
-        {
-            return false;
-        }
-        if (TypeName == "MonthlyTask" && InputMonthlyDay == 0)
-        {
-            return false;
-        }
-        if (TypeName == "NonRepeatedTask" && DateOnly.FromDateTime(InputSpecificDay) < new DateOnly())
-        {
-            return false;
-        }
-        return true;
+
+        return allowedTimeSpans.Contains(InputStart) && allowedTimeSpans.Contains(InputEnd);
     }
 
 

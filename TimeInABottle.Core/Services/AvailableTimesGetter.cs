@@ -67,4 +67,9 @@ public class AvailableTimesGetter : IAvailableTimesGetter
         var tasks = _daoQueryService.GetThisWeekTasks(weekdays);
         return GetAvailableTimes(tasks);
     }
+
+    public IEnumerable<TimeSpan> GetAvailableTimesForDate(int date) {
+        var dateOnly = new DateOnly(DateTime.Now.Year, DateTime.Now.Month, date);
+        return GetAvailableTimesForDate(dateOnly);
+    }
 }
