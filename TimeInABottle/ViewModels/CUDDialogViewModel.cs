@@ -125,7 +125,7 @@ public partial class CUDDialogViewModel : ObservableRecipient
             if (Activator.CreateInstance(type) is ITask taskInstance)
             {
                 TaskOptions.Add(taskInstance);
-                Core.Models.Tasks.TaskFactory.RegisterTask(type.Name, type);
+                //Core.Models.Tasks.TaskFactory.RegisterTask(type.Name, type);
             }
         }
     }

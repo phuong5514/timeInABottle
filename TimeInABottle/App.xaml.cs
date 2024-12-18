@@ -6,6 +6,7 @@ using TimeInABottle.Activation;
 using TimeInABottle.Background;
 using TimeInABottle.Contracts.Services;
 using TimeInABottle.Core.Contracts.Services;
+using TimeInABottle.Core.Models.Tasks;
 using TimeInABottle.Core.Services;
 using TimeInABottle.Models;
 using TimeInABottle.Services;
@@ -115,7 +116,9 @@ public partial class App : Application
 
         await App.GetService<IActivationService>().ActivateAsync(args);
 
+        // init
         RegisterBackgroundTask();
+        registerTaskFactory();
 
         var behaviorController = App.GetService<IBehaviorController>();
         await behaviorController.RunAsync();
@@ -128,6 +131,24 @@ public partial class App : Application
         backgroundTaskRegisterService.CleanRegister();
 
         backgroundTaskRegisterService.RegisterBackgroundTask("NotificationBackgroundTasks", "TimeInABottle.Background.NotificationBackgroundTasks", new TimeTrigger(15, false));
+    }
+
+    private void registerTaskFactory()
+    {
+        var taskType = typeof(ITask);
+        var assembly = taskType.Assembly;
+
+        var taskTypes = assembly.GetTypes()
+                                .Where(t => t.IsSubclassOf(taskType) && !t.IsAbstract)
+                                .ToList();
+
+        foreach (var type in taskTypes)
+        {
+            if (Activator.CreateInstance(type) is ITask taskInstance)
+            {
+                Core.Models.Tasks.TaskFactory.RegisterTask(type.Name, type);
+            }
+        }
     }
 
 }

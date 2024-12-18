@@ -3,18 +3,34 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Helpers;
 using TimeInABottle.Core.Models.Filters;
 using TimeInABottle.Core.Models.Tasks;
 
 namespace TimeInABottle.Core.Services;
-public class SqliteDaoService : IDaoService
+public class SqliteDaoService : IDaoService, IDaoExporterService
 {
     private readonly TaskContext _db;
+    private string _exportPath;
 
     public SqliteDaoService()
     {
+        var configPath = Path.Combine(AppContext.BaseDirectory, "secret.config");
+        if (File.Exists(configPath))
+        {
+            var config = XElement.Load(configPath);
+            var filename = config.Element("Dao")?.Element("bgComFile")?.Value;
+            if (filename != null)
+            {
+                _exportPath = $"{filename}.json";
+            }
+            else
+            {
+            }
+        }
+
         _db = new();
     }
 
@@ -74,18 +90,40 @@ public class SqliteDaoService : IDaoService
 
     public void AddTask(ITask task) { 
         _db.Tasks.Add(task);
-        _db.SaveChanges();
+        saveChanges();
     }
 
     // potentially deprecated and unused
     public void UpdateTask(ITask task) { 
         _db.Tasks.Update(task);
-        _db.SaveChanges();
+        saveChanges();
     }
 
     public void DeleteTask(ITask task)
     {
         _db.Tasks.Remove(task);
+        saveChanges();
+    }
+
+    private void saveChanges()
+    {
         _db.SaveChanges();
+        Export();
+    }
+
+    public void Export() { 
+        var tasks = _db.Tasks.ToList();
+        var today = DateOnly.FromDateTime(DateTime.Now);
+        var optimisedTasks = tasks
+            .Where(task =>
+                task is DailyTask ||
+                task is NonRepeatedTask nrt && nrt.Date >= today ||
+                task is MonthlyTask ||
+                task is WeeklyTask)
+            .ToList();
+
+
+        var jsonTasks = TaskToJsonTaskConverter.ConvertList(optimisedTasks);
+        LocalStorageWriter.Write(_exportPath, jsonTasks);
     }
 }

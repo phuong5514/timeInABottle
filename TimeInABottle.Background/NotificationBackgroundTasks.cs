@@ -33,7 +33,8 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
         _taskDeferral = taskInstance.GetDeferral();
 
         Debug.WriteLine("Background " + taskInstance.Task.Name + " Starting...");
-        _dao = new MockDaoService();
+        _dao = new LocalStorageDaoService();
+        //_dao = new SqliteDaoService();
         LoadTasksList();
 
         bufferService = new WeatherBasedBufferService();
@@ -108,7 +109,7 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
         {
             return;
         }
-        _todayTasks = _dao.GetAllTasks();
+        _todayTasks = _dao.GetTodayTasks();
     }
 
     private void CallibrateIndex()
