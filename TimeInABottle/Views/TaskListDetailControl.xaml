@@ -4,7 +4,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:helper="using:TimeInABottle.Helpers"
     mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <helper:TaskToSpecialtyStringConverter x:Key="TaskToSpecialtyStringConverter"/>
+    </UserControl.Resources>
+    
     <ScrollViewer
         Name="ForegroundElement"
         HorizontalAlignment="Stretch"
@@ -35,12 +41,13 @@
 
                 <TextBlock Text="{x:Bind ListDetailsMenuItem.End, Mode=OneWay}" Style="{StaticResource DetailBodyBaseMediumStyle}" />
 
+                <TextBlock Text="{x:Bind ListDetailsMenuItem, Mode=OneWay, Converter={StaticResource TaskToSpecialtyStringConverter}}" Style="{StaticResource DetailBodyBaseMediumStyle}"/>
+
                 <TextBlock
                     Margin="{StaticResource SmallTopMargin}"
                     Text="Description"
                     Style="{StaticResource DetailSubTitleStyle}" />
                 <TextBlock Text="{x:Bind ListDetailsMenuItem.Description, Mode=OneWay}" Style="{StaticResource DetailBodyBaseMediumStyle}" />
-                
             </StackPanel>
         </StackPanel>
     </ScrollViewer>

@@ -33,8 +33,6 @@ public sealed partial class DashboardPage : Page
         //ViewModel.Innit();
         InitializeComponent();
 
-
-
         SetGrid();
         SetTitles();
         LoadData();
@@ -54,7 +52,7 @@ public sealed partial class DashboardPage : Page
             if (task is DailyTask)
             {
                 // Daily Task: Create a grid cell for each day
-                for (var day = 0; day < 7; day++)
+                for (var day = 1; day <= 7; day++)
                 {
                     var dayEvent = CreateTaskGrid(task);
                     Grid.SetColumn((FrameworkElement)dayEvent, day); // Set column based on the day
@@ -291,7 +289,7 @@ public sealed partial class DashboardPage : Page
 
         var flyout = new Flyout
         {
-            Content = content
+            Content = content,
         };
 
         FlyoutBase.SetAttachedFlyout((FrameworkElement)sender, flyout);

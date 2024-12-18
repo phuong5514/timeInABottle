@@ -124,10 +124,10 @@ public partial class DashboardViewModel : ObservableRecipient
 
     public void Innit()
     {
+
         _dao = App.GetService<IDaoService>();
-        getTodayTasks();
-        getWeekTasks();
         UpdateDate();
+        LoadData();
         Time = TimeOnly.FromDateTime(DateTime.Now);
         Weather = App.GetService<IWeatherService>().GetCurrentWeather();
         StartTimer();
@@ -137,7 +137,7 @@ public partial class DashboardViewModel : ObservableRecipient
         if (_dao == null) { 
             return;
         }
-        var tasks = _dao.GetAllTasks();
+        var tasks = _dao.GetTodayTasks();
         TodayTasks = tasks;
     }
 
@@ -150,10 +150,16 @@ public partial class DashboardViewModel : ObservableRecipient
         ThisWeekTasks = _dao.GetThisWeekTasks();
     }
 
+
+
+    private void LoadData()
+    {
+        getTodayTasks(); 
+        getWeekTasks();
+    }
+
+
     
-
-
-
 
     //private void 
 

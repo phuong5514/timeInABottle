@@ -15,6 +15,7 @@
         <helpers:TaskToNotificationConverter x:Key="TaskToNotificationConverter"/>
         <helpers:WeatherInfoWrapperToTemperatureConverter x:Key="WeatherInfoWrapperToTemperatureConverter"/>
         <helpers:WeatherInfoWrapperToWeatherTypeConverter x:Key="WeatherInfoWrapperToWeatherTypeConverter"/>
+        <helpers:TaskToSpecialtyStringConverter x:Key="TaskToSpecialtyStringConverter"/>
 
         <DataTemplate x:Key ="ListItem" x:DataType="task:ITask">
             <StackPanel Orientation="Horizontal" Style="{StaticResource BaseListItemContainerStyle}">
@@ -51,24 +52,28 @@
 
         <DataTemplate x:Key="CalendarTaskItemFlyout" x:DataType="task:ITask">
             <ScrollView>
-                <StackPanel 
-                    Orientation="Vertical"
-                    Style="{StaticResource CellContentFlyout}"
-                    >
-                    <StackPanel.Background>
-                        <AcrylicBrush 
+                <ScrollView.Background>
+                    <AcrylicBrush 
                         TintColor="#e67c73"
                         TintOpacity="0.6"
                         FallbackColor="#fff"
                         AlwaysUseFallback="False" />
-                    </StackPanel.Background>
-
+                </ScrollView.Background>
+                <StackPanel 
+                    Orientation="Vertical"
+                    Style="{StaticResource CellContentFlyout}"
+                    >
+                    
                     <TextBlock Style="{StaticResource CalendarTaskItemExtended}">
                         <Run Text="{x:Bind Name}"/>
                     </TextBlock>
 
                     <TextBlock Style="{StaticResource CalendarTaskItemExtended}">
                         <Run Text="{x:Bind Start, Converter={StaticResource TimeToStringConverter}}"/> - <Run Text="{x:Bind End, Converter={StaticResource TimeToStringConverter}}"/>
+                    </TextBlock>
+
+                    <TextBlock Style="{StaticResource CalendarTaskItemExtended}">
+                        <Run Text="{x:Bind Converter={StaticResource TaskToSpecialtyStringConverter}, Mode=OneWay}"/>
                     </TextBlock>
 
                     <TextBlock Style="{StaticResource CalendarTaskItemExtended}">

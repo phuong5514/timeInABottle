@@ -8,9 +8,10 @@ using TimeInABottle.Core.Models.Tasks;
 
 namespace TimeInABottle.Helpers;
 /// <summary>
+/// 
 /// Converts task objects to their corresponding specialty titles.
 /// </summary>
-public class TaskToSpecialtyTitleConverter : IValueConverter
+public class TaskToSpecialtyStringConverter : IValueConverter
 {
     /// <summary>
     /// Converts a task object to a specialty title string.
@@ -28,14 +29,19 @@ public class TaskToSpecialtyTitleConverter : IValueConverter
             switch (task)
             {
                 case DailyTask:
-                    return ""; // Daily tasks might not need a specific specialty title.
+                    return "Every day"; // Daily tasks might not need a specific specialty title.
                 case WeeklyTask weeklyTask:
-                    // Assuming WeeklyTask has a property `DaysOfWeek` (e.g., a list of days or flags for each day).
-                    //return FormatDaysOfWeek(weeklyTask.WeekDays);
-                    return "";
+                    var stringBuilder = new StringBuilder("Weekly on ");
+                    foreach(var day in weeklyTask.WeekDays)
+                    {
+                        stringBuilder.Append(day.ToString());
+                        stringBuilder.Append(", ");
+                    }
+
+                    return stringBuilder.ToString().TrimEnd(',', ' ');
                 case MonthlyTask monthlyTask:
                     // Assuming MonthlyTask has a property `DayInMonth` for the day of the month.
-                    return $"Day {monthlyTask.Date}";
+                    return $"Monthly on day {monthlyTask.Date}";
                 case NonRepeatedTask nonRepeatingTask:
                     // Assuming NonRepeatingTask has a specific date property.
                     return nonRepeatingTask.Date.ToString("MMMM dd, yyyy");
