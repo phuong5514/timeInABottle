@@ -12,7 +12,7 @@ namespace TimeInABottle.Core.Contracts.Services;
 /// Interface for DAO query services.
 /// Provides methods to perform custom queries on tasks.
 /// </summary>
-public interface IDaoQueryService
+public partial interface IDaoService
 {
     /// <summary>
     /// Executes a custom query based on the provided filter and sorting order.
@@ -25,4 +25,19 @@ public interface IDaoQueryService
 
     FullObservableCollection<ITask> FindTaskFromDate(DateOnly date);
 
+
+    /// <summary>
+    /// Retrieves tasks scheduled for the current week.
+    /// </summary>
+    /// <returns>A collection of this week's tasks.</returns>
+    FullObservableCollection<ITask> GetThisWeekTasks();
+
+    /// <summary>
+    /// Retrieves tasks scheduled for the current month.
+    /// </summary>
+    /// <returns>A collection of this month's tasks.</returns>
+    FullObservableCollection<ITask> GetThisMonthTasks();
+
+
+    FullObservableCollection<ITask> GetThisWeekTasks(IEnumerable<DayOfWeek> weekdays);
 }

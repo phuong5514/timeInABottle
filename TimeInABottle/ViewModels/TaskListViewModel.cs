@@ -244,7 +244,7 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
     public void LoadTask()
     {
         FullObservableCollection<ITask> newTasks;
-        if (_daoService is IDaoQueryService queryDao)
+        if (_daoService is IDaoService queryDao)
         {
             newTasks = queryDao.CustomQuery(_filter, !_isInvertOrder);
         }

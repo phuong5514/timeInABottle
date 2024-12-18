@@ -62,12 +62,13 @@ public class LocalStorageDaoService : IDaoService
         return new FullObservableCollection<ITask>(tasksToday);
     }
 
-
-    public void AddTask(ITask task) => throw new NotImplementedException(); // intentionally left unimplemented
-
-    public void DeleteTask(ITask task) => throw new NotImplementedException();
-    FullObservableCollection<ITask> IDaoService.GetAllTasks() => throw new NotImplementedException();
-    FullObservableCollection<ITask> IDaoService.GetThisMonthTasks() => throw new NotImplementedException();
+    public FullObservableCollection<ITask> GetAllTasks() => throw new NotImplementedException();
+    public FullObservableCollection<ITask> CustomQuery(IFilter filter, bool isSortAscending = true) => throw new NotImplementedException();
+    public FullObservableCollection<ITask> FindTaskFromDate(DateOnly date) => throw new NotImplementedException();
     public FullObservableCollection<ITask> GetThisWeekTasks() => throw new NotImplementedException();
+    public FullObservableCollection<ITask> GetThisMonthTasks() => throw new NotImplementedException();
+    public FullObservableCollection<ITask> GetThisWeekTasks(IEnumerable<DayOfWeek> weekdays) => throw new NotImplementedException();
+    public void AddTask(ITask task) => throw new NotImplementedException();
     public void UpdateTask(ITask task) => throw new NotImplementedException();
+    public void DeleteTask(ITask task) => throw new NotImplementedException();
 }
