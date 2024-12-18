@@ -95,8 +95,20 @@ public class SqliteDaoService : IDaoService, IDaoExporterService, IDaoQueryServi
 
     // potentially deprecated and unused
     public void UpdateTask(ITask task) {
-        _db.Tasks.Update(task);
-        saveChanges();
+        var existingTask = _db.Tasks.Find(task.Id);
+        if (existingTask != null)
+        {
+            _db.Entry(existingTask).CurrentValues.SetValues(task);
+            saveChanges();
+        }
+        else
+        {
+            // Handle the case where the task does not exist in the database
+            throw new InvalidOperationException("Task not found.");
+        }
+
+        //_db.Tasks.Update(task);
+        //saveChanges();
     }
 
     public void DeleteTask(ITask task)

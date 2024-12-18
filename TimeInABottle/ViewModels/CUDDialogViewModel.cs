@@ -16,6 +16,11 @@ public partial class CUDDialogViewModel : ObservableRecipient
     public string InputDescription { set; get; }
     public TimeSpan InputStart { set; get; }
     public TimeSpan InputEnd { set; get; }
+    public int Id
+    {
+        set; get;
+    }
+    public bool IsEditMode => Id != 0;
 
     public List<ITask> TaskOptions { private set; get; }
     public ITask SelectedTaskOption
@@ -85,6 +90,7 @@ public partial class CUDDialogViewModel : ObservableRecipient
         InputDescription = task.Description;
         InputStart = task.Start.ToTimeSpan();
         InputEnd = task.End.ToTimeSpan();
+        Id = task.Id;
 
 
         var taskVisitor = new GetTaskSpecialtiesVisitor();
@@ -166,28 +172,25 @@ public partial class CUDDialogViewModel : ObservableRecipient
 
     public bool SaveChanges()
     {
-        var needToCreate = _task == null;
         if (!ValidateInput())
         {
             return false;
         }
 
+        if (IsEditMode)
+        {
+            _daoService.DeleteTask(_task);
+        }
+
         if (TypeName == nameof(WeeklyTask) && InputWeekDays.Count == Weekdays.Count)
         {
-            _task ??= Core.Models.Tasks.TaskFactory.CreateTask(nameof(DailyTask));
+            _task = Core.Models.Tasks.TaskFactory.CreateTask(nameof(DailyTask));
         }
         else
         {
-            _task ??= Core.Models.Tasks.TaskFactory.CreateTask(TypeName);
+            _task = Core.Models.Tasks.TaskFactory.CreateTask(TypeName);
         }
 
-        //if (TypeName == (new WeeklyTask()).TypeName() && InputWeekDays.Count == Weekdays.Count)
-        //{
-        //    _task ??= Core.Models.Tasks.TaskFactory.CreateTask((new DailyTask()).TypeName());
-        //}
-        //else { 
-        //    _task ??= Core.Models.Tasks.TaskFactory.CreateTask(TypeName);
-        //}
 
         _task.Name = InputName;
         _task.Description = InputDescription;
@@ -206,15 +209,7 @@ public partial class CUDDialogViewModel : ObservableRecipient
             nonRepeatedTask.Date = DateOnly.FromDateTime(InputSpecificDay);
         }
 
-        if (needToCreate)
-        {
-            _daoService.AddTask(_task);
-        }
-        else
-        {
-            _daoService.UpdateTask(_task);
-        }
-
+        _daoService.AddTask(_task);
         return true;
     }
 
