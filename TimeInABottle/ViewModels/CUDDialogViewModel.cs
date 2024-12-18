@@ -32,6 +32,7 @@ public partial class CUDDialogViewModel : ObservableRecipient
             }
             return SelectedTaskOption.TypeName();
         }
+
     }
 
 
@@ -75,6 +76,10 @@ public partial class CUDDialogViewModel : ObservableRecipient
 
     public void EditMode(ITask task)
     {
+        if (task == null) {
+            return;
+        }
+
         _task = task;
         InputName = task.Name;
         InputDescription = task.Description;
@@ -167,7 +172,13 @@ public partial class CUDDialogViewModel : ObservableRecipient
             return false;
         }
 
-        _task ??= Core.Models.Tasks.TaskFactory.CreateTask(TypeName);
+        if (TypeName == (new WeeklyTask()).TypeName() && InputWeekDays.Count == Weekdays.Count)
+        {
+            _task ??= Core.Models.Tasks.TaskFactory.CreateTask((new DailyTask()).TypeName());
+        }
+        else { 
+            _task ??= Core.Models.Tasks.TaskFactory.CreateTask(TypeName);
+        }
 
         _task.Name = InputName;
         _task.Description = InputDescription;
