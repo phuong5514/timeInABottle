@@ -64,8 +64,12 @@ public sealed partial class DashboardPage : Page
                 // Weekly Task: Create grids only for specified weekdays
                 foreach (var day in weeklyTask.WeekDays)
                 {
+                    var position = (int)day;
+                    if (position <= 0) {
+                        position += 7;
+                    }
                     var weeklyEvent = CreateTaskGrid(task);
-                    Grid.SetColumn((FrameworkElement)weeklyEvent, (int)day); // Convert weekday to column index
+                    Grid.SetColumn((FrameworkElement)weeklyEvent, position); // Convert weekday to column index
                     CalendarContainer.Children.Add(weeklyEvent);
                 }
             }
