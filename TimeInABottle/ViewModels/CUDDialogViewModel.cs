@@ -172,13 +172,22 @@ public partial class CUDDialogViewModel : ObservableRecipient
             return false;
         }
 
-        if (TypeName == (new WeeklyTask()).TypeName() && InputWeekDays.Count == Weekdays.Count)
+        if (TypeName == nameof(WeeklyTask) && InputWeekDays.Count == Weekdays.Count)
         {
-            _task ??= Core.Models.Tasks.TaskFactory.CreateTask((new DailyTask()).TypeName());
+            _task ??= Core.Models.Tasks.TaskFactory.CreateTask(nameof(DailyTask));
         }
-        else { 
+        else
+        {
             _task ??= Core.Models.Tasks.TaskFactory.CreateTask(TypeName);
         }
+
+        //if (TypeName == (new WeeklyTask()).TypeName() && InputWeekDays.Count == Weekdays.Count)
+        //{
+        //    _task ??= Core.Models.Tasks.TaskFactory.CreateTask((new DailyTask()).TypeName());
+        //}
+        //else { 
+        //    _task ??= Core.Models.Tasks.TaskFactory.CreateTask(TypeName);
+        //}
 
         _task.Name = InputName;
         _task.Description = InputDescription;
