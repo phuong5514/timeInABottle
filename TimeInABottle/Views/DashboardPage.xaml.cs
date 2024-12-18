@@ -289,7 +289,7 @@ public sealed partial class DashboardPage : Page
 
         var flyout = new Flyout
         {
-            Content = content
+            Content = content,
         };
 
         FlyoutBase.SetAttachedFlyout((FrameworkElement)sender, flyout);

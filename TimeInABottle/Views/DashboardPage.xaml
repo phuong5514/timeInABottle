@@ -52,18 +52,18 @@
 
         <DataTemplate x:Key="CalendarTaskItemFlyout" x:DataType="task:ITask">
             <ScrollView>
-                <StackPanel 
-                    Orientation="Vertical"
-                    Style="{StaticResource CellContentFlyout}"
-                    >
-                    <StackPanel.Background>
-                        <AcrylicBrush 
+                <ScrollView.Background>
+                    <AcrylicBrush 
                         TintColor="#e67c73"
                         TintOpacity="0.6"
                         FallbackColor="#fff"
                         AlwaysUseFallback="False" />
-                    </StackPanel.Background>
-
+                </ScrollView.Background>
+                <StackPanel 
+                    Orientation="Vertical"
+                    Style="{StaticResource CellContentFlyout}"
+                    >
+                    
                     <TextBlock Style="{StaticResource CalendarTaskItemExtended}">
                         <Run Text="{x:Bind Name}"/>
                     </TextBlock>
