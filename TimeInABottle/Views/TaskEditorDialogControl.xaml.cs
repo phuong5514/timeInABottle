@@ -61,13 +61,13 @@ public sealed partial class TaskEditorDialogControl : UserControl
         ViewModel.InputWeekDays.Remove(day);
     }
 
-    private Values.Weekdays ExtractCheckboxOptionValue(CheckBox sender)
+    private DayOfWeek ExtractCheckboxOptionValue(CheckBox sender)
     {
         var optionContentString = sender.Content.ToString();
         if (optionContentString == null) {
             throw new ArgumentNullException(nameof(optionContentString));
         }
-        return (Values.Weekdays)Enum.Parse(typeof(Values.Weekdays), optionContentString);
+        return (DayOfWeek)Enum.Parse(typeof(DayOfWeek), optionContentString);
     }
 
     private void SelectAll_Checked(object sender, RoutedEventArgs e)

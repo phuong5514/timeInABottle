@@ -41,7 +41,7 @@ public class JsonTask
         get; set;
     }
     // Weekly repeated task
-    public List<Values.Weekdays> DaysOfWeek
+    public List<DayOfWeek> DaysOfWeek
     {
         get; set;
     }

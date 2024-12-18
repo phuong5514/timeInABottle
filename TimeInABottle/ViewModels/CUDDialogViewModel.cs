@@ -40,7 +40,7 @@ public partial class CUDDialogViewModel : ObservableRecipient
     public static readonly List<string> Weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
     // specialized input
-    public List<Values.Weekdays> InputWeekDays
+    public List<DayOfWeek> InputWeekDays
     {
         set; get;
     }
@@ -86,7 +86,7 @@ public partial class CUDDialogViewModel : ObservableRecipient
         var specialisedValue = taskVisitor.visitTask(task);
         if (specialisedValue != null)
         {
-            if (specialisedValue is List<Values.Weekdays> weekdays)
+            if (specialisedValue is List<DayOfWeek> weekdays)
             {
                 InputWeekDays = weekdays;
             }

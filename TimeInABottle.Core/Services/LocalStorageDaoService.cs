@@ -53,7 +53,7 @@ public class LocalStorageDaoService : IDaoService
                 task is DailyTask ||
                 task is NonRepeatedTask nrt && nrt.Date == today ||
                 task is MonthlyTask mt && mt.Date == today.Day ||
-                task is WeeklyTask wt && wt.WeekDays.Contains((Values.Weekdays)today.DayOfWeek))
+                task is WeeklyTask wt && wt.WeekDays.Contains(today.DayOfWeek))
             .ToList();
 
         var sorter = new TaskListSorter();
@@ -65,7 +65,6 @@ public class LocalStorageDaoService : IDaoService
 
     public void AddTask(ITask task) => throw new NotImplementedException(); // intentionally left unimplemented
 
-    public FullObservableCollection<ITask> CustomQuery(IFilter filter, bool isSortAscending) => throw new NotImplementedException();
     public void DeleteTask(ITask task) => throw new NotImplementedException();
     FullObservableCollection<ITask> IDaoService.GetAllTasks() => throw new NotImplementedException();
     FullObservableCollection<ITask> IDaoService.GetThisMonthTasks() => throw new NotImplementedException();

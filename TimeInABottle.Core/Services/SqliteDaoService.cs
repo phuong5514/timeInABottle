@@ -10,7 +10,7 @@ using TimeInABottle.Core.Models.Filters;
 using TimeInABottle.Core.Models.Tasks;
 
 namespace TimeInABottle.Core.Services;
-public class SqliteDaoService : IDaoService, IDaoExporterService
+public class SqliteDaoService : IDaoService, IDaoExporterService, IDaoQueryService
 {
     private readonly TaskContext _db;
     private string _exportPath;
@@ -42,7 +42,7 @@ public class SqliteDaoService : IDaoService, IDaoExporterService
     }
 
 
-    public FullObservableCollection<ITask> GetAllTasks() { 
+    public FullObservableCollection<ITask> GetAllTasks() {
         var tasks = _db.Tasks.ToList();
         return new FullObservableCollection<ITask>(tasks);
     }
@@ -81,20 +81,20 @@ public class SqliteDaoService : IDaoService, IDaoExporterService
                 task is DailyTask ||
                 task is NonRepeatedTask nrt && nrt.Date == today ||
                 task is MonthlyTask mt && mt.Date == today.Day ||
-                task is WeeklyTask wt && wt.WeekDays.Contains((Values.Weekdays)today.DayOfWeek))
+                task is WeeklyTask wt && wt.WeekDays.Contains(today.DayOfWeek))
             .ToList();
 
         return new FullObservableCollection<ITask>(todayTasks);
     }
 
 
-    public void AddTask(ITask task) { 
+    public void AddTask(ITask task) {
         _db.Tasks.Add(task);
         saveChanges();
     }
 
     // potentially deprecated and unused
-    public void UpdateTask(ITask task) { 
+    public void UpdateTask(ITask task) {
         _db.Tasks.Update(task);
         saveChanges();
     }
@@ -111,7 +111,7 @@ public class SqliteDaoService : IDaoService, IDaoExporterService
         Export();
     }
 
-    public void Export() { 
+    public void Export() {
         var tasks = _db.Tasks.ToList();
         var today = DateOnly.FromDateTime(DateTime.Now);
         var optimisedTasks = tasks
@@ -126,4 +126,17 @@ public class SqliteDaoService : IDaoService, IDaoExporterService
         var jsonTasks = TaskToJsonTaskConverter.ConvertList(optimisedTasks);
         LocalStorageWriter.Write(_exportPath, jsonTasks);
     }
-}
+
+    public FullObservableCollection<ITask> FindTaskFromDate(DateOnly date) {
+        var tasks = _db.Tasks.ToList();
+        var filteredTasks = tasks
+            .Where(task =>
+                task is DailyTask ||
+                task is NonRepeatedTask nrt && nrt.Date == date ||
+                task is MonthlyTask mt && mt.Date == date.Day ||
+                task is WeeklyTask wt && wt.WeekDays.Contains(date.DayOfWeek)
+            ).ToList();
+
+        return new FullObservableCollection<ITask>(filteredTasks);
+    }
+}   

@@ -14,16 +14,16 @@ public class Values
     /// <summary>
     /// Enumeration of the days of the week, starting with Monday as 1.
     /// </summary>
-    public enum Weekdays
-    {
-        Monday = 1,
-        Tuesday,
-        Wednesday,
-        Thursday,
-        Friday,
-        Saturday,
-        Sunday
-    }
+    //public enum Weekdays
+    //{
+    //    Monday = 1,
+    //    Tuesday,
+    //    Wednesday,
+    //    Thursday,
+    //    Friday,
+    //    Saturday,
+    //    Sunday
+    //}
 
     /// <summary>
     /// Enumeration of the months of the year, starting with January as 1.
