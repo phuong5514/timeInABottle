@@ -1,7 +1,10 @@
-﻿using CommunityToolkit.WinUI.UI.Controls;
+﻿using System.Reflection;
+using System.Text;
+using CommunityToolkit.WinUI.UI.Controls;
 
 using Microsoft.UI.Xaml.Controls;
 using TimeInABottle.Core.Models.Filters;
+using TimeInABottle.Models;
 using TimeInABottle.ViewModels;
 
 namespace TimeInABottle.Views;
@@ -149,12 +152,38 @@ public sealed partial class TaskListPage : Page
         ViewModel.resetFilterChoice();
     }
 
-    private async Task CreateFailureDialog()
+    private async Task CreateFailureDialog(FunctionResultCode code)
     {
+        var message = "";
+        switch (code)
+        {
+            case FunctionResultCode.ERROR:
+                message = "An error occurred";
+                break;
+
+            case FunctionResultCode.ERROR_INVALID_INPUT:
+                var stringBuilder = new StringBuilder();
+                stringBuilder.AppendLine("Invalid input, make sure to check your input!");
+                stringBuilder.AppendLine("");
+                stringBuilder.AppendLine("Commonly occured scenarios:");
+                stringBuilder.AppendLine("1. Start time is after or is the same as end time");
+                stringBuilder.AppendLine("2. there is already a task occupied that time");
+                message = stringBuilder.ToString(); 
+                break;
+
+            case FunctionResultCode.ERROR_MISSING_INPUT:
+                message = "Missing input(s), make sure to fill all the required fields!";
+                break;
+
+            case FunctionResultCode.ERROR_UNKNOWN:
+                message = "An unknown error occurred";
+                break;
+        }
+
         var dialog = new ContentDialog
         {
             Title = "Error",
-            Content = new UserControl() { Content = new TextBlock() { Text = "Failed to save changes" } },
+            Content = new UserControl() { Content = new TextBlock() { Text = message } },
             CloseButtonText = "Ok",
             XamlRoot = this.Content.XamlRoot, // Ensure the dialog is shown in the correct XAML root
         };
@@ -189,13 +218,14 @@ public sealed partial class TaskListPage : Page
         var result = await dialog.ShowAsync();
         if (result == ContentDialogResult.Primary)
         {
-            if (dialogViewModel.SaveChanges())
+            var code = dialogViewModel.SaveChanges();
+            if (code == Models.FunctionResultCode.SUCCESS)
             {
                 // tell the view model that data is changed
                 ViewModel.LoadTask();
             }
             else {
-                _ = CreateFailureDialog();
+                _ = CreateFailureDialog(code);
             };
             
         }
@@ -230,12 +260,13 @@ public sealed partial class TaskListPage : Page
         var result = await dialog.ShowAsync();
         if (result == ContentDialogResult.Primary)
         {
-            if (dialogViewModel.SaveChanges())
+            var code = dialogViewModel.SaveChanges();
+            if (code == FunctionResultCode.SUCCESS)
             {
                 ViewModel.LoadTask();
             }
             else {
-                _ = CreateFailureDialog();
+                _ = CreateFailureDialog(code);
             }
             
         }

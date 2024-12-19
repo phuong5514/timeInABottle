@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Helpers;
 using TimeInABottle.Core.Models.Tasks;
+using TimeInABottle.Models;
 
 namespace TimeInABottle.ViewModels;
 public partial class CUDDialogViewModel : ObservableRecipient
@@ -142,19 +143,20 @@ public partial class CUDDialogViewModel : ObservableRecipient
         }
     }
 
-    private bool ValidateInput()
+    private FunctionResultCode ValidateInput()
     {
-        var result = true;
-        result &= validateEmptyInput();
-        result &= validateTime();
-        return result;
+        if (!validateEmptyInput())
+        {
+            return FunctionResultCode.ERROR_MISSING_INPUT;
+        }
+
+        return validateTime() ? FunctionResultCode.SUCCESS : FunctionResultCode.ERROR_INVALID_INPUT;
     }
 
     private bool validateEmptyInput()
     {
         var result = true;
         result &= !string.IsNullOrWhiteSpace(InputName);
-        result &= InputStart < InputEnd;
         result &= !string.IsNullOrWhiteSpace(TypeName);
 
         switch(TypeName)
@@ -174,6 +176,11 @@ public partial class CUDDialogViewModel : ObservableRecipient
 
     private bool validateTime()
     {
+        if (InputStart >= InputEnd)
+        {
+            return false;
+        }
+
         var allowedTimeSpans = new List<TimeSpan>();
         var timeGetter = App.GetService<IAvailableTimesGetter>();
         switch (TypeName)
@@ -193,11 +200,12 @@ public partial class CUDDialogViewModel : ObservableRecipient
     }
 
 
-    public bool SaveChanges()
+    public FunctionResultCode SaveChanges()
     {
-        if (!ValidateInput())
+        var validationResult = ValidateInput();
+        if (validationResult != FunctionResultCode.SUCCESS)
         {
-            return false;
+            return validationResult;
         }
 
         if (IsEditMode)
@@ -233,7 +241,7 @@ public partial class CUDDialogViewModel : ObservableRecipient
         }
 
         _daoService.AddTask(_task);
-        return true;
+        return FunctionResultCode.SUCCESS;
     }
 
     public bool DeleteTask()
