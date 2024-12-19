@@ -32,6 +32,10 @@ public partial interface IDaoService
     /// <returns>A collection of this week's tasks.</returns>
     FullObservableCollection<ITask> GetThisWeekTasks();
 
+    FullObservableCollection<ITask> GetNextWeekTasks();
+
+    FullObservableCollection<ITask> GetThisWeekTasksFromNow();
+
     /// <summary>
     /// Retrieves tasks scheduled for the current month.
     /// </summary>

@@ -20,7 +20,7 @@ public class AvailableTimesGetter : IAvailableTimesGetter
         _timeIncrement = timeIncrement;
     }
 
-    private IEnumerable<TimeSpan> GetAvailableTimes(IEnumerable<ITask> taskList) 
+    public IEnumerable<TimeSpan> GetAvailableTimes(IEnumerable<ITask> taskList) 
     {
         var startTime = TimeSpan.FromHours(0); // 12:00 AM
         var endTime = TimeSpan.FromHours(24); // 11:59 PM
@@ -46,18 +46,21 @@ public class AvailableTimesGetter : IAvailableTimesGetter
         return availableTimes;
     }
 
-    public IEnumerable<TimeSpan> GetAvailableTimesForDate(DateOnly date) { 
+    public IEnumerable<TimeSpan> GetAvailableTimesForDate(DateOnly date)
+    {
         var tasks = _daoQueryService.FindTaskFromDate(date);
         return GetAvailableTimes(tasks);
     }
 
-    public IEnumerable<TimeSpan> GetAvailableTimesForToday() { 
+    public IEnumerable<TimeSpan> GetAvailableTimesForToday()
+    {
         var tasks = _daoQueryService.GetTodayTasks();
 
         return GetAvailableTimes(tasks);
     }
 
-    public IEnumerable<TimeSpan> GetAvailableTimesForWeek() { 
+    public IEnumerable<TimeSpan> GetAvailableTimesForWeek()
+    {
         var tasks = _daoQueryService.GetThisWeekTasks();
         return GetAvailableTimes(tasks);
     }
@@ -68,8 +71,20 @@ public class AvailableTimesGetter : IAvailableTimesGetter
         return GetAvailableTimes(tasks);
     }
 
-    public IEnumerable<TimeSpan> GetAvailableTimesForDate(int date) {
+    public IEnumerable<TimeSpan> GetAvailableTimesForDate(int date)
+    {
         var dateOnly = new DateOnly(DateTime.Now.Year, DateTime.Now.Month, date);
         return GetAvailableTimesForDate(dateOnly);
+    }
+
+    public IEnumerable<TimeSpan> GetAvailableTimesForNextWeek()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IEnumerable<TimeSpan> GetAvailableTimesForWeekFromNow()
+    {
+        var tasks = _daoQueryService.GetThisWeekTasksFromNow();
+        return GetAvailableTimes(tasks);
     }
 }

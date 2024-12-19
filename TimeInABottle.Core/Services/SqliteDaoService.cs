@@ -175,4 +175,36 @@ public class SqliteDaoService : IDaoService
         filteredTasks.AddRange(monthlyTasks);
         return new FullObservableCollection<ITask>(filteredTasks);
     }
+
+    public FullObservableCollection<ITask> GetNextWeekTasks() {
+        var tasks = _db.Tasks.ToList();
+        var startOfWeek = DateOnly.FromDateTime(DateTime.Now.StartOfWeek(DayOfWeek.Monday)).AddDays(7);
+        var endOfWeek = startOfWeek.AddDays(6);
+
+        var thisWeekTasks = tasks
+            .Where(task =>
+                task is WeeklyTask ||
+                (task is NonRepeatedTask nrt && nrt.Date >= startOfWeek && nrt.Date <= endOfWeek) ||
+                task is DailyTask ||
+                (task is MonthlyTask mt && mt.Date >= startOfWeek.Day && (mt.Date <= endOfWeek.Day || endOfWeek.Day < startOfWeek.Day))
+            )
+            .ToList();
+        return new FullObservableCollection<ITask>(thisWeekTasks);
+    }
+
+    public FullObservableCollection<ITask> GetThisWeekTasksFromNow() {
+        var tasks = _db.Tasks.ToList();
+        var endOfWeek = DateOnly.FromDateTime(DateTime.Now.StartOfWeek(DayOfWeek.Monday)).AddDays(6);
+        var today = DateOnly.FromDateTime(DateTime.Now);
+        var now = TimeOnly.FromDateTime(DateTime.Now);
+
+        var filteredTasks = tasks
+            .Where(task =>
+                (task is NonRepeatedTask nrt && (nrt.Date > today && nrt.Date <= endOfWeek || (nrt.Date == today && nrt.Start > now))) ||
+                task is DailyTask dt && dt.Start > now ||
+                (task is MonthlyTask mt && ((mt.Date > today.Day && (mt.Date <= endOfWeek.Day || endOfWeek.Day < today.Day)) || mt.Date == today.Day && mt.Start > now)) ||
+                (task is WeeklyTask wt)
+            ).ToList();
+        return new FullObservableCollection<ITask>(filteredTasks);
+    }
 }   
