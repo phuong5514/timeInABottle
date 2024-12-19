@@ -84,9 +84,17 @@
         
 
         <DataTemplate x:Key="FilterTagTemplate" x:DataType="filters:IFilter">
-            <TextBlock
-                Text="{Binding Converter= {StaticResource FilterConverter}}"
-                ToolTipService.ToolTip="Click to remove filter criteria"/>
+            <StackPanel 
+                Orientation="Horizontal"
+                VerticalAlignment="Center"
+                Style="{StaticResource FilterTag}">
+                
+                <TextBlock
+                    
+                    Text="{Binding Converter= {StaticResource FilterConverter}}"
+                    ToolTipService.ToolTip="Click to remove filter criteria"/>
+            </StackPanel>
+
         </DataTemplate>
 
 

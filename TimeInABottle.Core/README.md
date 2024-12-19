@@ -19,5 +19,10 @@ The Core project contains code that can be [reused across multiple application p
 		<EndTime>22:00:00</EndTime>  // weather data end point
 		<TimeZone>+07:00</TimeZone> // timezone
 	</WeatherAPI>
+
+	<Dao>
+		<bgComFile>{name of the json file that will communicate with background task}</bgComFile>
+		<connectionStrFilename>{database file name}</connectionStrFilename>
+	</Dao>
 </configuration>
 ```

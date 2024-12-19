@@ -48,4 +48,14 @@
         <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
 
+    <Style x:Key="FilterTag" TargetType="StackPanel">
+        <Setter Property="Height" Value="28"/>
+        <Setter Property="Width" Value="auto"/>
+        <Setter Property="Margin" Value="{StaticResource SmallLeftMargin}"/>
+        <Setter Property="Padding" Value="{StaticResource SmallPadding}"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Background" Value="#03a9fc"/>
+    </Style>
+
+
 </ResourceDictionary>

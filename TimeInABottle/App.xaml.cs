@@ -6,6 +6,7 @@ using TimeInABottle.Activation;
 using TimeInABottle.Background;
 using TimeInABottle.Contracts.Services;
 using TimeInABottle.Core.Contracts.Services;
+using TimeInABottle.Core.Models.Tasks;
 using TimeInABottle.Core.Services;
 using TimeInABottle.Models;
 using TimeInABottle.Services;
@@ -68,13 +69,14 @@ public partial class App : Application
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<IBackgroundTaskRegisterService, BackgroundTaskRegisterService>();
             services.AddSingleton<ILocationService, LocationService>();
-            services.AddSingleton<IWeatherService, ApiWeatherService>();
             services.AddSingleton<IBehaviorController, ApiWeatherServiceBehaviorController>();
             services.AddSingleton<IStorageService, LocalStorageService>();
 
 
             // Core Services
             //services.AddSingleton<IDaoService, MockDaoService>();
+            services.AddSingleton<IWeatherService, ApiWeatherService>();
+            services.AddSingleton<IAvailableTimesGetter>(provider => new AvailableTimesGetter(provider.GetRequiredService<IDaoService>(), 30));
             services.AddSingleton<IDaoService, SqliteDaoService>();
             services.AddSingleton<ISampleDataService, SampleDataService>();
             services.AddSingleton<IFileService, FileService>();
@@ -115,7 +117,9 @@ public partial class App : Application
 
         await App.GetService<IActivationService>().ActivateAsync(args);
 
+        // init
         RegisterBackgroundTask();
+        registerTaskFactory();
 
         var behaviorController = App.GetService<IBehaviorController>();
         await behaviorController.RunAsync();
@@ -128,6 +132,28 @@ public partial class App : Application
         backgroundTaskRegisterService.CleanRegister();
 
         backgroundTaskRegisterService.RegisterBackgroundTask("NotificationBackgroundTasks", "TimeInABottle.Background.NotificationBackgroundTasks", new TimeTrigger(15, false));
+    }
+
+    private void registerTaskFactory()
+    {
+        var taskType = typeof(ITask);
+        var assembly = taskType.Assembly;
+
+        var taskTypes = assembly.GetTypes()
+                                .Where(t => t.IsSubclassOf(taskType) && !t.IsAbstract)
+                                .ToList();
+
+        foreach (var type in taskTypes)
+        {
+            if (Activator.CreateInstance(type) is ITask taskInstance)
+            {
+                if (type.Name == "DerivedTask")
+                {
+                    continue;
+                }
+                Core.Models.Tasks.TaskFactory.RegisterTask(type.Name, type);
+            }
+        }
     }
 
 }

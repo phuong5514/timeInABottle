@@ -39,7 +39,7 @@ public class WeeklyTask : IRepeatedTask
     /// <param name="startingTime">The starting time of the weekly task.</param>
     /// <param name="endingTime">The ending time of the weekly task.</param>
     /// <param name="weekdays">The list of weekdays on which the task occurs.</param>
-    public WeeklyTask(string name, string description, TimeOnly startingTime, TimeOnly endingTime, List<Values.Weekdays> weekdays)
+    public WeeklyTask(string name, string description, TimeOnly startingTime, TimeOnly endingTime, List<DayOfWeek> weekdays)
         : base(name, description, startingTime, endingTime)
     {
         WeekDays = weekdays;
@@ -48,7 +48,7 @@ public class WeeklyTask : IRepeatedTask
     /// <summary>
     /// Gets or sets the list of weekdays on which the task occurs.
     /// </summary>
-    public List<Values.Weekdays> WeekDays
+    public List<DayOfWeek> WeekDays
     {
         get; set;
     }

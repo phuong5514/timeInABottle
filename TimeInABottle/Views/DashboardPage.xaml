@@ -25,63 +25,55 @@
             </StackPanel>
         </DataTemplate>
 
+        <!--PointerEntered="CalendarTaskItem_PointerEntered"-->
+
         <DataTemplate x:Key="CalendarTaskItem" x:DataType="task:ITask">
-            <StackPanel 
-                Orientation="Vertical"
-                Style="{StaticResource CellContentStackPanel}"
-                PointerEntered="CalendarTaskItem_PointerEntered"
-            >
-                <StackPanel.Background>
+            <Button Style="{StaticResource CellContentButton}">
+                <Button.Background>
                     <AcrylicBrush 
-                        TintColor="#e67c73"
+                        TintColor="#03a9fc"
                         TintOpacity="0.6"
                         FallbackColor="#fff"
                         AlwaysUseFallback="False" />
-                </StackPanel.Background>
-
-                <TextBlock Style="{StaticResource CalendarTaskItem}">
-                    <Run Text="{x:Bind Name}"/>
-                </TextBlock>
-                
-                <TextBlock Style="{StaticResource CalendarTaskItem}">
-                    <Run Text="{x:Bind Start, Converter={StaticResource TimeToStringConverter}}"/> - <Run Text="{x:Bind End, Converter={StaticResource TimeToStringConverter}}"/>
-                </TextBlock>
-                
-            </StackPanel>
-        </DataTemplate>
-
-        <DataTemplate x:Key="CalendarTaskItemFlyout" x:DataType="task:ITask">
-            <ScrollView>
-                <ScrollView.Background>
-                    <AcrylicBrush 
-                        TintColor="#e67c73"
-                        TintOpacity="0.6"
-                        FallbackColor="#fff"
-                        AlwaysUseFallback="False" />
-                </ScrollView.Background>
-                <StackPanel 
-                    Orientation="Vertical"
-                    Style="{StaticResource CellContentFlyout}"
-                    >
+                </Button.Background>
+                <StackPanel Orientation="Vertical" Style="{StaticResource CellContentStackPanel}">
                     
-                    <TextBlock Style="{StaticResource CalendarTaskItemExtended}">
+
+                    <TextBlock Style="{StaticResource CalendarTaskItem}">
                         <Run Text="{x:Bind Name}"/>
                     </TextBlock>
 
-                    <TextBlock Style="{StaticResource CalendarTaskItemExtended}">
+                    <TextBlock Style="{StaticResource CalendarTaskItem}">
                         <Run Text="{x:Bind Start, Converter={StaticResource TimeToStringConverter}}"/> - <Run Text="{x:Bind End, Converter={StaticResource TimeToStringConverter}}"/>
                     </TextBlock>
-
-                    <TextBlock Style="{StaticResource CalendarTaskItemExtended}">
-                        <Run Text="{x:Bind Converter={StaticResource TaskToSpecialtyStringConverter}, Mode=OneWay}"/>
-                    </TextBlock>
-
-                    <TextBlock Style="{StaticResource CalendarTaskItemExtended}">
-                        <Run Text="{x:Bind Description}"/>
-                    </TextBlock>
                 </StackPanel>
-            </ScrollView>
+
+                <Button.Flyout>
+                    <Flyout FlyoutPresenterStyle="{StaticResource CellContentFlyout}">
+                        <ScrollViewer>
+                            <StackPanel Orientation="Vertical" Style="{StaticResource CellContentStackPanel}">
+                                <TextBlock Style="{StaticResource CalendarTaskItemExtended}">
+                                    <Run Text="{x:Bind Name}"/>
+                                </TextBlock>
+
+                                <TextBlock Style="{StaticResource CalendarTaskItemExtended}">
+                                    <Run Text="{x:Bind Start, Converter={StaticResource TimeToStringConverter}}"/> - <Run Text="{x:Bind End, Converter={StaticResource TimeToStringConverter}}"/>
+                                </TextBlock>
+
+                                <TextBlock Style="{StaticResource CalendarTaskItemExtended}">
+                                    <Run Text="{x:Bind Converter={StaticResource TaskToSpecialtyStringConverter}, Mode=OneWay}"/>
+                                </TextBlock>
+
+                                <TextBlock Style="{StaticResource CalendarTaskItemExtended}">
+                                    <Run Text="{x:Bind Description}"/>
+                                </TextBlock>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
         </DataTemplate>
+
     </Page.Resources>
 
     <Grid x:Name="ContentArea">

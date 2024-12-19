@@ -13,7 +13,7 @@ public class GetTaskSpecialtiesVisitor
         return task.Accept(this);
     }
 
-    public List<Values.Weekdays> VisitWeeklyTask(WeeklyTask task)
+    public List<DayOfWeek> VisitWeeklyTask(WeeklyTask task)
     {
         return task.WeekDays;
     }

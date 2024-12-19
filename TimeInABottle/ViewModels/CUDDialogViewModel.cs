@@ -5,9 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Helpers;
 using TimeInABottle.Core.Models.Tasks;
+using TimeInABottle.Models;
 
 namespace TimeInABottle.ViewModels;
 public partial class CUDDialogViewModel : ObservableRecipient
@@ -16,6 +18,11 @@ public partial class CUDDialogViewModel : ObservableRecipient
     public string InputDescription { set; get; }
     public TimeSpan InputStart { set; get; }
     public TimeSpan InputEnd { set; get; }
+    public int Id
+    {
+        set; get;
+    }
+    public bool IsEditMode => Id != 0;
 
     public List<ITask> TaskOptions { private set; get; }
     public ITask SelectedTaskOption
@@ -32,6 +39,7 @@ public partial class CUDDialogViewModel : ObservableRecipient
             }
             return SelectedTaskOption.TypeName();
         }
+
     }
 
 
@@ -40,7 +48,7 @@ public partial class CUDDialogViewModel : ObservableRecipient
     public static readonly List<string> Weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
     // specialized input
-    public List<Values.Weekdays> InputWeekDays
+    public List<DayOfWeek> InputWeekDays
     {
         set; get;
     }
@@ -75,18 +83,23 @@ public partial class CUDDialogViewModel : ObservableRecipient
 
     public void EditMode(ITask task)
     {
+        if (task == null) {
+            return;
+        }
+
         _task = task;
         InputName = task.Name;
         InputDescription = task.Description;
         InputStart = task.Start.ToTimeSpan();
         InputEnd = task.End.ToTimeSpan();
+        Id = task.Id;
 
 
         var taskVisitor = new GetTaskSpecialtiesVisitor();
         var specialisedValue = taskVisitor.visitTask(task);
         if (specialisedValue != null)
         {
-            if (specialisedValue is List<Values.Weekdays> weekdays)
+            if (specialisedValue is List<DayOfWeek> weekdays)
             {
                 InputWeekDays = weekdays;
             }
@@ -125,49 +138,90 @@ public partial class CUDDialogViewModel : ObservableRecipient
             if (Activator.CreateInstance(type) is ITask taskInstance)
             {
                 TaskOptions.Add(taskInstance);
-                Core.Models.Tasks.TaskFactory.RegisterTask(type.Name, type);
+                //Core.Models.Tasks.TaskFactory.RegisterTask(type.Name, type);
             }
         }
     }
 
-    private bool ValidateInput()
+    private FunctionResultCode ValidateInput()
     {
-        if (string.IsNullOrWhiteSpace(InputName))
+        if (!validateEmptyInput())
         {
-            return false;
+            return FunctionResultCode.ERROR_MISSING_INPUT;
         }
+
+        return validateTime() ? FunctionResultCode.SUCCESS : FunctionResultCode.ERROR_INVALID_INPUT;
+    }
+
+    private bool validateEmptyInput()
+    {
+        var result = true;
+        result &= !string.IsNullOrWhiteSpace(InputName);
+        result &= !string.IsNullOrWhiteSpace(TypeName);
+
+        switch(TypeName)
+        {
+            case "WeeklyTask":
+                result &= InputWeekDays.Count > 0;
+                break;
+            case "MonthlyTask":
+                result &= InputMonthlyDay > 0;
+                break;
+            case "NonRepeatedTask":
+                result &= DateOnly.FromDateTime(InputSpecificDay) >= new DateOnly();
+                break;
+        }
+        return result;
+    }
+
+    private bool validateTime()
+    {
         if (InputStart >= InputEnd)
         {
             return false;
         }
-        if (string.IsNullOrWhiteSpace(TypeName)) {
-            return false;
-        }
-        if (TypeName == "WeeklyTask" && InputWeekDays.Count == 0)
+
+        var allowedTimeSpans = new List<TimeSpan>();
+        var timeGetter = App.GetService<IAvailableTimesGetter>();
+        switch (TypeName)
         {
-            return false;
+            case "WeeklyTask":
+                allowedTimeSpans = (List<TimeSpan>) timeGetter.GetAvailableTimesForWeek(InputWeekDays);
+                break;
+            case "MonthlyTask":
+                allowedTimeSpans = (List<TimeSpan>) timeGetter.GetAvailableTimesForDate(InputMonthlyDay);
+                break;
+            case "NonRepeatedTask":
+                allowedTimeSpans = (List<TimeSpan>)timeGetter.GetAvailableTimesForDate(DateOnly.FromDateTime(InputSpecificDay));
+                break;
         }
-        if (TypeName == "MonthlyTask" && InputMonthlyDay == 0)
-        {
-            return false;
-        }
-        if (TypeName == "NonRepeatedTask" && DateOnly.FromDateTime(InputSpecificDay) < new DateOnly())
-        {
-            return false;
-        }
-        return true;
+
+        return allowedTimeSpans.Contains(InputStart) && allowedTimeSpans.Contains(InputEnd);
     }
 
 
-    public bool SaveChanges()
+    public FunctionResultCode SaveChanges()
     {
-        var needToCreate = _task == null;
-        if (!ValidateInput())
+        var validationResult = ValidateInput();
+        if (validationResult != FunctionResultCode.SUCCESS)
         {
-            return false;
+            return validationResult;
         }
 
-        _task ??= Core.Models.Tasks.TaskFactory.CreateTask(TypeName);
+        if (IsEditMode)
+        {
+            _daoService.DeleteTask(_task);
+        }
+
+        if (TypeName == nameof(WeeklyTask) && InputWeekDays.Count == Weekdays.Count)
+        {
+            _task = Core.Models.Tasks.TaskFactory.CreateTask(nameof(DailyTask));
+        }
+        else
+        {
+            _task = Core.Models.Tasks.TaskFactory.CreateTask(TypeName);
+        }
+
 
         _task.Name = InputName;
         _task.Description = InputDescription;
@@ -186,16 +240,8 @@ public partial class CUDDialogViewModel : ObservableRecipient
             nonRepeatedTask.Date = DateOnly.FromDateTime(InputSpecificDay);
         }
 
-        if (needToCreate)
-        {
-            _daoService.AddTask(_task);
-        }
-        else
-        {
-            _daoService.UpdateTask(_task);
-        }
-
-        return true;
+        _daoService.AddTask(_task);
+        return FunctionResultCode.SUCCESS;
     }
 
     public bool DeleteTask()
