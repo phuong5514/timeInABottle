@@ -131,30 +131,6 @@ public sealed partial class DashboardPage : Page
         return content;
     }
 
-    private UIElement CreateTaskGridFlyout(ITask task)
-    {
-        // Retrieve the DataTemplate
-        var template = (DataTemplate)Resources["CalendarTaskItemFlyout"];
-        if (template == null)
-        {
-            throw new InvalidOperationException("DataTemplate 'CalendarTaskItemFlyout' not found in resources.");
-        }
-        // Load the template content
-        try
-        {
-            var content = (FrameworkElement)template.LoadContent();
-            content.DataContext = task;
-            return content;
-        }
-        catch
-        {
-            return null;
-        }
-
-        // Set the data context to bind the task
-
-    }
-
     /// <summary>
     /// Calculates the row index based on the time.
     /// </summary>
@@ -284,20 +260,6 @@ public sealed partial class DashboardPage : Page
             //Canvas.SetZIndex(SideBar, 0);
             ColumnDefinitionSideBar.Width = new GridLength(0);
         }
-    }
-
-    private void CalendarTaskItem_PointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
-    {
-        var task = (ITask)((FrameworkElement)sender).DataContext;
-        var content = CreateTaskGridFlyout(task);
-
-        var flyout = new Flyout
-        {
-            Content = content,
-        };
-
-        FlyoutBase.SetAttachedFlyout((FrameworkElement)sender, flyout);
-        FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
     }
 
 }
