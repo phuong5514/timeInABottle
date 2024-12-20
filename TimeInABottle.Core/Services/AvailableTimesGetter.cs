@@ -87,4 +87,6 @@ public class AvailableTimesGetter : IAvailableTimesGetter
         var tasks = _daoQueryService.GetThisWeekTasksFromNow();
         return GetAvailableTimes(tasks);
     }
+
+    public IEnumerable<TimeSpan> GetAvailableTimesForTodayFromNow() => throw new NotImplementedException();
 }

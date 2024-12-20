@@ -17,4 +17,5 @@ public interface IAvailableTimesGetter
     public IEnumerable<TimeSpan> GetAvailableTimesForWeek();
     public IEnumerable<TimeSpan> GetAvailableTimesForNextWeek();
     public IEnumerable<TimeSpan> GetAvailableTimesForWeekFromNow();
+    public IEnumerable<TimeSpan> GetAvailableTimesForTodayFromNow();
 }
