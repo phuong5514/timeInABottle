@@ -34,6 +34,9 @@ public partial class SchedularViewModel : ObservableRecipient
     [ObservableProperty]
     public TaskWrapper? selectedTask;
 
+    public bool IsTaskSelected => SelectedTask != null;
+    public bool IsTaskNotSelected => !IsTaskSelected;
+
 
     public void Innit()
     {
