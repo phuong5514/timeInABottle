@@ -7,7 +7,7 @@ using TimeInABottle.Core.Models.Tasks;
 using TimeInABottle.Models;
 
 namespace TimeInABottle.Contracts.Services;
-public interface ISchedularService
+public interface IPlannerService
 {
     IEnumerable<DerivedTask> ScheduleThisWeek(IEnumerable<TaskWrapper> tasks);
     IEnumerable<DerivedTask> ScheduleNextWeek(IEnumerable<TaskWrapper> tasks);

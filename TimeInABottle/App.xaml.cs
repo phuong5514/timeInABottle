@@ -12,6 +12,7 @@ using TimeInABottle.Models;
 using TimeInABottle.Services;
 using TimeInABottle.ViewModels;
 using TimeInABottle.Views;
+
 using Windows.ApplicationModel.Background;
 
 namespace TimeInABottle;
@@ -71,6 +72,8 @@ public partial class App : Application
             services.AddSingleton<ILocationService, LocationService>();
             services.AddSingleton<IBehaviorController, ApiWeatherServiceBehaviorController>();
             services.AddSingleton<IStorageService, LocalStorageService>();
+            services.AddSingleton<IPlannerService, TimeSlotBasedPlannerService>();
+
 
 
             // Core Services
@@ -82,6 +85,8 @@ public partial class App : Application
             services.AddSingleton<IFileService, FileService>();
 
             // Views and ViewModels
+            services.AddTransient<SchedularViewModel>();
+            services.AddTransient<SchedularPage>();
             services.AddTransient<TaskListViewModel>();
             services.AddTransient<TaskListPage>();
             services.AddTransient<DashboardViewModel>();

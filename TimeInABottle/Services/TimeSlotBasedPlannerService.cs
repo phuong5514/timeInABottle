@@ -10,7 +10,7 @@ using TimeInABottle.Core.Services;
 using TimeInABottle.Models;
 
 namespace TimeInABottle.Services;
-public class TimeSlotBasedSchedularService : ISchedularService
+public class TimeSlotBasedPlannerService : IPlannerService
 {
     private TimeSpan _minimumStart;
     private TimeSpan _maximumEnd;
@@ -35,7 +35,7 @@ public class TimeSlotBasedSchedularService : ISchedularService
         }
     }
 
-    public TimeSlotBasedSchedularService()
+    public TimeSlotBasedPlannerService()
     {
         _availableTimesGetter = App.GetService<IAvailableTimesGetter>();
         ReadConfig();
@@ -222,16 +222,16 @@ public class TimeSlotBasedSchedularService : ISchedularService
         var start = TimeOnly.FromTimeSpan(timeSlot.StartTime);
         var timeSlotDuration = timeSlot.EndTime - timeSlot.StartTime;
 
-        if (timeSlotDuration >= task.ExpectedDuration)
+        if (timeSlotDuration >= task.EstimatedCompletionTime)
         {
-            AddDerivedTask(result, task.Task.Name, start, timeSlot.StartTime.Add(task.ExpectedDuration), date);
-            UpdateTimeSlotAfterTask(dayTimeSlots, timeSlot, task.ExpectedDuration);
+            AddDerivedTask(result, task.Task.Name, start, timeSlot.StartTime.Add(task.EstimatedCompletionTime), date);
+            UpdateTimeSlotAfterTask(dayTimeSlots, timeSlot, task.EstimatedCompletionTime);
             sortedTasks.RemoveAt(0);
         }
         else
         {
             AddDerivedTask(result, task.Task.Name, start, timeSlot.EndTime, date);
-            task.ExpectedDuration -= timeSlotDuration;
+            task.EstimatedCompletionTime -= timeSlotDuration;
             dayTimeSlots.RemoveAt(0);
         }
     }
