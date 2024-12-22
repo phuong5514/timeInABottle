@@ -9,7 +9,8 @@
 	xmlns:model="using:TimeInABottle.Models"
 	xmlns:views="using:TimeInABottle.Views"
     xmlns:xaml="using:Microsoft.UI.Xaml"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+	x:Name="SchedulerPage">
 
     <Page.Resources>
         <helpers:TimeToGreetingConverter x:Key="TimeToGreetingConverter"/>
@@ -17,18 +18,25 @@
         <helpers:TaskToNotificationConverter x:Key="TaskToNotificationConverter"/>
         <helpers:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
-        <DataTemplate x:Key ="ListItem" x:DataType="task:ITask">
-            <StackPanel Orientation="Horizontal" Style="{StaticResource BaseListItemContainerStyle}">
+        <DataTemplate x:Key ="ListItem" x:DataType="model:TaskWrapper">
+            <StackPanel Orientation="Horizontal" Style="{StaticResource BaseListItemContainerStyle}" HorizontalAlignment="Stretch">
                 <TextBlock Style="{StaticResource ListSubTitleStyle}">
-                    <Run Text="{x:Bind Start, Converter={StaticResource TimeToStringConverter}}"/>: <Run Text="{x:Bind Name}"/>
+                    <Run Text="{x:Bind Task.Name}"/>
+					<!--<Run Text="{x:Bind Task.Start, Converter={StaticResource TimeToStringConverter}}"/>: -->
                 </TextBlock>
+				<Button Click="RemoveTask_Click" HorizontalAlignment="Right">
+					<FontIcon Glyph="&#xE738;"/>
+				</Button>
             </StackPanel>
         </DataTemplate>
 
         <!--PointerEntered="CalendarTaskItem_PointerEntered"-->
 
         <DataTemplate x:Key="CalendarTaskItem" x:DataType="task:ITask">
-            <Button Style="{StaticResource CellContentButton}">
+			<!--
+            <Button Style="{StaticResource CellContentButton}" Command="{Binding DataContext.AddTaskForSchedulingCommand, ElementName=SchedulerPage}" CommandParameter="{Binding}">
+			-->
+			<Button Style="{StaticResource CellContentButton}" Click="CalendarItem_Click">
                 <Button.Background>
                     <AcrylicBrush 
                         TintColor="#03a9fc"
@@ -37,12 +45,9 @@
                         AlwaysUseFallback="False" />
                 </Button.Background>
                 <StackPanel Orientation="Vertical" Style="{StaticResource CellContentStackPanel}">
-                    
-
                     <TextBlock Style="{StaticResource CalendarTaskItem}">
                         <Run Text="{x:Bind Name}"/>
                     </TextBlock>
-
                     <TextBlock Style="{StaticResource CalendarTaskItem}">
                         <Run Text="{x:Bind Start, Converter={StaticResource TimeToStringConverter}}"/> - <Run Text="{x:Bind End, Converter={StaticResource TimeToStringConverter}}"/>
                     </TextBlock>
@@ -127,7 +132,7 @@
 
 			<!-- SideBar: selected task for scheduling-->
             <StackPanel x:Name="SideBar" Grid.Column="1" Grid.RowSpan="2" Orientation="Vertical" Background="{ThemeResource SolidBackgroundFillColorBaseBrush}" Margin="0,0,0,32" CornerRadius="16">
-                <Button x:Name="ScheduleButton" Content="Schedule" Command="{Binding ScheduleSelectedTask}"/>
+                <Button x:Name="ScheduleButton" Content="Schedule" Click="ScheduleButton_Click"/>
                 <TextBlock Style="{StaticResource VerticalListTitleStyle}">Tasks for Scheduling</TextBlock>
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                     <ListView 

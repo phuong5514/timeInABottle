@@ -69,6 +69,7 @@ public class SqliteDaoService : IDaoService
             .Where(task =>
                 task is WeeklyTask ||
                 (task is NonRepeatedTask nrt && nrt.Date >= startOfWeek && nrt.Date <= endOfWeek) ||
+                (task is DerivedTask dt && dt.AssignedDate >= startOfWeek && dt.AssignedDate <= endOfWeek) || 
                 task is DailyTask ||
                 (task is MonthlyTask mt && mt.Date >= startOfWeek.Day && (mt.Date <= endOfWeek.Day || endOfWeek.Day < startOfWeek.Day))
             )
@@ -83,6 +84,7 @@ public class SqliteDaoService : IDaoService
             .Where(task =>
                 task is DailyTask ||
                 (task is NonRepeatedTask nrt && nrt.Date == today) ||
+                (task is DerivedTask dt && dt.AssignedDate == today) ||
                 task is MonthlyTask mt && mt.Date == today.Day ||
                 (task is WeeklyTask wt && wt.WeekDays.Contains(today.DayOfWeek))
             )
@@ -149,6 +151,7 @@ public class SqliteDaoService : IDaoService
             .Where(task =>
                 task is DailyTask ||
                 (task is NonRepeatedTask nrt && nrt.Date == date) ||
+                (task is DerivedTask dt && dt.AssignedDate == date) ||
                 (task is MonthlyTask mt && mt.Date == date.Day) ||
                 (task is WeeklyTask wt && wt.WeekDays.Contains(date.DayOfWeek))
             ).ToList();
@@ -164,6 +167,7 @@ public class SqliteDaoService : IDaoService
             .Where(task =>
                 (task is WeeklyTask wt && wt.WeekDays.Intersect(weekdays).Any()) ||
                 (task is NonRepeatedTask nrt && weekdays.Contains(nrt.Date.DayOfWeek) && nrt.Date <= endOfWeek) ||
+                (task is DerivedTask dt && weekdays.Contains(dt.AssignedDate.DayOfWeek) && dt.AssignedDate <= endOfWeek) || 
                 task is DailyTask
             ).ToList();
 
@@ -185,6 +189,7 @@ public class SqliteDaoService : IDaoService
             .Where(task =>
                 task is WeeklyTask ||
                 (task is NonRepeatedTask nrt && nrt.Date >= startOfWeek && nrt.Date <= endOfWeek) ||
+                (task is DerivedTask dt && dt.AssignedDate >= startOfWeek && dt.AssignedDate <= endOfWeek) ||
                 task is DailyTask ||
                 (task is MonthlyTask mt && mt.Date >= startOfWeek.Day && (mt.Date <= endOfWeek.Day || endOfWeek.Day < startOfWeek.Day))
             )
@@ -201,10 +206,33 @@ public class SqliteDaoService : IDaoService
         var filteredTasks = tasks
             .Where(task =>
                 (task is NonRepeatedTask nrt && (nrt.Date > today && nrt.Date <= endOfWeek || (nrt.Date == today && nrt.Start > now))) ||
+                (task is DerivedTask dtk && (dtk.AssignedDate > today && dtk.AssignedDate <= endOfWeek || (dtk.AssignedDate == today && dtk.Start > now))) ||
                 task is DailyTask dt && dt.Start > now ||
                 (task is MonthlyTask mt && ((mt.Date > today.Day && (mt.Date <= endOfWeek.Day || endOfWeek.Day < today.Day)) || mt.Date == today.Day && mt.Start > now)) ||
                 (task is WeeklyTask wt)
             ).ToList();
         return new FullObservableCollection<ITask>(filteredTasks);
+    }
+
+    public void AddTasks(IEnumerable<ITask> tasks) {
+        foreach (var task in tasks)
+        {
+            _db.Tasks.Add(task);
+        }
+        saveChanges();
+    }
+
+    public void UpdateTasks(IEnumerable<ITask> tasks) { 
+        foreach (var task in tasks)
+        {
+            UpdateTask(task);
+        }
+    }
+    public void DeleteTasks(IEnumerable<ITask> tasks)
+    {
+        foreach (var task in tasks)
+        {
+            DeleteTask(task);
+        }
     }
 }   

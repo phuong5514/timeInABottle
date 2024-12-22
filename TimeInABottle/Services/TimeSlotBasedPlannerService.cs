@@ -201,7 +201,7 @@ public class TimeSlotBasedPlannerService : IPlannerService
             date.AddDays((int)day - (int)date.DayOfWeek);
             var availableTimes = _availableTimesGetter.GetAvailableTimesForWeek([day]);
 
-            LoadDayOfWeekTimeSlots(day, availableTimes);
+            LoadDayOfWeekTimeSlots(day, availableTimes.Item1);
 
             var dayTimeSlots = TimeSlots[day];
             while (dayTimeSlots.Count > 0 && sortedTasks.Count > 0)

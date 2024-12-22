@@ -20,6 +20,7 @@ public sealed partial class SchedularPage : Page
 
         SetGrid();
         SetTitles();
+        LoadData();
     }
 
     private void SetGrid()
@@ -208,5 +209,47 @@ public sealed partial class SchedularPage : Page
         return endRow - startRow;
     }
 
+    public void CalendarItem_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var button = (Button)sender;
+            var task = (ITask)button.DataContext;
+            ViewModel.AddTaskForSchedulingCommand.Execute(task);
+            //ViewModel.AddTaskForScheduling(task);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.StackTrace);
+        }
+    }
+
+
+    public void RemoveTask_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var button = (Button)sender;
+            var task = button.DataContext;
+            ViewModel.RemoveTaskForSchedulingCommand.Execute(task);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.StackTrace);
+        }
+    }
+
+    public void ScheduleButton_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            //ViewModel.ScheduleSelectedTaskCommand.Execute();
+            ViewModel.ScheduleSelectedTaskExecute();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.StackTrace);
+        }
+    }
 
 }

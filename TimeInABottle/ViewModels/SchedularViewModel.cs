@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -7,6 +8,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using TimeInABottle.Contracts.Services;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Helpers;
+using TimeInABottle.Core.Models.Filters;
 using TimeInABottle.Core.Models.Tasks;
 using TimeInABottle.Core.Models.Weather;
 using TimeInABottle.Models;
@@ -24,7 +26,7 @@ public partial class SchedularViewModel : ObservableRecipient
         private set; get;
     }
 
-    private readonly List<ITask> _tasksForScheduling;
+    private List<ITask> _tasksForScheduling;
 
     public FullObservableCollection<ITask> ThisWeekTasks
     {
@@ -40,6 +42,8 @@ public partial class SchedularViewModel : ObservableRecipient
 
     public void Innit()
     {
+        TasksForScheduling = new();
+        _tasksForScheduling = new();
         _dao = App.GetService<IDaoService>();
         _plannerService = App.GetService<IPlannerService>();
         LoadData();
@@ -59,36 +63,75 @@ public partial class SchedularViewModel : ObservableRecipient
 
     private void AddTaskForScheduling(ITask task)
     {
-        var taskWrapper = new TaskWrapper(task);
-        TasksForScheduling.Add(taskWrapper);
-        _tasksForScheduling.Add(task);
-        SelectedTask = taskWrapper;
+        try
+        {
+            if (_tasksForScheduling.Contains(task))
+            {
+                return;
+            }
+
+            var taskWrapper = new TaskWrapper(task);
+            TasksForScheduling.Add(taskWrapper);
+            _tasksForScheduling.Add(task);
+
+          
+            SelectedTask = taskWrapper;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
     }
 
-    public ICommand RemoveTaskForSchedulingCommand => new RelayCommand<ITask>(RemoveTaskForScheduling);
+    public ICommand RemoveTaskForSchedulingCommand => new RelayCommand<TaskWrapper>(RemoveTaskForScheduling);
 
-    private void RemoveTaskForScheduling(ITask task)
+    private void RemoveTaskForScheduling(TaskWrapper taskwrapper)
     {
-        var taskWrapper = TasksForScheduling.First(t => t.Task == task);
-        TasksForScheduling.Remove(taskWrapper);
-        _tasksForScheduling.Remove(task);
+        //var taskWrapper = TasksForScheduling.First(t => t.Task == task);
+
+        _tasksForScheduling.Remove(taskwrapper.Task);
+        TasksForScheduling.Remove(taskwrapper);
+
+
+        //SelectedTask = null;
         EnsureItemSelected();
     }
 
-    public ICommand ScheduleSelectedTask => new RelayCommand(ScheduleSelectedTaskExecute);
+    //public ICommand ScheduleSelectedTaskCommand => new RelayCommand(ScheduleSelectedTaskExecute);
 
-    private void ScheduleSelectedTaskExecute()
+    public void ScheduleSelectedTaskExecute()
     {
-        if (SelectedTask == null)
+        try
         {
-            return;
+            // clear previous derived tasks
+            var derivedTasks = _dao?.CustomQuery(new DerivedTaskFilter());
+            _dao.DeleteTasks(derivedTasks);
+            //foreach (var task in derivedTasks)
+            //{
+            //    _dao?.DeleteTask(task);
+            //}
+
+            if (SelectedTask == null)
+            {
+                return;
+            }
+            List<DerivedTask> result = (List<DerivedTask>)_plannerService.ScheduleThisWeek(TasksForScheduling);
+
+            _dao.AddTasks(result);
+            //foreach (var task in result)
+            //{
+            //    _dao?.AddTask(task);
+            //}
+            LoadData();
+
+            SelectedTask = null;
+            TasksForScheduling.Clear();
+            _tasksForScheduling.Clear();
         }
-        List<DerivedTask> result = (List<DerivedTask>)_plannerService.ScheduleThisWeek(TasksForScheduling);
-        foreach (var task in result)
-        {
-            _dao?.UpdateTask(task);
+        catch (Exception ex) {
+            Console.WriteLine(ex.StackTrace);
         }
-        LoadData();
+
     }
 
 
