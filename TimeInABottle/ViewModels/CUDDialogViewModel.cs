@@ -145,15 +145,15 @@ public partial class CUDDialogViewModel : ObservableRecipient
 
     private FunctionResultCode ValidateInput()
     {
-        if (!validateEmptyInput())
+        if (!ValidateEmptyInput())
         {
             return FunctionResultCode.ERROR_MISSING_INPUT;
         }
 
-        return validateTime() ? FunctionResultCode.SUCCESS : FunctionResultCode.ERROR_INVALID_INPUT;
+        return ValidateTime() ? FunctionResultCode.SUCCESS : FunctionResultCode.ERROR_INVALID_INPUT;
     }
 
-    private bool validateEmptyInput()
+    private bool ValidateEmptyInput()
     {
         var result = true;
         result &= !string.IsNullOrWhiteSpace(InputName);
@@ -174,29 +174,34 @@ public partial class CUDDialogViewModel : ObservableRecipient
         return result;
     }
 
-    private bool validateTime()
+    private bool ValidateTime()
     {
         if (InputStart >= InputEnd)
         {
             return false;
         }
 
-        var allowedTimeSpans = new List<TimeSpan>();
         var timeGetter = App.GetService<IAvailableTimesGetter>();
+        IEnumerable<TimeSpan> allowedStarts = Enumerable.Empty<TimeSpan>();
+        IEnumerable<TimeSpan> allowedEnds = Enumerable.Empty<TimeSpan>();
+
         switch (TypeName)
         {
             case "WeeklyTask":
-                allowedTimeSpans = (List<TimeSpan>) timeGetter.GetAvailableTimesForWeek(InputWeekDays);
+                (allowedStarts, allowedEnds) = timeGetter.GetAvailableTimesForWeek(InputWeekDays);
                 break;
             case "MonthlyTask":
-                allowedTimeSpans = (List<TimeSpan>) timeGetter.GetAvailableTimesForDate(InputMonthlyDay);
+                (allowedStarts, allowedEnds) = timeGetter.GetAvailableTimesForDate(InputMonthlyDay);
                 break;
             case "NonRepeatedTask":
-                allowedTimeSpans = (List<TimeSpan>)timeGetter.GetAvailableTimesForDate(DateOnly.FromDateTime(InputSpecificDay));
+                (allowedStarts, allowedEnds) = timeGetter.GetAvailableTimesForDate(DateOnly.FromDateTime(InputSpecificDay));
+                break;
+            case "DailyTask":
+                (allowedStarts, allowedEnds) = timeGetter.GetAvailableTimesForToday();
                 break;
         }
 
-        return allowedTimeSpans.Contains(InputStart) && allowedTimeSpans.Contains(InputEnd);
+        return allowedStarts.Contains(InputStart) && allowedEnds.Contains(InputEnd);
     }
 
 

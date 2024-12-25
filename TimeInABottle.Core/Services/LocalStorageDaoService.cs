@@ -71,4 +71,9 @@ public class LocalStorageDaoService : IDaoService
     public void AddTask(ITask task) => throw new NotImplementedException();
     public void UpdateTask(ITask task) => throw new NotImplementedException();
     public void DeleteTask(ITask task) => throw new NotImplementedException();
+    public FullObservableCollection<ITask> GetNextWeekTasks() => throw new NotImplementedException();
+    public FullObservableCollection<ITask> GetThisWeekTasksFromNow() => throw new NotImplementedException();
+    public void AddTasks(IEnumerable<ITask> tasks) => throw new NotImplementedException();
+    public void UpdateTasks(IEnumerable<ITask> tasks) => throw new NotImplementedException();
+    public void DeleteTasks(IEnumerable<ITask> tasks) => throw new NotImplementedException();
 }

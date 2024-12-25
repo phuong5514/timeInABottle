@@ -29,13 +29,6 @@
 
         <DataTemplate x:Key="CalendarTaskItem" x:DataType="task:ITask">
             <Button Style="{StaticResource CellContentButton}">
-                <Button.Background>
-                    <AcrylicBrush 
-                        TintColor="#03a9fc"
-                        TintOpacity="0.6"
-                        FallbackColor="#fff"
-                        AlwaysUseFallback="False" />
-                </Button.Background>
                 <StackPanel Orientation="Vertical" Style="{StaticResource CellContentStackPanel}">
                     
 
@@ -119,13 +112,13 @@
 			</Grid.RowDefinitions>
 
 			<!-- NoticeBoard : hien deadline, cac thong tin thoi tiet, thoi gian, cac hoat dong tiep theo,... -->
-			<Grid x:Name="NoticeBoard">
+            <Grid x:Name="NoticeBoard" Background="{ThemeResource SolidBackgroundFillColorBaseBrush}" CornerRadius="16" Margin="0,0, 16, 16">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="6*"/>
                     <ColumnDefinition Width="6*"/>
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Orientation="Vertical" Padding="16, 8, 16, 8">
+                <StackPanel Orientation="Vertical" Padding="{StaticResource MediumPadding}">
                     <!--TODO: data binding-->
                     <TextBlock Style="{StaticResource PageTitleStyle}" Text="{x:Bind ViewModel.Time, Mode=OneWay, Converter={StaticResource TimeToGreetingConverter}}"/>
                     
@@ -137,7 +130,7 @@
                     
                 </StackPanel>
 
-                <StackPanel Orientation="Vertical" Grid.Column="1" Padding="16, 8, 16, 8">
+                <StackPanel Orientation="Vertical" Grid.Column="1" Padding="{StaticResource MediumPadding}">
                     <TextBlock Style="{StaticResource PageTitleStyle}" Text="{x:Bind ViewModel.Time, Mode=OneWay, Converter={StaticResource TimeToStringConverter}}"/>
                     <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="{x:Bind ViewModel.NextTask, Mode=OneWay, Converter={StaticResource TaskToNotificationConverter}}"/>
 
@@ -159,7 +152,7 @@
 			</Grid>
 
 			<!-- SideBar: cac cong viec trong ngay -->
-            <StackPanel x:Name="SideBar" Grid.Column="1" Grid.RowSpan="2" Orientation="Vertical">
+            <StackPanel x:Name="SideBar" Grid.Column="1" Grid.RowSpan="2" Orientation="Vertical" Background="{ThemeResource SolidBackgroundFillColorBaseBrush}" CornerRadius="16" Padding="{StaticResource MediumPadding}" Margin="0,0,0, 32">
                 <TextBlock Style="{StaticResource VerticalListTitleStyle}">Today's Tasks</TextBlock>
 
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
@@ -171,7 +164,7 @@
             </StackPanel>
 
 			<!-- CalendarContainer: chua lich chinh -->
-            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Grid.Row="1">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Grid.Row="1" Background="{ThemeResource SolidBackgroundFillColorBaseBrush}" Margin="0,0,16,32" >
                 <Grid x:Name="CalendarContainer">
                 </Grid>
             </ScrollViewer>

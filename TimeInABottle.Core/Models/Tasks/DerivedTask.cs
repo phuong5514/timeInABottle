@@ -20,12 +20,17 @@ public class DerivedTask : ITask
     /// <param name="description">The description of the task.</param>
     /// <param name="start">The start time of the task.</param>
     /// <param name="end">The end time of the task.</param>
-    public DerivedTask(string name, string description, TimeOnly start, TimeOnly end) : base(name, description, start, end)
+    public DerivedTask(string name, string description, TimeOnly start, TimeOnly end, DateOnly date) : base(name, description, start, end)
     {
+        AssignedDate = date;
     }
 
     public DerivedTask() : base() // For EF Core
     {
+    }
+
+    public DateOnly AssignedDate {
+        get; set;
     }
 
     /// <summary>
@@ -34,6 +39,12 @@ public class DerivedTask : ITask
     /// <returns>A string that represents the current object.</returns>
     public override string ToString() => "DerivedTask";
     public override object Accept(GetTaskSpecialtiesVisitor visitor) {
-        return null;
+        return AssignedDate;
+        //return null;
+    }
+
+    public override IEnumerable<int> GetWeekdaysInt() { 
+        int dayOfWeek = (int)AssignedDate.DayOfWeek;
+        return new List<int> { dayOfWeek };
     }
 }

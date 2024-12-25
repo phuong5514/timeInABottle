@@ -20,56 +20,109 @@ public class AvailableTimesGetter : IAvailableTimesGetter
         _timeIncrement = timeIncrement;
     }
 
-    private IEnumerable<TimeSpan> GetAvailableTimes(IEnumerable<ITask> taskList) 
+    public Tuple<IEnumerable<TimeSpan>, IEnumerable<TimeSpan>> GetAvailableTimes(IEnumerable<ITask> taskList)
     {
         var startTime = TimeSpan.FromHours(0); // 12:00 AM
         var endTime = TimeSpan.FromHours(24); // 11:59 PM
         var increment = TimeSpan.FromMinutes(_timeIncrement); // 30-minute intervals
 
-        var availableTimes = new List<TimeSpan>();
+        var availableStartTimes = new List<TimeSpan>();
+        var availableEndTimes = new List<TimeSpan>();
 
-        for (var time = startTime; time < endTime; time += increment)
+        var tasks = taskList.ToList();
+
+        if (tasks.Count == 0)
         {
-            foreach (var task in taskList)
+            for (var time = startTime; time < endTime; time += increment)
             {
-                var blockedStartTime = task.Start.ToTimeSpan();
+                availableStartTimes.Add(time);
+                availableEndTimes.Add(time);
+            } 
+        }
+        else
+        {
+            for (var time = startTime; time < endTime; time += increment)
+            {
+                var isAvailableStart = true;
+                var isAvailableEnd = true;
 
-                var blockedEndTime = task.End.ToTimeSpan();
-
-                if (time < blockedStartTime || time >= blockedEndTime)
+                foreach (var task in tasks)
                 {
-                    availableTimes.Add(time);
+                    var blockedStartTime = task.Start.ToTimeSpan();
+                    var blockedEndTime = task.End.ToTimeSpan();
+
+                    if (time >= blockedStartTime && time < blockedEndTime)
+                    {
+                        isAvailableStart = false;
+                    }
+
+                    if (time > blockedStartTime && time <= blockedEndTime)
+                    {
+                        isAvailableEnd = false;
+                    }
+
+                    if (!isAvailableStart && !isAvailableEnd)
+                    {
+                        break;
+                    }
+                }
+
+                if (isAvailableStart)
+                {
+                    availableStartTimes.Add(time);
+                }
+
+                if (isAvailableEnd)
+                {
+                    availableEndTimes.Add(time);
                 }
             }
         }
 
-        return availableTimes;
+        return Tuple.Create((IEnumerable<TimeSpan>)availableStartTimes, (IEnumerable<TimeSpan>)availableEndTimes);
     }
 
-    public IEnumerable<TimeSpan> GetAvailableTimesForDate(DateOnly date) { 
+    public Tuple<IEnumerable<TimeSpan>, IEnumerable<TimeSpan>> GetAvailableTimesForDate(DateOnly date)
+    {
         var tasks = _daoQueryService.FindTaskFromDate(date);
         return GetAvailableTimes(tasks);
     }
 
-    public IEnumerable<TimeSpan> GetAvailableTimesForToday() { 
+    public Tuple<IEnumerable<TimeSpan>, IEnumerable<TimeSpan>> GetAvailableTimesForToday()
+    {
         var tasks = _daoQueryService.GetTodayTasks();
 
         return GetAvailableTimes(tasks);
     }
 
-    public IEnumerable<TimeSpan> GetAvailableTimesForWeek() { 
+    public Tuple<IEnumerable<TimeSpan>, IEnumerable<TimeSpan>> GetAvailableTimesForWeek()
+    {
         var tasks = _daoQueryService.GetThisWeekTasks();
         return GetAvailableTimes(tasks);
     }
 
-    public IEnumerable<TimeSpan> GetAvailableTimesForWeek(IEnumerable<DayOfWeek> weekdays)
+    public Tuple<IEnumerable<TimeSpan>, IEnumerable<TimeSpan>> GetAvailableTimesForWeek(IEnumerable<DayOfWeek> weekdays)
     {
         var tasks = _daoQueryService.GetThisWeekTasks(weekdays);
         return GetAvailableTimes(tasks);
     }
 
-    public IEnumerable<TimeSpan> GetAvailableTimesForDate(int date) {
+    public Tuple<IEnumerable<TimeSpan>, IEnumerable<TimeSpan>> GetAvailableTimesForDate(int date)
+    {
         var dateOnly = new DateOnly(DateTime.Now.Year, DateTime.Now.Month, date);
         return GetAvailableTimesForDate(dateOnly);
     }
+
+    public Tuple<IEnumerable<TimeSpan>, IEnumerable<TimeSpan>> GetAvailableTimesForNextWeek()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Tuple<IEnumerable<TimeSpan>, IEnumerable<TimeSpan>> GetAvailableTimesForWeekFromNow()
+    {
+        var tasks = _daoQueryService.GetThisWeekTasksFromNow();
+        return GetAvailableTimes(tasks);
+    }
+
+    public Tuple<IEnumerable<TimeSpan>, IEnumerable<TimeSpan>> GetAvailableTimesForTodayFromNow() => throw new NotImplementedException();
 }

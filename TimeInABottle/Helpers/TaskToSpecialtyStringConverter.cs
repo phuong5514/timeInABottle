@@ -45,6 +45,8 @@ public class TaskToSpecialtyStringConverter : IValueConverter
                 case NonRepeatedTask nonRepeatingTask:
                     // Assuming NonRepeatingTask has a specific date property.
                     return nonRepeatingTask.Date.ToString("MMMM dd, yyyy");
+                case DerivedTask derivedTask:
+                    return derivedTask.AssignedDate.ToString("MMMM dd, yyyy");
                 default:
                     return "Unknown Task Type";
             }

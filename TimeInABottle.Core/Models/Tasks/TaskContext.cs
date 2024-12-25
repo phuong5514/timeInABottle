@@ -20,9 +20,11 @@ internal class TaskContext : DbContext
 
     public TaskContext()
     {
-        var folder = Environment.SpecialFolder.LocalApplicationData;
-        var path = Environment.GetFolderPath(folder);
-        DbPath = System.IO.Path.Join(path, _dbName);
+        //var folder = Environment.SpecialFolder.LocalApplicationData;
+        var folder = AppContext.BaseDirectory;
+        //var path = Environment.GetFolderPath(folder);
+        //DbPath = System.IO.Path.Join(path, _dbName);
+        DbPath = System.IO.Path.Combine(folder, _dbName);
         Database.EnsureCreated();
     }
 

@@ -37,4 +37,6 @@ public class DailyTask : IRepeatedTask
     public override object Accept(GetTaskSpecialtiesVisitor visitor) {
         return null;
     }
+
+    public override IEnumerable<int> GetWeekdaysInt() => new List<int> {0,1,2,3,4,5,6};
 }

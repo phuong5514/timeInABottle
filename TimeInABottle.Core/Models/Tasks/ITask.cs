@@ -93,4 +93,5 @@ public abstract class ITask : INotifyPropertyChanged
     public string TypeName() => GetType().Name;
 
     public abstract object Accept(GetTaskSpecialtiesVisitor visitor);
+    public abstract IEnumerable<int> GetWeekdaysInt();
 }

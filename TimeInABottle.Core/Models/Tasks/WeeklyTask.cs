@@ -61,4 +61,15 @@ public class WeeklyTask : IRepeatedTask
     public override object Accept(GetTaskSpecialtiesVisitor visitor) { 
         return visitor.VisitWeeklyTask(this);
     }
+
+    public override IEnumerable<int> GetWeekdaysInt()
+    {
+        List<int> weekdaysInt = new List<int>();
+        foreach(DayOfWeek day in WeekDays)
+        {
+            int dayOfWeek = (int)day;
+            weekdaysInt.Add(dayOfWeek);
+        }
+        return weekdaysInt;
+    }
 }
