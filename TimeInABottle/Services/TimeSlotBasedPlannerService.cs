@@ -82,6 +82,10 @@ public class TimeSlotBasedPlannerService : IPlannerService
             }
         }
 
+        if (start != end) {
+            list.Add(new TimeSlot { StartTime = start, EndTime = end });
+        }
+
 
         TimeSlots[dayOfWeek] = list;
         return FunctionResultCode.SUCCESS;
@@ -90,7 +94,7 @@ public class TimeSlotBasedPlannerService : IPlannerService
 
     private void InitializeTimeSlots()
     {
-        TimeSlots = new Dictionary<DayOfWeek, List<TimeSlot>>();
+        TimeSlots = [];
         foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
         {
             TimeSlots.Add(day, new List<TimeSlot>());
@@ -137,68 +141,31 @@ public class TimeSlotBasedPlannerService : IPlannerService
         return priority;
     }
 
-
-    //public IEnumerable<DerivedTask> ScheduleThisWeek(IEnumerable<TaskWrapper> tasks)
-    //{
-    //    var result = new List<DerivedTask>();
-    //    var sortedTasks = tasks.OrderByDescending(task => CalculatePriority(task)).ToList();
-
-    //    foreach (DayOfWeek day in Enum.GetValues<DayOfWeek>())
-    //    {
-    //        var availableTimes = _availableTimesGetter.GetAvailableTimesForWeek(new List<DayOfWeek> { day });
-    //        LoadDayOfWeekTimeSlots(day, availableTimes);
-
-    //        var dayTimeSlots = TimeSlots[day];
-    //        while (dayTimeSlots.Count > 0 && sortedTasks.Count > 0)
-    //        {
-    //            var timeSlot = dayTimeSlots[0];
-    //            var task = sortedTasks[0];
-
-    //            var start = TimeOnly.FromTimeSpan(timeSlot.StartTime);
-    //            var timeSlotDuration = timeSlot.EndTime - timeSlot.StartTime;
-
-    //            if (timeSlotDuration >= task.ExpectedDuration)
-    //            {
-    //                var endTS = timeSlot.StartTime.Add(task.ExpectedDuration);
-    //                var end = TimeOnly.FromTimeSpan(endTS);
-
-    //                result.Add(new DerivedTask($"Task from {task.Task.Name}", "", start, end));
-
-    //                if (timeSlotDuration > task.ExpectedDuration)
-    //                {
-    //                    timeSlot.StartTime = endTS;
-    //                }
-    //                else
-    //                {
-    //                    dayTimeSlots.RemoveAt(0);
-    //                }
-
-    //                sortedTasks.RemoveAt(0);
-    //            }
-    //            else
-    //            {
-    //                var end = TimeOnly.FromTimeSpan(timeSlot.EndTime);
-
-    //                result.Add(new DerivedTask($"Task from {task.Task.Name}", "", start, end));
-    //                task.ExpectedDuration -= timeSlotDuration;
-
-    //                dayTimeSlots.RemoveAt(0);
-    //            }
-    //        }
-    //    }
-
-    //    return result;
-    //}
+    private static List<DayOfWeek> DAY_OF_WEEKS =
+        [
+        DayOfWeek.Monday,
+        DayOfWeek.Tuesday,
+        DayOfWeek.Wednesday,
+        DayOfWeek.Thursday,
+        DayOfWeek.Friday,
+        DayOfWeek.Saturday,
+        DayOfWeek.Sunday
+        ];
 
     public IEnumerable<DerivedTask> ScheduleThisWeek(IEnumerable<TaskWrapper> tasks)
     {
         var result = new List<DerivedTask>();
         var sortedTasks = tasks.OrderByDescending(task => CalculatePriority(task)).ToList();
 
-        foreach (var day in Enum.GetValues<DayOfWeek>())
+        foreach (var day in DAY_OF_WEEKS)
         {
             var date = DateOnly.FromDateTime(DateTime.Now);
-            date.AddDays((int)day - (int)date.DayOfWeek);
+            date = date.AddDays((int)day - (int)date.DayOfWeek);
+            if (day is DayOfWeek.Sunday)
+            {
+                date = date.AddDays(7);
+            }
+
             var availableTimes = _availableTimesGetter.GetAvailableTimesForWeek([day]);
 
             LoadDayOfWeekTimeSlots(day, availableTimes.Item1);
@@ -212,6 +179,49 @@ public class TimeSlotBasedPlannerService : IPlannerService
 
         return result;
     }
+
+    public IEnumerable<DerivedTask> ScheduleThisWeekFromNow(IEnumerable<TaskWrapper> tasks)
+    {
+        var result = new List<DerivedTask>();
+        var sortedTasks = tasks.OrderByDescending(task => CalculatePriority(task)).ToList();
+
+        foreach (var day in DAY_OF_WEEKS)
+        {
+            var now = DateOnly.FromDateTime(DateTime.Now);
+
+            var date = DateOnly.FromDateTime(DateTime.Now);
+            date = date.AddDays((int)day - (int)date.DayOfWeek);
+            if (day is DayOfWeek.Sunday) {
+                date = date.AddDays(7);
+            }
+
+            if (date < now)
+            {
+                continue;
+            }
+
+            Tuple<IEnumerable<TimeSpan>, IEnumerable<TimeSpan>> availableTimes;
+            if (date == now)
+            {
+                availableTimes = _availableTimesGetter.GetAvailableTimesForTodayFromNow();
+            }
+            else
+            {
+                availableTimes = _availableTimesGetter.GetAvailableTimesForWeek([day]);
+            }
+
+            LoadDayOfWeekTimeSlots(day, availableTimes.Item1);
+
+            var dayTimeSlots = TimeSlots[day];
+            while (dayTimeSlots.Count > 0 && sortedTasks.Count > 0)
+            {
+                ProcessTaskInTimeSlot(dayTimeSlots, sortedTasks, result, date);
+            }
+        }
+
+        return result;
+    }
+
 
     // Handles processing a single task within a time slot
     private void ProcessTaskInTimeSlot(List<TimeSlot> dayTimeSlots, List<TaskWrapper> sortedTasks, List<DerivedTask> result, DateOnly date)
@@ -256,63 +266,6 @@ public class TimeSlotBasedPlannerService : IPlannerService
             dayTimeSlots.RemoveAt(0);
         }
     }
-
-    public IEnumerable<DerivedTask> ScheduleNextWeek(IEnumerable<TaskWrapper> tasks) {
-
-        var result = new List<DerivedTask>();
-        var sortedTasks = tasks.OrderByDescending(task => CalculatePriority(task)).ToList();
-
-        //foreach (var day in Enum.GetValues<DayOfWeek>())
-        //{
-        //    var availableTimes = _availableTimesGetter.GetAvailableTimesForNextWeek([day]);
-        //    LoadDayOfWeekTimeSlots(day, availableTimes);
-
-        //    var dayTimeSlots = TimeSlots[day];
-        //    while (dayTimeSlots.Count > 0 && sortedTasks.Count > 0)
-        //    {
-        //        ProcessTaskInTimeSlot(dayTimeSlots, sortedTasks, result);
-        //    }
-        //}
-
-        return result;
-    }
-
-    public IEnumerable<DerivedTask> ScheduleThisWeekFromNow(IEnumerable<TaskWrapper> tasks)
-    {
-        var result = new List<DerivedTask>();
-        var sortedTasks = tasks.OrderByDescending(task => CalculatePriority(task)).ToList();
-
-        var daysOfWeek = Enum.GetValues<DayOfWeek>().ToList();
-        var currentDayOfWeek = DateTime.Now.DayOfWeek;
-        daysOfWeek.RemoveRange(0, (int)currentDayOfWeek);
-
-        //foreach (var day in daysOfWeek)
-        //{
-
-
-        //    IEnumerable<TimeSpan> availableTimes;
-        //    if (day == currentDayOfWeek)
-        //    {
-        //        availableTimes = _availableTimesGetter.GetAvailableTimesForToday();
-        //        // remove 
-        //    }
-        //    else {
-        //        availableTimes = _availableTimesGetter.GetAvailableTimesForWeek([day]);
-        //    }
-            
-        //    LoadDayOfWeekTimeSlots(day, availableTimes);
-
-        //    var dayTimeSlots = TimeSlots[day];
-        //    while (dayTimeSlots.Count > 0 && sortedTasks.Count > 0)
-        //    {
-        //        ProcessTaskInTimeSlot(dayTimeSlots, sortedTasks, result);
-        //    }
-        //}
-
-        return result;
-    }
-
-
 
     private TimeSpan EstimateDefaultTime(TaskWrapper taskWrapper, int timeUnitMinutes = 30)
     {

@@ -20,11 +20,9 @@ public class AvailableTimesGetter : IAvailableTimesGetter
         _timeIncrement = timeIncrement;
     }
 
-    public Tuple<IEnumerable<TimeSpan>, IEnumerable<TimeSpan>> GetAvailableTimes(IEnumerable<ITask> taskList)
+    private Tuple<IEnumerable<TimeSpan>, IEnumerable<TimeSpan>> GetAvailableTimes(IEnumerable<ITask> taskList, TimeSpan startTime, TimeSpan endTime)
     {
-        var startTime = TimeSpan.FromHours(0); // 12:00 AM
-        var endTime = TimeSpan.FromHours(24); // 11:59 PM
-        var increment = TimeSpan.FromMinutes(_timeIncrement); // 30-minute intervals
+        var increment = TimeSpan.FromMinutes(_timeIncrement);
 
         var availableStartTimes = new List<TimeSpan>();
         var availableEndTimes = new List<TimeSpan>();
@@ -37,7 +35,7 @@ public class AvailableTimesGetter : IAvailableTimesGetter
             {
                 availableStartTimes.Add(time);
                 availableEndTimes.Add(time);
-            } 
+            }
         }
         else
         {
@@ -82,6 +80,15 @@ public class AvailableTimesGetter : IAvailableTimesGetter
         return Tuple.Create((IEnumerable<TimeSpan>)availableStartTimes, (IEnumerable<TimeSpan>)availableEndTimes);
     }
 
+    public Tuple<IEnumerable<TimeSpan>, IEnumerable<TimeSpan>> GetAvailableTimes(IEnumerable<ITask> taskList)
+    {
+        var startTime = TimeSpan.FromHours(0); // 12:00 AM
+        var endTime = TimeSpan.FromHours(24); // 11:59 PM
+
+        return GetAvailableTimes(taskList, startTime, endTime);
+        
+    }
+
     public Tuple<IEnumerable<TimeSpan>, IEnumerable<TimeSpan>> GetAvailableTimesForDate(DateOnly date)
     {
         var tasks = _daoQueryService.FindTaskFromDate(date);
@@ -124,5 +131,22 @@ public class AvailableTimesGetter : IAvailableTimesGetter
         return GetAvailableTimes(tasks);
     }
 
-    public Tuple<IEnumerable<TimeSpan>, IEnumerable<TimeSpan>> GetAvailableTimesForTodayFromNow() => throw new NotImplementedException();
+    public Tuple<IEnumerable<TimeSpan>, IEnumerable<TimeSpan>> GetAvailableTimesForTodayFromNow()
+    {
+        var tasks = _daoQueryService.GetTodayTasks();
+        var endTime = TimeSpan.FromHours(24); // 11:59 PM
+
+        var startTime = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
+
+        if (startTime.Minutes < 30)
+        {
+            startTime = new TimeSpan(startTime.Hours, 30, 0);
+        }
+        else
+        {
+            startTime = new TimeSpan(startTime.Hours + 1, 0, 0);
+        }
+
+        return GetAvailableTimes(tasks, startTime, endTime);
+    }
 }

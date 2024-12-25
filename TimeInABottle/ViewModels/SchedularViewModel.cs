@@ -177,7 +177,7 @@ public partial class SchedularViewModel : ObservableRecipient
     }
 
     //public ICommand ScheduleSelectedTaskCommand => new RelayCommand(ScheduleSelectedTaskExecute);
-
+    public bool IsOnlyFromNow { set; get; }
     public void ScheduleSelectedTaskExecute()
     {
         try
@@ -194,14 +194,17 @@ public partial class SchedularViewModel : ObservableRecipient
             {
                 return;
             }
-            List<DerivedTask> result = (List<DerivedTask>)_plannerService.ScheduleThisWeek(TasksForScheduling);
-            //var result = _plannerService.ScheduleThisWeekFromNow(TasksForScheduling);
+
+            List<DerivedTask> result;
+            if (IsOnlyFromNow)
+            {
+                result = (List<DerivedTask>)_plannerService.ScheduleThisWeekFromNow(TasksForScheduling);
+            }
+            else { 
+                result = (List<DerivedTask>)_plannerService.ScheduleThisWeek(TasksForScheduling);
+            }
 
             _dao.AddTasks(result);
-            //foreach (var task in result)
-            //{
-            //    _dao?.AddTask(task);
-            //}
             LoadData();
 
             SelectedTask = null;
