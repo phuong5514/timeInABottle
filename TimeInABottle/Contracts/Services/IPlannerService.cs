@@ -10,7 +10,7 @@ namespace TimeInABottle.Contracts.Services;
 public interface IPlannerService
 {
     IEnumerable<DerivedTask> ScheduleThisWeek(IEnumerable<TaskWrapper> tasks);
-    IEnumerable<DerivedTask> ScheduleNextWeek(IEnumerable<TaskWrapper> tasks);
+    //IEnumerable<DerivedTask> ScheduleNextWeek(IEnumerable<TaskWrapper> tasks);
     IEnumerable<DerivedTask> ScheduleThisWeekFromNow(IEnumerable<TaskWrapper> tasks);
 }
 
