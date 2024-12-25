@@ -54,7 +54,8 @@ public class SqliteDaoService : IDaoService
         var thisMonthTasks = tasks
             .Where(task =>
                 task is MonthlyTask ||
-                (task is NonRepeatedTask nrt && nrt.Date.Month == currentMonth)
+                (task is NonRepeatedTask nrt && nrt.Date.Month == currentMonth) ||
+                (task is DerivedTask dt && dt.AssignedDate.Month == currentMonth)
             )
             .ToList();
 

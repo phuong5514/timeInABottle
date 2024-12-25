@@ -42,4 +42,9 @@ public class DerivedTask : ITask
         return AssignedDate;
         //return null;
     }
+
+    public override IEnumerable<int> GetWeekdaysInt() { 
+        int dayOfWeek = (int)AssignedDate.DayOfWeek;
+        return new List<int> { dayOfWeek };
+    }
 }

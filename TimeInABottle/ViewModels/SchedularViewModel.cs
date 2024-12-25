@@ -20,21 +20,100 @@ public partial class SchedularViewModel : ObservableRecipient
     private IDaoService? _dao;
     private IPlannerService _plannerService;
 
-
+    private List<ITask> _tasksForScheduling;
+    //private FullObservableCollection<TaskWrapper> _tasksWrapperForScheduling;
     public FullObservableCollection<TaskWrapper> TasksForScheduling
     {
-        private set; get;
+        //private set
+        //{
+        //    //_tasksWrapperForScheduling.ItemAdded -= OnThisWeekTaskAdded;
+        //    if (_tasksWrapperForScheduling != null)
+        //    {
+        //        _tasksWrapperForScheduling.ItemAdded -= OnThisWeekTaskAdded;
+        //    }
+        //    _tasksWrapperForScheduling = value;
+        //    _tasksWrapperForScheduling.ItemAdded += OnThisWeekTaskAdded;
+        //}
+        private set;
+        get;
+        //get => _tasksWrapperForScheduling;
     }
 
-    private List<ITask> _tasksForScheduling;
+    //private void OnThisWeekTaskAdded(object? sender, TaskWrapper addedTask)
+    //{
+    //    SelectedTask = addedTask;
+    //}
 
     public FullObservableCollection<ITask> ThisWeekTasks
     {
         private set; get;
     }
 
-    [ObservableProperty]
-    public TaskWrapper? selectedTask;
+    //[ObservableProperty]
+    //public TaskWrapper? selectedTask;
+
+    //public event Action<TaskWrapper?>? SelectedTaskChanged;
+
+
+    //private TaskWrapper? _selectedTask;
+    //public TaskWrapper? SelectedTask
+    //{
+    //    get;
+    //    set;
+    //    //get => _selectedTask;
+    //    //set
+    //    //{
+    //    //    if (_selectedTask != value)
+    //    //    {
+    //    //        _selectedTask = value;
+    //    //        OnPropertyChanged(nameof(SelectedTask));
+    //    //    }
+    //    //}
+    //}
+
+    private TaskWrapper? _selectedTask;
+    public TaskWrapper? SelectedTask
+    {
+        get => _selectedTask;
+        set
+        {
+            if (_selectedTask != value)
+            {
+                _selectedTask = value;
+                OnPropertyChanged(nameof(SelectedTask));
+
+                // Update the editable copy when a new task is selected
+                if (_selectedTask != null)
+                {
+                    EditableTask = new TaskWrapper(_selectedTask); // Assuming TaskWrapper supports cloning
+                }
+            }
+        }
+    }
+
+    private TaskWrapper? _editableTask;
+    public TaskWrapper? EditableTask
+    {
+        get => _editableTask;
+        set
+        {
+            _editableTask = value;
+            OnPropertyChanged(nameof(EditableTask));
+        }
+    }
+
+    // Command to confirm changes
+    public ICommand ConfirmChangesCommand => new RelayCommand(ConfirmChanges);
+
+    private void ConfirmChanges()
+    {
+        if (EditableTask != null && SelectedTask != null)
+        {
+            SelectedTask.CopyFrom(EditableTask); // Assuming TaskWrapper has a CopyFrom method
+            OnPropertyChanged(nameof(SelectedTask));
+        }
+    }
+
 
     public bool IsTaskSelected => SelectedTask != null;
     public bool IsTaskNotSelected => !IsTaskSelected;
@@ -65,7 +144,7 @@ public partial class SchedularViewModel : ObservableRecipient
     {
         try
         {
-            if (_tasksForScheduling.Contains(task))
+            if (_tasksForScheduling.Contains(task) || task is DerivedTask)
             {
                 return;
             }
@@ -116,6 +195,7 @@ public partial class SchedularViewModel : ObservableRecipient
                 return;
             }
             List<DerivedTask> result = (List<DerivedTask>)_plannerService.ScheduleThisWeek(TasksForScheduling);
+            //var result = _plannerService.ScheduleThisWeekFromNow(TasksForScheduling);
 
             _dao.AddTasks(result);
             //foreach (var task in result)
@@ -150,7 +230,7 @@ public partial class SchedularViewModel : ObservableRecipient
     {
         try
         {
-            SelectedTask ??= TasksForScheduling.First();
+            SelectedTask = TasksForScheduling.First();
         }
         catch (InvalidOperationException)
         {

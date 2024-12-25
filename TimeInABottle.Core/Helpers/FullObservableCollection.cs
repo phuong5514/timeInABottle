@@ -31,6 +31,7 @@ public sealed class FullObservableCollection<T> : ObservableCollection<T>
             foreach (Object item in e.NewItems)
             {
                 ((INotifyPropertyChanged)item).PropertyChanged += ItemPropertyChanged;
+                //OnItemAdded((T)item);
             }
         }
         if (e.OldItems != null)
@@ -47,4 +48,10 @@ public sealed class FullObservableCollection<T> : ObservableCollection<T>
         NotifyCollectionChangedEventArgs args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, sender, sender, IndexOf((T)sender));
         OnCollectionChanged(args);
     }
+
+    //public event EventHandler<T> ItemAdded;
+    //private void OnItemAdded(T item)
+    //{
+    //    ItemAdded?.Invoke(this, item);
+    //}
 }

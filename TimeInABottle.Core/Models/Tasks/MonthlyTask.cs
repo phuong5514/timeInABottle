@@ -50,4 +50,10 @@ public class MonthlyTask : IRepeatedTask
     public override object Accept(GetTaskSpecialtiesVisitor visitor) {
         return visitor.VisitMonthlyTask(this);   
     }
+
+    public override IEnumerable<int> GetWeekdaysInt() {
+        var thisMonthDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, Date);
+        int weekday = (int)thisMonthDate.DayOfWeek;
+        return new List<int> { weekday };
+    }
 }

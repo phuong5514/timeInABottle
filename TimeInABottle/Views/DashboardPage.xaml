@@ -29,13 +29,6 @@
 
         <DataTemplate x:Key="CalendarTaskItem" x:DataType="task:ITask">
             <Button Style="{StaticResource CellContentButton}">
-                <Button.Background>
-                    <AcrylicBrush 
-                        TintColor="#03a9fc"
-                        TintOpacity="0.6"
-                        FallbackColor="#fff"
-                        AlwaysUseFallback="False" />
-                </Button.Background>
                 <StackPanel Orientation="Vertical" Style="{StaticResource CellContentStackPanel}">
                     
 

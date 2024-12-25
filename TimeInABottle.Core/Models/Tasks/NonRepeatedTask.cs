@@ -51,4 +51,10 @@ public class NonRepeatedTask : ITask
     public override object Accept(GetTaskSpecialtiesVisitor visitor) {
         return Date;   
     }
+
+    public override IEnumerable<int> GetWeekdaysInt()
+    {
+        int dayOfWeek = (int)Date.DayOfWeek;
+        return new List<int> { dayOfWeek };
+    }
 }

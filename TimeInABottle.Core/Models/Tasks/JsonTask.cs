@@ -45,4 +45,9 @@ public class JsonTask
     {
         get; set;
     }
+
+    public bool IsDerived
+    {
+        get; set;
+    }
 }

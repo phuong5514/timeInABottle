@@ -17,12 +17,12 @@
         <helpers:TimeToStringConverter x:Key="TimeToStringConverter"/>
         <helpers:TaskToNotificationConverter x:Key="TaskToNotificationConverter"/>
         <helpers:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+		<helpers:TaskTypeToBooleanConverter x:Key="TaskTypeToBooleanConverter"/>
 
         <DataTemplate x:Key ="ListItem" x:DataType="model:TaskWrapper">
             <StackPanel Orientation="Horizontal" Style="{StaticResource BaseListItemContainerStyle}" HorizontalAlignment="Stretch">
                 <TextBlock Style="{StaticResource ListSubTitleStyle}">
                     <Run Text="{x:Bind Task.Name}"/>
-					<!--<Run Text="{x:Bind Task.Start, Converter={StaticResource TimeToStringConverter}}"/>: -->
                 </TextBlock>
 				<Button Click="RemoveTask_Click" HorizontalAlignment="Right">
 					<FontIcon Glyph="&#xE738;"/>
@@ -30,21 +30,14 @@
             </StackPanel>
         </DataTemplate>
 
-        <!--PointerEntered="CalendarTaskItem_PointerEntered"-->
-
         <DataTemplate x:Key="CalendarTaskItem" x:DataType="task:ITask">
-			<!--
-            <Button Style="{StaticResource CellContentButton}" Command="{Binding DataContext.AddTaskForSchedulingCommand, ElementName=SchedulerPage}" CommandParameter="{Binding}">
-			-->
-			<Button Style="{StaticResource CellContentButton}" Click="CalendarItem_Click">
-                <Button.Background>
-                    <AcrylicBrush 
-                        TintColor="#03a9fc"
-                        TintOpacity="0.6"
-                        FallbackColor="#fff"
-                        AlwaysUseFallback="False" />
-                </Button.Background>
-                <StackPanel Orientation="Vertical" Style="{StaticResource CellContentStackPanel}">
+            <Button 
+                Style="{StaticResource CellContentButton}"
+                Click="CalendarItem_Click"
+                IsEnabled="{Binding Converter={StaticResource TaskTypeToBooleanConverter}}">
+                <StackPanel 
+                    Orientation="Vertical" 
+                    Style="{StaticResource CellContentStackPanel}">
                     <TextBlock Style="{StaticResource CalendarTaskItem}">
                         <Run Text="{x:Bind Name}"/>
                     </TextBlock>
@@ -68,7 +61,6 @@
 						<!-- hien sidebar -->
 						<Setter Target="SideBar.Visibility" Value="Visible"/>
 						<Setter Target="ColumnDefinitionSideBar.Width" Value="3*"/>
-						<Setter Target="ToggleButton.Visibility" Value="Collapsed"/>
 					</VisualState.Setters>
 				</VisualState>
 
@@ -81,7 +73,6 @@
 						<!-- an sidebar-->
 						<Setter Target="SideBar.Visibility" Value="Collapsed"/>
 						<Setter Target="ColumnDefinitionSideBar.Width" Value="0"/>
-						<Setter Target="ToggleButton.Visibility" Value="Visible"/>
 					</VisualState.Setters>
 				</VisualState>
 			</VisualStateGroup>
@@ -101,31 +92,37 @@
 			<!-- Header: input and task config. -->
             <Grid x:Name="Header" Background="{ThemeResource SolidBackgroundFillColorBaseBrush}" Margin="0,0,16,16" CornerRadius="16">
                 <Grid.ColumnDefinitions>
-					<ColumnDefinition Width ="*"/>
+					<ColumnDefinition Width ="2*"/>
+					<ColumnDefinition Width ="2*"/>
 					<ColumnDefinition Width ="*"/>
 				</Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Orientation="Vertical" Padding="{StaticResource LargePadding}" Spacing="10" Visibility="{x:Bind ViewModel.IsTaskSelected, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <ComboBox PlaceholderText="Difficulty" 	  
                         HorizontalAlignment="Stretch"	  
                         ItemsSource="{x:Bind model:TaskWrapper.DifficultyValues}" 
-                        SelectedItem="{x:Bind ViewModel.SelectedTask.DifficultyLevel, Mode=TwoWay}"/>
+                        SelectedItem="{x:Bind ViewModel.EditableTask.DifficultyLevel, Mode=TwoWay}"/>
                     <ComboBox PlaceholderText="Urgency" 
                         HorizontalAlignment="Stretch"
                         ItemsSource="{x:Bind model:TaskWrapper.UrgencyValues}" 
-                        SelectedItem="{x:Bind ViewModel.SelectedTask.UrgencyLevel, Mode=TwoWay}"/>
+                        SelectedItem="{x:Bind ViewModel.EditableTask.UrgencyLevel, Mode=TwoWay}"/>
                     <ComboBox PlaceholderText="Important" 
                         HorizontalAlignment="Stretch"
                         ItemsSource="{x:Bind model:TaskWrapper.ImportanceValues}" 
-                        SelectedItem="{x:Bind ViewModel.SelectedTask.ImportanceLevel, Mode=TwoWay}"/>
+                        SelectedItem="{x:Bind ViewModel.EditableTask.ImportanceLevel, Mode=TwoWay}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Orientation="Vertical" Padding="{StaticResource LargePadding}" Spacing="10" Visibility="{x:Bind ViewModel.IsTaskSelected, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <TimePicker Header="Estimated Completion Time" ClockIdentifier="24HourClock" MinuteIncrement="30" Time="{x:Bind ViewModel.SelectedTask.EstimatedCompletionTime, Mode=TwoWay}"/>
-                    <CheckBox Content="Set as Deadline" IsChecked="{x:Bind ViewModel.SelectedTask.ParentAsDeadline, Mode=TwoWay}"/>
+                    <TimePicker Header="Estimated Completion Time" ClockIdentifier="24HourClock" MinuteIncrement="30" Time="{x:Bind ViewModel.EditableTask.EstimatedCompletionTime, Mode=TwoWay}"/>
+                    <CheckBox Content="Set as Deadline" IsChecked="{x:Bind ViewModel.EditableTask.ParentAsDeadline, Mode=TwoWay}"/>
+
+					
                 </StackPanel>
+
+				<StackPanel Grid.Column="2" Padding="{StaticResource LargePadding}" VerticalAlignment="bottom" Visibility="{x:Bind ViewModel.IsTaskSelected, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+				    <Button  Content="Save Changes" Command="{x:Bind ViewModel.ConfirmChangesCommand}"/>
+				</StackPanel>
 			
-			
-			    <TextBlock Grid.ColumnSpan ="2" Padding="{StaticResource LargePadding}" Visibility="{x:Bind ViewModel.IsTaskNotSelected, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+			    <TextBlock Grid.ColumnSpan ="3" Padding="{StaticResource LargePadding}" Visibility="{x:Bind ViewModel.IsTaskNotSelected, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
 					Select or add a new task to the schedule queue to edit it's scheduling properties!
 				</TextBlock>
             </Grid>

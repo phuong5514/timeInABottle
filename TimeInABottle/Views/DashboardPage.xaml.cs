@@ -49,53 +49,17 @@ public sealed partial class DashboardPage : Page
         var thisWeekTasks = ViewModel.ThisWeekTasks;
         foreach (var task in thisWeekTasks)
         {
-            if (task is DailyTask)
+            var weekdays = task.GetWeekdaysInt();
+            foreach (var weekday in weekdays)
             {
-                // Daily Task: Create a grid cell for each day
-                for (var day = 1; day <= 7; day++)
+                var position = weekday;
+                if (position <= 0)
                 {
-                    var dayEvent = CreateTaskGrid(task);
-                    Grid.SetColumn((FrameworkElement)dayEvent, day); // Set column based on the day
-                    CalendarContainer.Children.Add(dayEvent);
+                    position += 7;
                 }
-            }
-            else if (task is WeeklyTask weeklyTask)
-            {
-                // Weekly Task: Create grids only for specified weekdays
-                foreach (var day in weeklyTask.WeekDays)
-                {
-                    var position = (int)day;
-                    if (position <= 0) {
-                        position += 7;
-                    }
-                    var weeklyEvent = CreateTaskGrid(task);
-                    Grid.SetColumn((FrameworkElement)weeklyEvent, position); // Convert weekday to column index
-                    CalendarContainer.Children.Add(weeklyEvent);
-                }
-            }
-            else if (task is MonthlyTask monthlyTask)
-            {
-                var date = monthlyTask.Date;
-                var dayOfWeek = (int)new DateTime(DateTime.Now.Year, DateTime.Now.Month, date).DayOfWeek;
-                dayOfWeek = dayOfWeek == 0 ? 7 : dayOfWeek;
-
-                var monthlyEvent = CreateTaskGrid(task);
-
-                Grid.SetColumn((FrameworkElement)monthlyEvent, dayOfWeek);
-                CalendarContainer.Children.Add(monthlyEvent);
-            }
-            else if (task is NonRepeatedTask nonRepeatedTask)
-            {
-                DateOnly date = nonRepeatedTask.Date;
-                DateTime eventDate = new DateTime(date.Year, date.Month, date.Day);
-
-                var dayOfWeek = (int)eventDate.DayOfWeek;
-                dayOfWeek = dayOfWeek == 0 ? 7 : dayOfWeek;
-
-                var nonRepeatedEvent = CreateTaskGrid(task);
-
-                Grid.SetColumn((FrameworkElement)nonRepeatedEvent, dayOfWeek);
-                CalendarContainer.Children.Add(nonRepeatedEvent);
+                var weeklyEvent = CreateTaskGrid(task);
+                Grid.SetColumn((FrameworkElement)weeklyEvent, position); // Convert weekday to column index
+                CalendarContainer.Children.Add(weeklyEvent);
             }
         }
     }

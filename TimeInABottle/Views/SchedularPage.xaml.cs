@@ -1,6 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using TimeInABottle.Core.Models.Tasks;
+using TimeInABottle.Models;
 using TimeInABottle.ViewModels;
 
 namespace TimeInABottle.Views;
@@ -21,7 +22,11 @@ public sealed partial class SchedularPage : Page
         SetGrid();
         SetTitles();
         LoadData();
+
+        //ViewModel.SelectedTaskChanged += OnSelectedTaskChanged;
     }
+
+
 
     private void SetGrid()
     {
@@ -106,54 +111,17 @@ public sealed partial class SchedularPage : Page
         var thisWeekTasks = ViewModel.ThisWeekTasks;
         foreach (var task in thisWeekTasks)
         {
-            if (task is DailyTask)
+            var weekdays = task.GetWeekdaysInt();
+            foreach (var weekday in weekdays)
             {
-                // Daily Task: Create a grid cell for each day
-                for (var day = 1; day <= 7; day++)
+                var position = weekday;
+                if (position <= 0)
                 {
-                    var dayEvent = CreateTaskGrid(task);
-                    Grid.SetColumn((FrameworkElement)dayEvent, day); // Set column based on the day
-                    CalendarContainer.Children.Add(dayEvent);
+                    position += 7;
                 }
-            }
-            else if (task is WeeklyTask weeklyTask)
-            {
-                // Weekly Task: Create grids only for specified weekdays
-                foreach (var day in weeklyTask.WeekDays)
-                {
-                    var position = (int)day;
-                    if (position <= 0)
-                    {
-                        position += 7;
-                    }
-                    var weeklyEvent = CreateTaskGrid(task);
-                    Grid.SetColumn((FrameworkElement)weeklyEvent, position); // Convert weekday to column index
-                    CalendarContainer.Children.Add(weeklyEvent);
-                }
-            }
-            else if (task is MonthlyTask monthlyTask)
-            {
-                var date = monthlyTask.Date;
-                var dayOfWeek = (int)new DateTime(DateTime.Now.Year, DateTime.Now.Month, date).DayOfWeek;
-                dayOfWeek = dayOfWeek == 0 ? 7 : dayOfWeek;
-
-                var monthlyEvent = CreateTaskGrid(task);
-
-                Grid.SetColumn((FrameworkElement)monthlyEvent, dayOfWeek);
-                CalendarContainer.Children.Add(monthlyEvent);
-            }
-            else if (task is NonRepeatedTask nonRepeatedTask)
-            {
-                DateOnly date = nonRepeatedTask.Date;
-                DateTime eventDate = new DateTime(date.Year, date.Month, date.Day);
-
-                var dayOfWeek = (int)eventDate.DayOfWeek;
-                dayOfWeek = dayOfWeek == 0 ? 7 : dayOfWeek;
-
-                var nonRepeatedEvent = CreateTaskGrid(task);
-
-                Grid.SetColumn((FrameworkElement)nonRepeatedEvent, dayOfWeek);
-                CalendarContainer.Children.Add(nonRepeatedEvent);
+                var weeklyEvent = CreateTaskGrid(task);
+                Grid.SetColumn((FrameworkElement)weeklyEvent, position); // Convert weekday to column index
+                CalendarContainer.Children.Add(weeklyEvent);
             }
         }
     }
@@ -166,10 +134,12 @@ public sealed partial class SchedularPage : Page
     private UIElement CreateTaskGrid(ITask task)
     {
         // Retrieve the DataTemplate
-        var template = (DataTemplate)Resources["CalendarTaskItem"];
+        var templateString = "CalendarTaskItem";
+        var template = (DataTemplate)Resources[templateString];
+
         if (template == null)
         {
-            throw new InvalidOperationException("DataTemplate 'CalendarTaskItem' not found in resources.");
+            throw new InvalidOperationException($"DataTemplate '{templateString}' not found in resources.");
         }
 
         // Load the template content
@@ -185,6 +155,7 @@ public sealed partial class SchedularPage : Page
         // Apply grid row and row span properties
         Grid.SetRow(content, row);
         Grid.SetRowSpan(content, rowSpan);
+
 
         return content;
     }
@@ -251,5 +222,23 @@ public sealed partial class SchedularPage : Page
             Console.WriteLine(ex.StackTrace);
         }
     }
+
+    //private void OnSelectedTaskChanged(TaskWrapper? selectedTask)
+    //{
+    //    if (selectedTask != null)
+    //    {
+    //        RestoreFocusToLastItem(selectedTask);
+    //    }
+    //}
+
+    //private void RestoreFocusToLastItem(TaskWrapper selectedTask)
+    //{
+    //    //var selectedListViewItem = TaskList.ContainerFromItem(selectedTask) as ListViewItem;
+    //    var selectedListViewItem = TaskList.ContainerFromItem(selectedTask) as ListViewItem;
+    //    if (selectedListViewItem != null)
+    //    {
+    //        selectedListViewItem.Focus(FocusState.Programmatic);
+    //    }
+    //}
 
 }

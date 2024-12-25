@@ -9,6 +9,15 @@ using TimeInABottle.Core.Models.Tasks;
 namespace TimeInABottle.Models;
 public class TaskWrapper(ITask task) : INotifyPropertyChanged
 {
+    public TaskWrapper(TaskWrapper value) : this(value.Task)
+    {
+        EstimatedCompletionTime = value.EstimatedCompletionTime;
+        ImportanceLevel = value.ImportanceLevel;
+        UrgencyLevel = value.UrgencyLevel;
+        DifficultyLevel = value.DifficultyLevel;
+        ParentAsDeadline = value.ParentAsDeadline;
+    }
+
     public enum Importance
     {
         Low = 1,
@@ -58,15 +67,21 @@ public class TaskWrapper(ITask task) : INotifyPropertyChanged
         set; get;
     } = false;
 
-    //public TimeSpan ExpectedDuration
-    //{
-    //    set; get;
-    //}
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
     public static Array ImportanceValues => Enum.GetValues(typeof(Importance));
     public static Array UrgencyValues => Enum.GetValues(typeof(Urgency));
     public static Array DifficultyValues => Enum.GetValues(typeof(Difficulty));
+
+    internal void CopyFrom(TaskWrapper other) {
+        if (other == null) return;
+
+        DifficultyLevel = other.DifficultyLevel;
+        UrgencyLevel = other.UrgencyLevel;
+        ImportanceLevel = other.ImportanceLevel;
+        EstimatedCompletionTime = other.EstimatedCompletionTime;
+        ParentAsDeadline = other.ParentAsDeadline;
+    }
 }
 
