@@ -154,13 +154,30 @@ public sealed partial class DashboardPage : Page
         // Add rows (48 rows for 30-minute intervals over 24 hours)
         for (var i = 0; i <= 48; i++) // 30-minute intervals
         {
-            CalendarContainer.RowDefinitions.Add(new RowDefinition { Height = new GridLength(36) });
+            CalendarContainer.RowDefinitions.Add(new RowDefinition { Height = new GridLength(40) });
         }
 
         var titles = new[] { "Time", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+        var today = DateTime.Now;
+        var dayIterator = today.AddDays(-(int)today.DayOfWeek + 1);
+        if (today.DayOfWeek == DayOfWeek.Sunday)
+        {
+            dayIterator = dayIterator.AddDays(-7);
+        }
+
         for (var i = 0; i < titles.Length; i++)
         {
-            var title = titles[i];
+            string? title;
+            if (i != 0)
+            {
+                var formatedDayString = dayIterator.ToString("M");
+                title = $"{titles[i]}\n{formatedDayString}";
+                dayIterator = dayIterator.AddDays(1);
+            }
+            else {
+                title = titles[i];
+            }
+
             var columnTitle = new TextBlock
             {
                 Text = title,
@@ -384,5 +401,60 @@ public sealed partial class DashboardPage : Page
         //{
         //    // left blank
         //}
+    }
+
+    private async Task CreateAddDialog()
+    {
+        var dialogViewModel = App.GetService<CUDDialogViewModel>();
+
+        var dialogContent = new TaskEditorDialogControl
+        {
+            ViewModel = dialogViewModel
+        };
+
+        var dialog = new ContentDialog
+        {
+            Title = "Add Task",
+            Content = dialogContent,
+            PrimaryButtonText = "Add",
+            CloseButtonText = "Cancel",
+            XamlRoot = Content.XamlRoot, // Ensure the dialog is shown in the correct XAML root
+            DataContext = dialogViewModel
+        };
+
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary)
+        {
+            var code = dialogViewModel.SaveChanges();
+            if (code == Models.FunctionResultCode.SUCCESS)
+            {
+                // tell the view model that data is changed
+                ViewModel.LoadData();
+                ClearData();
+                LoadData();
+            }
+            else
+            {
+                _ = CreateFailureDialog(code);
+            };
+
+        }
+        else
+        {
+            // left blank
+        }
+    }
+
+    private void CalendarContainer_RightTapped(object sender, Microsoft.UI.Xaml.Input.RightTappedRoutedEventArgs e)
+    {
+        var flyout = CalendarContainer.Resources["AddTaskFlyout"] as MenuFlyout;
+
+        // Show the flyout at the pointer location
+        flyout?.ShowAt(sender as UIElement, e.GetPosition(sender as UIElement));
+    }
+
+    private void AddTaskFlyoutItem_Click(object sender, RoutedEventArgs e)
+    {
+        _ = CreateAddDialog();
     }
 }

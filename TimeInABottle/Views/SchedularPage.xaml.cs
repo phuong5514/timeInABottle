@@ -61,13 +61,31 @@ public sealed partial class SchedularPage : Page
         // Add rows (48 rows for 30-minute intervals over 24 hours)
         for (var i = 0; i <= 48; i++) // 30-minute intervals
         {
-            CalendarContainer.RowDefinitions.Add(new RowDefinition { Height = new GridLength(36) });
+            CalendarContainer.RowDefinitions.Add(new RowDefinition { Height = new GridLength(40) });
         }
 
         var titles = new[] { "Time", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+        var today = DateTime.Now;
+        var dayIterator = today.AddDays(-(int)today.DayOfWeek + 1);
+        if (today.DayOfWeek == DayOfWeek.Sunday)
+        {
+            dayIterator = dayIterator.AddDays(-7);
+        }
+
         for (var i = 0; i < titles.Length; i++)
         {
-            var title = titles[i];
+            string? title;
+            if (i != 0)
+            {
+                var formatedDayString = dayIterator.ToString("M");
+                title = $"{titles[i]}\n{formatedDayString}";
+                dayIterator = dayIterator.AddDays(1);
+            }
+            else
+            {
+                title = titles[i];
+            }
+
             var columnTitle = new TextBlock
             {
                 Text = title,

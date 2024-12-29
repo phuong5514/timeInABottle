@@ -210,7 +210,21 @@
 			<!-- CalendarContainer: chua lich chinh -->
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Grid.Row="1" Margin="0,0,16,32" >
                 <Grid x:Name="CalendarContainer"
-                      Style="{StaticResource TimeTable}"/>
+                      Style="{StaticResource TimeTable}"
+                      RightTapped="CalendarContainer_RightTapped">
+
+                    <Grid.Resources>
+                        <MenuFlyout x:Key="AddTaskFlyout">
+                            <MenuFlyoutItem 
+                                Text="Add Task"
+                                Icon="Add"
+                                Click="AddTaskFlyoutItem_Click" />
+                            <MenuFlyoutItem 
+                                Text="Cancel"
+                                Icon="Cancel" />
+                        </MenuFlyout>
+                    </Grid.Resources>
+                </Grid>
 
             </ScrollViewer>
             <!-- Basic Grid structure, we will add rows and columns in the code-behind -->
