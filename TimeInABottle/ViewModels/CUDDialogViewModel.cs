@@ -201,21 +201,62 @@ public partial class CUDDialogViewModel : ObservableRecipient
                 break;
         }
 
+        //if (IsEditMode)
+        //{
+        //    var milestone = _task.Start.ToTimeSpan();
+        //    var increment = TimeSpan.FromMinutes(30);
+
+        //    // add the old's occupied time as available
+        //    while (milestone < _task.End.ToTimeSpan())
+        //    {
+        //        allowedStarts = allowedStarts.Append(milestone);
+        //        allowedEnds = allowedEnds.Append(milestone + increment);
+        //        milestone += increment;
+        //    }
+        //}
+
+
         return allowedStarts.Contains(InputStart) && allowedEnds.Contains(InputEnd);
     }
 
 
     public FunctionResultCode SaveChanges()
     {
-        var validationResult = ValidateInput();
-        if (validationResult != FunctionResultCode.SUCCESS)
-        {
-            return validationResult;
-        }
+        // validate before commit change
+        // pros: easier failure management: if fail no need to do anything
+        // con: edge case validation: edit a task time when but it is occupied by the soon-to-be deleted task -> need additional handling
+        //var validationResult = ValidateInput();
+        //if (validationResult != FunctionResultCode.SUCCESS)
+        //{
+        //    return validationResult;
+        //}
 
+        //if (IsEditMode)
+        //{
+        //    _daoService.DeleteTask(_task);
+        //}
+
+
+
+        // delete old task first and implement rollback
+        // pros: fewer code, simple handling for edge case
+        // con: performence: is deleting and adding 1 time more efficent than 
         if (IsEditMode)
         {
             _daoService.DeleteTask(_task);
+        }
+
+        var validationResult = ValidateInput();
+        if (validationResult != FunctionResultCode.SUCCESS)
+        {
+            // roll back
+            if (IsEditMode)
+            {
+                _daoService.AddTask(_task);
+            }
+
+
+            return validationResult;
         }
 
         if (TypeName == nameof(WeeklyTask) && InputWeekDays.Count == Weekdays.Count)

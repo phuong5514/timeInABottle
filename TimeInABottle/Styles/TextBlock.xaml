@@ -46,7 +46,17 @@
         <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
         <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="Padding" Value="{StaticResource MediumLeftRightMargin}"/>
     </Style>
+
+    <Style x:Key="CalendarTaskItemExtendedTitle" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="Padding" Value="{StaticResource SmallLeftRightMargin}"/>
+    </Style>
+
+
 
     <Style x:Key="FilterTag" TargetType="StackPanel">
         <Setter Property="Height" Value="28"/>

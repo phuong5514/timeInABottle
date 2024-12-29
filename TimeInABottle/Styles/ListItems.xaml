@@ -8,6 +8,11 @@
         <Setter Property="Padding" Value="{StaticResource MediumPadding}"/>
         <Setter Property="Margin" Value="{StaticResource ListItemMargin}"/>
     </Style>
+
+    <Style x:Key="BaseListItemContainerStyleGrid" TargetType="Grid">
+        <Setter Property="Padding" Value="{StaticResource SmallPadding}"/>
+        <Setter Property="Margin" Value="{StaticResource ListItemMargin}"/>
+    </Style>
     
     <Style x:Key="BaseListTitleStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
         <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />

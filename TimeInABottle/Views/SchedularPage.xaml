@@ -20,14 +20,26 @@
 		<helpers:TaskTypeToBooleanConverter x:Key="TaskTypeToBooleanConverter"/>
 
         <DataTemplate x:Key ="ListItem" x:DataType="model:TaskWrapper">
-            <StackPanel Orientation="Horizontal" Style="{StaticResource BaseListItemContainerStyle}" HorizontalAlignment="Stretch">
-                <TextBlock Style="{StaticResource ListSubTitleStyle}">
-                    <Run Text="{x:Bind Task.Name}"/>
-                </TextBlock>
-				<Button Click="RemoveTask_Click" HorizontalAlignment="Right">
-					<FontIcon Glyph="&#xE738;"/>
-				</Button>
-            </StackPanel>
+            <Grid Style="{StaticResource BaseListItemContainerStyleGrid}" HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <!-- TextBlock fills available space -->
+                    <ColumnDefinition Width="Auto"/>
+                    <!-- Button only takes as much space as needed -->
+                </Grid.ColumnDefinitions>
+
+                <TextBlock 
+                    Grid.Column="0" 
+                    Style="{StaticResource ListSubTitleStyle}" 
+                    VerticalAlignment="Center"
+                    Text="{x:Bind Task.Name}"/>
+
+                <Button 
+                    Grid.Column="1" 
+                    Click="RemoveTask_Click">
+                    <FontIcon Glyph="&#xE738;"/>
+                </Button>
+            </Grid>
         </DataTemplate>
 
         <DataTemplate x:Key="CalendarTaskItem" x:DataType="task:ITask">
