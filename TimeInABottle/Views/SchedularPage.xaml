@@ -45,6 +45,7 @@
                     Text="{x:Bind Task.Name}"/>
 
                 <Button 
+                    Padding="{StaticResource ExSmallPadding}"
                     Grid.Column="2" 
                     Click="RemoveTask_Click"
                     VerticalAlignment="Center">
@@ -114,7 +115,7 @@
 			</Grid.RowDefinitions>
 
 			<!-- Header: input and task config. -->
-            <Grid x:Name="Header" Background="{ThemeResource SolidBackgroundFillColorBaseBrush}" Margin="0,0,16,16" CornerRadius="16">
+            <Grid x:Name="Header" Background="{ThemeResource SolidBackgroundFillColorBaseBrush}" Margin="0,0,16,16" Style="{StaticResource GridBorder}">
                 <Grid.ColumnDefinitions>
 					<ColumnDefinition Width ="2*"/>
 					<ColumnDefinition Width ="2*"/>
@@ -155,8 +156,19 @@
             </Grid>
 
 			<!-- SideBar: selected task for scheduling-->
-            <StackPanel x:Name="SideBar" Grid.Column="1" Grid.RowSpan="2" Orientation="Vertical" Background="{ThemeResource SolidBackgroundFillColorBaseBrush}" Margin="0,0,0,32" CornerRadius="16">
-				<StackPanel Orientation="Vertical" Padding="{StaticResource MediumPadding}" >
+            <Grid x:Name="SideBar"
+                  Grid.Column="1"
+                  Grid.RowSpan="2"
+                  Background="{ThemeResource SolidBackgroundFillColorBaseBrush}"
+                  Margin="0,0,0,32"
+                  Style="{StaticResource GridBorder}">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+				<StackPanel Orientation="Vertical">
 					<TextBlock Style="{StaticResource VerticalListTitleStyle}">Schedule settings</TextBlock>
 					<CheckBox Content="Only times from now" IsChecked="{x:Bind ViewModel.IsOnlyFromNow, Mode=TwoWay}" HorizontalAlignment="Stretch"/>
                     <Button x:Name="ScheduleButton"
@@ -166,23 +178,27 @@
                             Background="{ThemeResource SystemFillColorSuccessBackgroundBrush}"/>
 				</StackPanel>
 
-				<Border BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}" BorderThickness="0,0,0,1" Margin="0,10,0,10"/>
+                <StackPanel Orientation="Vertical" Grid.Row="1">
+                    <Border BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}" BorderThickness="0,0,0,1" Margin="0,10,0,10" />
 
-				<TextBlock Style="{StaticResource VerticalListTitleStyle}" Padding="{StaticResource MediumBottomMargin}">Tasks for Scheduling</TextBlock>
-                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                    <ListView 
-                        Name="TaskList"
-                        ItemsSource="{x:Bind ViewModel.TasksForScheduling}"
-                        SelectedItem="{x:Bind ViewModel.SelectedTask, Mode=TwoWay}"
-                        ItemTemplate="{StaticResource ListItem}"
-                    />
-                </ScrollViewer>
-            </StackPanel>
+                    <TextBlock Style="{StaticResource VerticalListTitleStyle}" Padding="{StaticResource MediumBottomMargin}">Tasks for Scheduling</TextBlock>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <ListView 
+                            Name="TaskList"
+                            ItemsSource="{x:Bind ViewModel.TasksForScheduling}"
+                            SelectedItem="{x:Bind ViewModel.SelectedTask, Mode=TwoWay}"
+                            ItemTemplate="{StaticResource ListItem}"
+                            />
+                    </ScrollViewer>
+                </StackPanel>
+            </Grid>
 
 			<!-- CalendarContainer: contains task available for scheduling-->
-            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Grid.Row="1"  Background="{ThemeResource SolidBackgroundFillColorBaseBrush}" Margin="0,0,16,32" CornerRadius="16">
-                <Grid x:Name="CalendarContainer">
-                </Grid>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Grid.Row="1" Margin="0,0,16,32" >
+                <Grid
+                    x:Name="CalendarContainer"
+                    Style="{StaticResource TimeTable}"/>
+                <!---->
             </ScrollViewer>
             <!-- Basic Grid structure, we will add rows and columns in the code-behind -->
         </Grid>

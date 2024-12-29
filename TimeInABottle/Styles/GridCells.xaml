@@ -45,6 +45,17 @@
         <Setter Property="Background" Value="{StaticResource AccentFillColorDefaultBrush}"/>
     </Style>
 
+    <Style x:Key="GridBorder" TargetType="Grid">
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="{ThemeResource SurfaceStrokeColorDefaultBrush}"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="12"/>
+    </Style>
+
+    <Style x:Key="TimeTable" TargetType="Grid" BasedOn="{StaticResource GridBorder}">
+        <Setter Property="Background" Value="{ThemeResource LayerFillColorAltBrush}"/>
+        
+    </Style>
 
 
 

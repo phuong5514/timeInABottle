@@ -52,7 +52,7 @@
                             <StackPanel Orientation="Vertical" Style="{StaticResource CellContentStackPanel}" Padding="0, 8, 0, 0">
                                 <StackPanel Orientation="Vertical" Padding="{StaticResource MediumPadding}">
 
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="5" Style="{StaticResource CalendarTaskItemExtended}" >
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="5" >
                                         <FontIcon 
                                             Glyph="{x:Bind Converter={StaticResource TaskTypeToIconConverter}, Mode=OneWay}" 
                                             HorizontalAlignment="Left" 
@@ -144,7 +144,9 @@
 			</Grid.RowDefinitions>
 
 			<!-- NoticeBoard : hien deadline, cac thong tin thoi tiet, thoi gian, cac hoat dong tiep theo,... -->
-            <Grid x:Name="NoticeBoard" Background="{ThemeResource SolidBackgroundFillColorBaseBrush}" CornerRadius="16" Margin="0,0, 16, 16">
+            <Grid x:Name="NoticeBoard" Background="{ThemeResource SolidBackgroundFillColorBaseBrush}"
+                  Margin="0,0, 16, 16"
+                  Style="{StaticResource GridBorder}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="6*"/>
                     <ColumnDefinition Width="6*"/>
@@ -183,21 +185,33 @@
 			</Grid>
 
 			<!-- SideBar: cac cong viec trong ngay -->
-            <StackPanel x:Name="SideBar" Grid.Column="1" Grid.RowSpan="2" Orientation="Vertical" Background="{ThemeResource SolidBackgroundFillColorBaseBrush}" CornerRadius="16" Padding="{StaticResource MediumPadding}" Margin="0,0,0, 32">
+            <Grid x:Name="SideBar" Grid.Column="1" Grid.RowSpan="2"
+                 Background="{ThemeResource SolidBackgroundFillColorBaseBrush}"
+                 Style="{StaticResource GridBorder}"
+                 Margin="0,0,0, 32"
+                 >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
                 <TextBlock Style="{StaticResource VerticalListTitleStyle}">Today's Tasks</TextBlock>
 
-                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled"
+                              Grid.Row="1">
                     <ListView Name="TaskList"
                         ItemsSource="{x:Bind ViewModel.TodayTasks, Mode=OneWay}"
                         ItemTemplate="{StaticResource ListItem}">
                     </ListView>
                 </ScrollViewer>
-            </StackPanel>
+            </Grid>
 
 			<!-- CalendarContainer: chua lich chinh -->
-            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Grid.Row="1" Background="{ThemeResource SolidBackgroundFillColorBaseBrush}" Margin="0,0,16,32" >
-                <Grid x:Name="CalendarContainer">
-                </Grid>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Grid.Row="1" Margin="0,0,16,32" >
+                <Grid x:Name="CalendarContainer"
+                      Style="{StaticResource TimeTable}"/>
+
             </ScrollViewer>
             <!-- Basic Grid structure, we will add rows and columns in the code-behind -->
 
