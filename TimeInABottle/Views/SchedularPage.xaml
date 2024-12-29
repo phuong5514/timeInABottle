@@ -18,25 +18,37 @@
         <helpers:TaskToNotificationConverter x:Key="TaskToNotificationConverter"/>
         <helpers:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 		<helpers:TaskTypeToBooleanConverter x:Key="TaskTypeToBooleanConverter"/>
+        <helpers:ListToAvailabilityColorConverter x:Key="ListToAvailabilityColorConverter"/>
+        <helpers:TaskTypeToIconConverter x:Key="TaskTypeToIconConverter"/>
 
         <DataTemplate x:Key ="ListItem" x:DataType="model:TaskWrapper">
             <Grid Style="{StaticResource BaseListItemContainerStyleGrid}" HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                     <!-- TextBlock fills available space -->
                     <ColumnDefinition Width="Auto"/>
                     <!-- Button only takes as much space as needed -->
                 </Grid.ColumnDefinitions>
 
-                <TextBlock 
+                <FontIcon
                     Grid.Column="0" 
+                    Glyph="{x:Bind Task, Converter={StaticResource TaskTypeToIconConverter}, Mode=OneWay}" 
+                    HorizontalAlignment="Left" 
+                    VerticalAlignment="Center" 
+                    Margin="{StaticResource SmallRightMargin }"/>
+                
+                <TextBlock 
+                    Grid.Column="1" 
                     Style="{StaticResource ListSubTitleStyle}" 
                     VerticalAlignment="Center"
                     Text="{x:Bind Task.Name}"/>
 
                 <Button 
-                    Grid.Column="1" 
-                    Click="RemoveTask_Click">
+                    Grid.Column="2" 
+                    Click="RemoveTask_Click"
+                    VerticalAlignment="Center">
+                    
                     <FontIcon Glyph="&#xE738;"/>
                 </Button>
             </Grid>
@@ -108,24 +120,27 @@
 					<ColumnDefinition Width ="2*"/>
 					<ColumnDefinition Width ="*"/>
 				</Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0" Orientation="Vertical" Padding="{StaticResource LargePadding}" Spacing="10" Visibility="{x:Bind ViewModel.IsTaskSelected, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <ComboBox PlaceholderText="Difficulty" 	  
-                        HorizontalAlignment="Stretch"	  
-                        ItemsSource="{x:Bind model:TaskWrapper.DifficultyValues}" 
-                        SelectedItem="{x:Bind ViewModel.EditableTask.DifficultyLevel, Mode=TwoWay}"/>
-                    <ComboBox PlaceholderText="Urgency" 
-                        HorizontalAlignment="Stretch"
-                        ItemsSource="{x:Bind model:TaskWrapper.UrgencyValues}" 
-                        SelectedItem="{x:Bind ViewModel.EditableTask.UrgencyLevel, Mode=TwoWay}"/>
-                    <ComboBox PlaceholderText="Important" 
-                        HorizontalAlignment="Stretch"
-                        ItemsSource="{x:Bind model:TaskWrapper.ImportanceValues}" 
-                        SelectedItem="{x:Bind ViewModel.EditableTask.ImportanceLevel, Mode=TwoWay}"/>
-                </StackPanel>
+
+                <ScrollView Grid.Column="0" Visibility="{x:Bind ViewModel.IsTaskSelected, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <StackPanel  Orientation="Vertical" Padding="{StaticResource LargePadding}" Spacing="10" >
+                        <ComboBox Header ="Difficulty" 
+                            HorizontalAlignment="Stretch"	  
+                            ItemsSource="{x:Bind model:TaskWrapper.DifficultyValues}" 
+                            SelectedItem="{x:Bind ViewModel.EditableTask.DifficultyLevel, Mode=TwoWay}"/>
+                        <ComboBox Header ="Urgency" 
+                            HorizontalAlignment="Stretch"
+                            ItemsSource="{x:Bind model:TaskWrapper.UrgencyValues}" 
+                            SelectedItem="{x:Bind ViewModel.EditableTask.UrgencyLevel, Mode=TwoWay}"/>
+                        <ComboBox Header ="Importance" 
+                            HorizontalAlignment="Stretch"
+                            ItemsSource="{x:Bind model:TaskWrapper.ImportanceValues}" 
+                            SelectedItem="{x:Bind ViewModel.EditableTask.ImportanceLevel, Mode=TwoWay}"/>
+                    </StackPanel>
+                </ScrollView>
 
                 <StackPanel Grid.Column="1" Orientation="Vertical" Padding="{StaticResource LargePadding}" Spacing="10" Visibility="{x:Bind ViewModel.IsTaskSelected, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <TimePicker Header="Estimated Completion Time" ClockIdentifier="24HourClock" MinuteIncrement="30" Time="{x:Bind ViewModel.EditableTask.EstimatedCompletionTime, Mode=TwoWay}"/>
-                    <CheckBox Content="Set as Deadline" IsChecked="{x:Bind ViewModel.EditableTask.ParentAsDeadline, Mode=TwoWay}"/>
+                    <CheckBox Content="Set parent as Deadline" IsChecked="{x:Bind ViewModel.EditableTask.ParentAsDeadline, Mode=TwoWay}"/>
 
 					
                 </StackPanel>
@@ -144,12 +159,16 @@
 				<StackPanel Orientation="Vertical" Padding="{StaticResource MediumPadding}" >
 					<TextBlock Style="{StaticResource VerticalListTitleStyle}">Schedule settings</TextBlock>
 					<CheckBox Content="Only times from now" IsChecked="{x:Bind ViewModel.IsOnlyFromNow, Mode=TwoWay}" HorizontalAlignment="Stretch"/>
-				    <Button x:Name="ScheduleButton" Content="Schedule for this week" Click="ScheduleButton_Click" HorizontalAlignment="Stretch"/>
+                    <Button x:Name="ScheduleButton"
+                            Content="Schedule for this week"
+                            Click="ScheduleButton_Click"
+                            HorizontalAlignment="Stretch"
+                            Background="{ThemeResource SystemFillColorSuccessBackgroundBrush}"/>
 				</StackPanel>
 
 				<Border BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}" BorderThickness="0,0,0,1" Margin="0,10,0,10"/>
 
-				<TextBlock Style="{StaticResource VerticalListTitleStyle}">Tasks for Scheduling</TextBlock>
+				<TextBlock Style="{StaticResource VerticalListTitleStyle}" Padding="{StaticResource MediumBottomMargin}">Tasks for Scheduling</TextBlock>
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                     <ListView 
                         Name="TaskList"

@@ -9,6 +9,7 @@
 
     <UserControl.Resources>
         <helper:TaskToSpecialtyStringConverter x:Key="TaskToSpecialtyStringConverter"/>
+        <helper:TaskTypeToIconConverter x:Key="TaskTypeToIconConverter"/>
     </UserControl.Resources>
     
     <ScrollViewer
@@ -18,14 +19,13 @@
         IsTabStop="True">
         <StackPanel HorizontalAlignment="Left" Padding="{StaticResource SmallPadding}">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-                <!--
+
                 <FontIcon
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    FontSize="48"
-                    Glyph="{x:Bind ListDetailsMenuItem.Symbol, Mode=OneWay}"
-                    AutomationProperties.Name="{x:Bind ListDetailsMenuItem.SymbolName, Mode=OneWay}"  />
-                -->
+                    FontSize="36"
+                    Glyph="{x:Bind ListDetailsMenuItem, Converter={StaticResource TaskTypeToIconConverter}, Mode=OneWay}"  />
+
                 <TextBlock
                     Margin="{StaticResource SmallLeftMargin}"
                     VerticalAlignment="Center"

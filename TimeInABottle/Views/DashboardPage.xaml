@@ -16,9 +16,14 @@
         <helpers:WeatherInfoWrapperToTemperatureConverter x:Key="WeatherInfoWrapperToTemperatureConverter"/>
         <helpers:WeatherInfoWrapperToWeatherTypeConverter x:Key="WeatherInfoWrapperToWeatherTypeConverter"/>
         <helpers:TaskToSpecialtyStringConverter x:Key="TaskToSpecialtyStringConverter"/>
+        <helpers:TaskTypeToIconConverter x:Key="TaskTypeToIconConverter"/>
 
         <DataTemplate x:Key ="ListItem" x:DataType="task:ITask">
-            <StackPanel Orientation="Horizontal" Style="{StaticResource BaseListItemContainerStyle}">
+            <StackPanel Orientation="Horizontal" Style="{StaticResource BaseListItemContainerStyle}" Spacing="8">
+                <FontIcon 
+                    Glyph="{x:Bind Converter={StaticResource TaskTypeToIconConverter}, Mode=OneWay}" 
+                    HorizontalAlignment="Left" 
+                    VerticalAlignment="Center" />
                 <TextBlock Style="{StaticResource ListSubTitleStyle}">
                     <Run Text="{x:Bind Start, Converter={StaticResource TimeToStringConverter}}"/>: <Run Text="{x:Bind Name}"/>
                 </TextBlock>
@@ -45,20 +50,23 @@
                     <Flyout FlyoutPresenterStyle="{StaticResource CellContentFlyout}">
                         <ScrollViewer>
                             <StackPanel Orientation="Vertical" Style="{StaticResource CellContentStackPanel}" Padding="0, 8, 0, 0">
-                                <StackPanel Orientation="Vertical">
-                                    <!--
-                                    <TextBlock Text="{x:Bind TypeName}" Style="{StaticResource CalendarTaskItemExtended}" FontWeight="SemiBold"/>
-                                    -->
-                                    <TextBlock Style="{StaticResource CalendarTaskItemExtended}">
-                                        <Run Text="{x:Bind Name}"/>
-                                    </TextBlock>
+                                <StackPanel Orientation="Vertical" Padding="{StaticResource MediumPadding}">
 
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="5" Style="{StaticResource CalendarTaskItemExtended}" >
+                                        <FontIcon 
+                                            Glyph="{x:Bind Converter={StaticResource TaskTypeToIconConverter}, Mode=OneWay}" 
+                                            HorizontalAlignment="Left" 
+                                            VerticalAlignment="Center" />
+                                        <TextBlock 
+                                            VerticalAlignment="Center" 
+                                            Text="{x:Bind Name}" />
+                                    </StackPanel>
                                     <TextBlock Text="From - To:" Style="{StaticResource CalendarTaskItemExtended}" FontWeight="SemiBold"/>
                                     <TextBlock Style="{StaticResource CalendarTaskItemExtended}">
                                         <Run Text="{x:Bind Start, Converter={StaticResource TimeToStringConverter}}"/> - <Run Text="{x:Bind End, Converter={StaticResource TimeToStringConverter}}"/>
                                     </TextBlock>
 
-                            
+
                                     <TextBlock Style="{StaticResource CalendarTaskItemExtended}">
                                         <Run Text="{x:Bind Converter={StaticResource TaskToSpecialtyStringConverter}, Mode=OneWay}"/>
                                     </TextBlock>
@@ -67,24 +75,23 @@
                                     <TextBlock Style="{StaticResource CalendarTaskItemExtended}">
                                         <Run Text="{x:Bind Description}"/>
                                     </TextBlock>
-
-                                    <Grid 
-                                        Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}"
-                                        VerticalAlignment="Stretch"
-                                        Padding="{StaticResource LargePadding}"
-                                        ColumnSpacing="12"
-                                        >
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
-
-                                        <Button Grid.Column="0" Click="CalendarItemEdit_Click" Content="Edit" HorizontalAlignment="Stretch"/>
-                                        
-                                        <Button Grid.Column="1" Click="CalendarItemDelete_Click" Content="Delete" HorizontalAlignment="Stretch"/>
-                                    </Grid>
-
                                 </StackPanel>
+                                
+                                <Grid 
+                                    Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}"
+                                    VerticalAlignment="Stretch"
+                                    Padding="{StaticResource LargePadding}"
+                                    ColumnSpacing="12"
+                                    >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Button Grid.Column="0" Click="CalendarItemEdit_Click" Content="Edit" HorizontalAlignment="Stretch"/>
+                                        
+                                    <Button Grid.Column="1" Click="CalendarItemDelete_Click" Content="Delete" HorizontalAlignment="Stretch"/>
+                                </Grid>
                             </StackPanel>
                         </ScrollViewer>
                     </Flyout>
