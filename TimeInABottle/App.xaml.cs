@@ -75,7 +75,6 @@ public partial class App : Application
             services.AddSingleton<IPlannerService, TimeSlotBasedPlannerService>();
 
 
-
             // Core Services
             //services.AddSingleton<IDaoService, MockDaoService>();
             services.AddSingleton<IWeatherService, ApiWeatherService>();
@@ -98,9 +97,6 @@ public partial class App : Application
 
             services.AddTransient<ShellPage>();
             services.AddTransient<ShellViewModel>();
-
-            // BackgroundTask
-
 
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));

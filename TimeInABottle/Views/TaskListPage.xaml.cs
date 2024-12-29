@@ -188,14 +188,14 @@ public sealed partial class TaskListPage : Page
             XamlRoot = this.Content.XamlRoot, // Ensure the dialog is shown in the correct XAML root
         };
         var result = await dialog.ShowAsync();
-        if (result == ContentDialogResult.Primary)
-        {
-            // left blank
-        }
-        else
-        {
-            // left blank
-        }
+        //if (result == ContentDialogResult.Primary)
+        //{
+        //    // left blank
+        //}
+        //else
+        //{
+        //    // left blank
+        //}
     }
 
     private async Task CreateAddDialog()

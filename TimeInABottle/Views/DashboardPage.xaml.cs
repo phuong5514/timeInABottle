@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Drawing;
+using System.Text;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
@@ -9,6 +11,7 @@ using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
 using TimeInABottle.Core.Models.Tasks;
 using TimeInABottle.Core.Services;
+using TimeInABottle.Models;
 using TimeInABottle.ViewModels;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -36,7 +39,7 @@ public sealed partial class DashboardPage : Page
         SetGrid();
         SetTitles();
         LoadData();
-
+        StartGridUpdateTimer();
     }
 
     /// <summary>
@@ -61,6 +64,28 @@ public sealed partial class DashboardPage : Page
                 Grid.SetColumn((FrameworkElement)weeklyEvent, position); // Convert weekday to column index
                 CalendarContainer.Children.Add(weeklyEvent);
             }
+        }
+    }
+
+    private void ClearData()
+    {
+        var template = (DataTemplate)Resources["CalendarTaskItem"];
+        if (template == null)
+        {
+            throw new InvalidOperationException("DataTemplate 'CalendarTaskItem' not found in resources.");
+        }
+
+        var content = template.LoadContent();
+        var contentType = content.GetType();
+
+        var childrenToRemove = CalendarContainer.Children
+            .OfType<FrameworkElement>()
+            .Where(child => child.GetType() == contentType)
+            .ToList();
+
+        foreach (var child in childrenToRemove)
+        {
+            CalendarContainer.Children.Remove(child);
         }
     }
 
@@ -130,13 +155,30 @@ public sealed partial class DashboardPage : Page
         // Add rows (48 rows for 30-minute intervals over 24 hours)
         for (var i = 0; i <= 48; i++) // 30-minute intervals
         {
-            CalendarContainer.RowDefinitions.Add(new RowDefinition { Height = new GridLength(36) });
+            CalendarContainer.RowDefinitions.Add(new RowDefinition { Height = new GridLength(40) });
         }
 
         var titles = new[] { "Time", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+        var today = DateTime.Now;
+        var dayIterator = today.AddDays(-(int)today.DayOfWeek + 1);
+        if (today.DayOfWeek == DayOfWeek.Sunday)
+        {
+            dayIterator = dayIterator.AddDays(-7);
+        }
+
         for (var i = 0; i < titles.Length; i++)
         {
-            var title = titles[i];
+            string? title;
+            if (i != 0)
+            {
+                var formatedDayString = dayIterator.ToString("M");
+                title = $"{titles[i]}\n{formatedDayString}";
+                dayIterator = dayIterator.AddDays(1);
+            }
+            else {
+                title = titles[i];
+            }
+
             var columnTitle = new TextBlock
             {
                 Text = title,
@@ -175,15 +217,35 @@ public sealed partial class DashboardPage : Page
     {
         var columns = 8;
         var rows = 49;
+
+        var startTime = DateTime.Now;
+        startTime = startTime.AddHours(-startTime.Hour).AddMinutes(-startTime.Minute).AddSeconds(-startTime.Second);
+        if (startTime.DayOfWeek == DayOfWeek.Sunday)
+        {
+            startTime = startTime.AddDays(-7);
+        }
+        startTime = startTime.AddDays(-(int)startTime.DayOfWeek);
+
         for (var i = 0; i < columns; i++)
         {
 
             for (var j = 0; j < rows; j++)
             {
+                DateTime? cellTime = null;
+                if (i > 0 && j > 0) {
+                    cellTime = startTime.AddMinutes(j * 30).AddDays(i);
+                }
+
                 Border emptyCell = new Border
                 {
-                    Style = GetStyle("Cell")
+                    Style = GetStyle("Cell"),
+                    Tag = cellTime
                 };
+
+                if (cellTime != null) { 
+                    UpdateCellStyle(emptyCell, cellTime);
+                }
+
                 Grid.SetColumn(emptyCell, i);
                 Grid.SetRow(emptyCell, j);
                 CalendarContainer.Children.Add(emptyCell);
@@ -191,6 +253,44 @@ public sealed partial class DashboardPage : Page
 
         }
     }
+
+
+    private void UpdateCellStyle(Border cell, DateTime? cellTime)
+    {
+        var now = DateTime.Now;
+        if (cellTime < now)
+        {
+            // Time has passed
+            cell.Background = (Brush)Microsoft.UI.Xaml.Application.Current.Resources["SurfaceStrokeColorDefaultBrush"];
+        }
+        else
+        {
+            // Future or current time
+            cell.Background = new SolidColorBrush(Colors.Transparent); // Default color
+        }
+    }
+
+    private void StartGridUpdateTimer()
+    {
+        var timer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromMinutes(5) 
+        };
+
+        timer.Tick += (s, e) =>
+        {
+            foreach (var child in CalendarContainer.Children)
+            {
+                if (child is Border cell && cell.Tag is DateTime cellTime)
+                {
+                    UpdateCellStyle(cell, cellTime);
+                }
+            }
+        };
+
+        timer.Start();
+    }
+
 
     /// <summary>
     /// Gets the style from the application resources.
@@ -201,6 +301,8 @@ public sealed partial class DashboardPage : Page
     {
         return (Style)Microsoft.UI.Xaml.Application.Current.Resources[key];
     }
+
+    
 
     /// <summary>
     /// Handles the click event of the toggle button to show or hide the sidebar.
@@ -226,4 +328,194 @@ public sealed partial class DashboardPage : Page
         }
     }
 
+    private void CalendarItemEdit_Click(object sender, RoutedEventArgs e)
+    {
+        var task = (ITask)((FrameworkElement)sender).DataContext;
+        _ = CreateEditDialog(task);
+    }
+
+    private void CalendarItemDelete_Click(object sender, RoutedEventArgs e)
+    {
+        var task = (ITask)((FrameworkElement)sender).DataContext;
+        _ = CreateDeleteConfirmationDialog(task);
+    }
+
+    private async Task CreateEditDialog(ITask selectedTask)
+    {
+        if (selectedTask == null)
+        {
+            return;
+        }
+
+        var dialogViewModel = App.GetService<CUDDialogViewModel>();
+        dialogViewModel.EditMode(selectedTask);
+
+        var dialogContent = new TaskEditorDialogControl();
+        dialogContent.ViewModel = dialogViewModel;
+
+        var dialog = new ContentDialog
+        {
+            Title = "Edit Task",
+            Content = dialogContent,
+            PrimaryButtonText = "Save changes",
+            CloseButtonText = "Cancel",
+            XamlRoot = Content.XamlRoot, // Ensure the dialog is shown in the correct XAML root
+            DataContext = dialogViewModel
+        };
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary)
+        {
+            var code = dialogViewModel.SaveChanges();
+            if (code == FunctionResultCode.SUCCESS)
+            {
+                ViewModel.LoadData();
+                ClearData();
+                LoadData();
+
+            }
+            else
+            {
+                _ = CreateFailureDialog(code);
+            }
+        }
+        else
+        {
+            // left blank
+        }
+    }
+
+
+    private async Task CreateDeleteConfirmationDialog(ITask selectedTask)
+    {
+        var dialogViewModel = App.GetService<CUDDialogViewModel>();
+        dialogViewModel.EditMode(selectedTask);
+
+        var dialog = new ContentDialog
+        {
+            Title = "Delete Task",
+            Content = new UserControl()
+            {
+                Content = new TextBlock() { Text = $"Are you sure you want to delete {selectedTask.Name}?" }
+            },
+            PrimaryButtonText = "Delete",
+            CloseButtonText = "Cancel",
+            XamlRoot = Content.XamlRoot, // Ensure the dialog is shown in the correct XAML root
+            DataContext = dialogViewModel
+        };
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary)
+        {
+            if (dialogViewModel.DeleteTask())
+            {
+                ViewModel.LoadData();
+                ClearData();
+                LoadData();
+            }
+        }
+        else
+        {
+            // left blank
+        }
+    }
+
+    private async Task CreateFailureDialog(FunctionResultCode code)
+    {
+        var message = "";
+        switch (code)
+        {
+            case FunctionResultCode.ERROR:
+                message = "An error occurred";
+                break;
+
+            case FunctionResultCode.ERROR_INVALID_INPUT:
+                var stringBuilder = new StringBuilder();
+                stringBuilder.AppendLine("Invalid input, make sure to check your input!");
+                stringBuilder.AppendLine("");
+                stringBuilder.AppendLine("Commonly occured scenarios:");
+                stringBuilder.AppendLine("1. Start time is after or is the same as end time");
+                stringBuilder.AppendLine("2. there is already a task occupied that time");
+                message = stringBuilder.ToString();
+                break;
+
+            case FunctionResultCode.ERROR_MISSING_INPUT:
+                message = "Missing input(s), make sure to fill all the required fields!";
+                break;
+
+            case FunctionResultCode.ERROR_UNKNOWN:
+                message = "An unknown error occurred";
+                break;
+        }
+
+        var dialog = new ContentDialog
+        {
+            Title = "Error",
+            Content = new UserControl() { Content = new TextBlock() { Text = message } },
+            CloseButtonText = "Ok",
+            XamlRoot = this.Content.XamlRoot, // Ensure the dialog is shown in the correct XAML root
+        };
+        _ = await dialog.ShowAsync();
+        //if (result == ContentDialogResult.Primary)
+        //{
+        //    // left blank
+        //}
+        //else
+        //{
+        //    // left blank
+        //}
+    }
+
+    private async Task CreateAddDialog()
+    {
+        var dialogViewModel = App.GetService<CUDDialogViewModel>();
+
+        var dialogContent = new TaskEditorDialogControl
+        {
+            ViewModel = dialogViewModel
+        };
+
+        var dialog = new ContentDialog
+        {
+            Title = "Add Task",
+            Content = dialogContent,
+            PrimaryButtonText = "Add",
+            CloseButtonText = "Cancel",
+            XamlRoot = Content.XamlRoot, // Ensure the dialog is shown in the correct XAML root
+            DataContext = dialogViewModel
+        };
+
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary)
+        {
+            var code = dialogViewModel.SaveChanges();
+            if (code == Models.FunctionResultCode.SUCCESS)
+            {
+                // tell the view model that data is changed
+                ViewModel.LoadData();
+                ClearData();
+                LoadData();
+            }
+            else
+            {
+                _ = CreateFailureDialog(code);
+            };
+
+        }
+        else
+        {
+            // left blank
+        }
+    }
+
+    private void CalendarContainer_RightTapped(object sender, Microsoft.UI.Xaml.Input.RightTappedRoutedEventArgs e)
+    {
+        var flyout = CalendarContainer.Resources["AddTaskFlyout"] as MenuFlyout;
+
+        // Show the flyout at the pointer location
+        flyout?.ShowAt(sender as UIElement, e.GetPosition(sender as UIElement));
+    }
+
+    private void AddTaskFlyoutItem_Click(object sender, RoutedEventArgs e)
+    {
+        _ = CreateAddDialog();
+    }
 }

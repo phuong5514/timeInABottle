@@ -61,13 +61,31 @@ public sealed partial class SchedularPage : Page
         // Add rows (48 rows for 30-minute intervals over 24 hours)
         for (var i = 0; i <= 48; i++) // 30-minute intervals
         {
-            CalendarContainer.RowDefinitions.Add(new RowDefinition { Height = new GridLength(36) });
+            CalendarContainer.RowDefinitions.Add(new RowDefinition { Height = new GridLength(40) });
         }
 
         var titles = new[] { "Time", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+        var today = DateTime.Now;
+        var dayIterator = today.AddDays(-(int)today.DayOfWeek + 1);
+        if (today.DayOfWeek == DayOfWeek.Sunday)
+        {
+            dayIterator = dayIterator.AddDays(-7);
+        }
+
         for (var i = 0; i < titles.Length; i++)
         {
-            var title = titles[i];
+            string? title;
+            if (i != 0)
+            {
+                var formatedDayString = dayIterator.ToString("M");
+                title = $"{titles[i]}\n{formatedDayString}";
+                dayIterator = dayIterator.AddDays(1);
+            }
+            else
+            {
+                title = titles[i];
+            }
+
             var columnTitle = new TextBlock
             {
                 Text = title,
@@ -126,6 +144,29 @@ public sealed partial class SchedularPage : Page
         }
     }
 
+    private void ClearData()
+    {
+        var template = (DataTemplate)Resources["CalendarTaskItem"];
+        if (template == null)
+        {
+            throw new InvalidOperationException("DataTemplate 'CalendarTaskItem' not found in resources.");
+        }
+
+        var content = template.LoadContent();
+        var contentType = content.GetType();
+
+        var childrenToRemove = CalendarContainer.Children
+            .OfType<FrameworkElement>()
+            .Where(child => child.GetType() == contentType)
+            .ToList();
+
+        foreach (var child in childrenToRemove)
+        {
+            CalendarContainer.Children.Remove(child);
+        }
+    }
+
+
     /// <summary>
     /// Creates a grid for a task.
     /// </summary>
@@ -175,8 +216,8 @@ public sealed partial class SchedularPage : Page
     /// <returns>The row span.</returns>
     private int CalculateRowSpan(TimeOnly start, TimeOnly end)
     {
-        int startRow = CalculateRow(start);
-        int endRow = CalculateRow(end);
+        var startRow = CalculateRow(start);
+        var endRow = CalculateRow(end);
         return endRow - startRow;
     }
 
@@ -216,29 +257,12 @@ public sealed partial class SchedularPage : Page
         {
             //ViewModel.ScheduleSelectedTaskCommand.Execute();
             ViewModel.ScheduleSelectedTaskExecute();
+            ClearData();
+            LoadData();
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.StackTrace);
         }
     }
-
-    //private void OnSelectedTaskChanged(TaskWrapper? selectedTask)
-    //{
-    //    if (selectedTask != null)
-    //    {
-    //        RestoreFocusToLastItem(selectedTask);
-    //    }
-    //}
-
-    //private void RestoreFocusToLastItem(TaskWrapper selectedTask)
-    //{
-    //    //var selectedListViewItem = TaskList.ContainerFromItem(selectedTask) as ListViewItem;
-    //    var selectedListViewItem = TaskList.ContainerFromItem(selectedTask) as ListViewItem;
-    //    if (selectedListViewItem != null)
-    //    {
-    //        selectedListViewItem.Focus(FocusState.Programmatic);
-    //    }
-    //}
-
 }

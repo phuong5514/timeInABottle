@@ -48,13 +48,22 @@
         <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
 
+    <Style x:Key="CalendarTaskItemExtendedTitle" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="Padding" Value="{StaticResource SmallLeftRightMargin}"/>
+    </Style>
+
+
+
     <Style x:Key="FilterTag" TargetType="StackPanel">
         <Setter Property="Height" Value="28"/>
         <Setter Property="Width" Value="auto"/>
-        <Setter Property="Margin" Value="{StaticResource SmallLeftMargin}"/>
+        <Setter Property="Margin" Value="{StaticResource SmallLeftRightMargin}"/>
         <Setter Property="Padding" Value="{StaticResource SmallPadding}"/>
         <Setter Property="CornerRadius" Value="8"/>
-        <Setter Property="Background" Value="#03a9fc"/>
+        <Setter Property="Background" Value="{ThemeResource SystemColorHighlightColor}"/>
     </Style>
 
 

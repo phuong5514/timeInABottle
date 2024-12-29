@@ -18,16 +18,41 @@
         <helpers:TaskToNotificationConverter x:Key="TaskToNotificationConverter"/>
         <helpers:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 		<helpers:TaskTypeToBooleanConverter x:Key="TaskTypeToBooleanConverter"/>
+        <helpers:ListToAvailabilityColorConverter x:Key="ListToAvailabilityColorConverter"/>
+        <helpers:TaskTypeToIconConverter x:Key="TaskTypeToIconConverter"/>
 
         <DataTemplate x:Key ="ListItem" x:DataType="model:TaskWrapper">
-            <StackPanel Orientation="Horizontal" Style="{StaticResource BaseListItemContainerStyle}" HorizontalAlignment="Stretch">
-                <TextBlock Style="{StaticResource ListSubTitleStyle}">
-                    <Run Text="{x:Bind Task.Name}"/>
-                </TextBlock>
-				<Button Click="RemoveTask_Click" HorizontalAlignment="Right">
-					<FontIcon Glyph="&#xE738;"/>
-				</Button>
-            </StackPanel>
+            <Grid Style="{StaticResource BaseListItemContainerStyleGrid}" HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <!-- TextBlock fills available space -->
+                    <ColumnDefinition Width="Auto"/>
+                    <!-- Button only takes as much space as needed -->
+                </Grid.ColumnDefinitions>
+
+                <FontIcon
+                    Grid.Column="0" 
+                    Glyph="{x:Bind Task, Converter={StaticResource TaskTypeToIconConverter}, Mode=OneWay}" 
+                    HorizontalAlignment="Left" 
+                    VerticalAlignment="Center" 
+                    Margin="{StaticResource SmallRightMargin }"/>
+                
+                <TextBlock 
+                    Grid.Column="1" 
+                    Style="{StaticResource ListSubTitleStyle}" 
+                    VerticalAlignment="Center"
+                    Text="{x:Bind Task.Name}"/>
+
+                <Button 
+                    Padding="{StaticResource ExSmallPadding}"
+                    Grid.Column="2" 
+                    Click="RemoveTask_Click"
+                    VerticalAlignment="Center">
+                    
+                    <FontIcon Glyph="&#xE738;"/>
+                </Button>
+            </Grid>
         </DataTemplate>
 
         <DataTemplate x:Key="CalendarTaskItem" x:DataType="task:ITask">
@@ -90,30 +115,33 @@
 			</Grid.RowDefinitions>
 
 			<!-- Header: input and task config. -->
-            <Grid x:Name="Header" Background="{ThemeResource SolidBackgroundFillColorBaseBrush}" Margin="0,0,16,16" CornerRadius="16">
+            <Grid x:Name="Header" Background="{ThemeResource SolidBackgroundFillColorBaseBrush}" Margin="0,0,16,16" Style="{StaticResource GridBorder}">
                 <Grid.ColumnDefinitions>
 					<ColumnDefinition Width ="2*"/>
 					<ColumnDefinition Width ="2*"/>
 					<ColumnDefinition Width ="*"/>
 				</Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0" Orientation="Vertical" Padding="{StaticResource LargePadding}" Spacing="10" Visibility="{x:Bind ViewModel.IsTaskSelected, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <ComboBox PlaceholderText="Difficulty" 	  
-                        HorizontalAlignment="Stretch"	  
-                        ItemsSource="{x:Bind model:TaskWrapper.DifficultyValues}" 
-                        SelectedItem="{x:Bind ViewModel.EditableTask.DifficultyLevel, Mode=TwoWay}"/>
-                    <ComboBox PlaceholderText="Urgency" 
-                        HorizontalAlignment="Stretch"
-                        ItemsSource="{x:Bind model:TaskWrapper.UrgencyValues}" 
-                        SelectedItem="{x:Bind ViewModel.EditableTask.UrgencyLevel, Mode=TwoWay}"/>
-                    <ComboBox PlaceholderText="Important" 
-                        HorizontalAlignment="Stretch"
-                        ItemsSource="{x:Bind model:TaskWrapper.ImportanceValues}" 
-                        SelectedItem="{x:Bind ViewModel.EditableTask.ImportanceLevel, Mode=TwoWay}"/>
-                </StackPanel>
+
+                <ScrollView Grid.Column="0" Visibility="{x:Bind ViewModel.IsTaskSelected, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <StackPanel  Orientation="Vertical" Padding="{StaticResource LargePadding}" Spacing="10" >
+                        <ComboBox Header ="Difficulty" 
+                            HorizontalAlignment="Stretch"	  
+                            ItemsSource="{x:Bind model:TaskWrapper.DifficultyValues}" 
+                            SelectedItem="{x:Bind ViewModel.EditableTask.DifficultyLevel, Mode=TwoWay}"/>
+                        <ComboBox Header ="Urgency" 
+                            HorizontalAlignment="Stretch"
+                            ItemsSource="{x:Bind model:TaskWrapper.UrgencyValues}" 
+                            SelectedItem="{x:Bind ViewModel.EditableTask.UrgencyLevel, Mode=TwoWay}"/>
+                        <ComboBox Header ="Importance" 
+                            HorizontalAlignment="Stretch"
+                            ItemsSource="{x:Bind model:TaskWrapper.ImportanceValues}" 
+                            SelectedItem="{x:Bind ViewModel.EditableTask.ImportanceLevel, Mode=TwoWay}"/>
+                    </StackPanel>
+                </ScrollView>
 
                 <StackPanel Grid.Column="1" Orientation="Vertical" Padding="{StaticResource LargePadding}" Spacing="10" Visibility="{x:Bind ViewModel.IsTaskSelected, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <TimePicker Header="Estimated Completion Time" ClockIdentifier="24HourClock" MinuteIncrement="30" Time="{x:Bind ViewModel.EditableTask.EstimatedCompletionTime, Mode=TwoWay}"/>
-                    <CheckBox Content="Set as Deadline" IsChecked="{x:Bind ViewModel.EditableTask.ParentAsDeadline, Mode=TwoWay}"/>
+                    <CheckBox Content="Set parent as Deadline" IsChecked="{x:Bind ViewModel.EditableTask.ParentAsDeadline, Mode=TwoWay}"/>
 
 					
                 </StackPanel>
@@ -128,30 +156,49 @@
             </Grid>
 
 			<!-- SideBar: selected task for scheduling-->
-            <StackPanel x:Name="SideBar" Grid.Column="1" Grid.RowSpan="2" Orientation="Vertical" Background="{ThemeResource SolidBackgroundFillColorBaseBrush}" Margin="0,0,0,32" CornerRadius="16">
-				<StackPanel Orientation="Vertical" Padding="{StaticResource MediumPadding}" >
+            <Grid x:Name="SideBar"
+                  Grid.Column="1"
+                  Grid.RowSpan="2"
+                  Background="{ThemeResource SolidBackgroundFillColorBaseBrush}"
+                  Margin="0,0,0,32"
+                  Style="{StaticResource GridBorder}">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+				<StackPanel Orientation="Vertical">
 					<TextBlock Style="{StaticResource VerticalListTitleStyle}">Schedule settings</TextBlock>
 					<CheckBox Content="Only times from now" IsChecked="{x:Bind ViewModel.IsOnlyFromNow, Mode=TwoWay}" HorizontalAlignment="Stretch"/>
-				    <Button x:Name="ScheduleButton" Content="Schedule for this week" Click="ScheduleButton_Click" HorizontalAlignment="Stretch"/>
+                    <Button x:Name="ScheduleButton"
+                            Content="Schedule for this week"
+                            Click="ScheduleButton_Click"
+                            HorizontalAlignment="Stretch"
+                            Background="{ThemeResource SystemFillColorSuccessBackgroundBrush}"/>
 				</StackPanel>
 
-				<Border BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}" BorderThickness="0,0,0,1" Margin="0,10,0,10"/>
+                <StackPanel Orientation="Vertical" Grid.Row="1">
+                    <Border BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}" BorderThickness="0,0,0,1" Margin="0,10,0,10" />
 
-				<TextBlock Style="{StaticResource VerticalListTitleStyle}">Tasks for Scheduling</TextBlock>
-                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                    <ListView 
-                        Name="TaskList"
-                        ItemsSource="{x:Bind ViewModel.TasksForScheduling}"
-                        SelectedItem="{x:Bind ViewModel.SelectedTask, Mode=TwoWay}"
-                        ItemTemplate="{StaticResource ListItem}"
-                    />
-                </ScrollViewer>
-            </StackPanel>
+                    <TextBlock Style="{StaticResource VerticalListTitleStyle}" Padding="{StaticResource MediumBottomMargin}">Tasks for Scheduling</TextBlock>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <ListView 
+                            Name="TaskList"
+                            ItemsSource="{x:Bind ViewModel.TasksForScheduling}"
+                            SelectedItem="{x:Bind ViewModel.SelectedTask, Mode=TwoWay}"
+                            ItemTemplate="{StaticResource ListItem}"
+                            />
+                    </ScrollViewer>
+                </StackPanel>
+            </Grid>
 
 			<!-- CalendarContainer: contains task available for scheduling-->
-            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Grid.Row="1"  Background="{ThemeResource SolidBackgroundFillColorBaseBrush}" Margin="0,0,16,32" CornerRadius="16">
-                <Grid x:Name="CalendarContainer">
-                </Grid>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Grid.Row="1" Margin="0,0,16,32" >
+                <Grid
+                    x:Name="CalendarContainer"
+                    Style="{StaticResource TimeTable}"/>
+                <!---->
             </ScrollViewer>
             <!-- Basic Grid structure, we will add rows and columns in the code-behind -->
         </Grid>

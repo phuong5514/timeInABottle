@@ -58,9 +58,6 @@ public partial class DashboardViewModel : ObservableRecipient
         _timer.Start();
     }
 
-    
-
-
     public FullObservableCollection<ITask> TodayTasks
     {
         set; get;
@@ -152,7 +149,7 @@ public partial class DashboardViewModel : ObservableRecipient
 
 
 
-    private void LoadData()
+    public void LoadData()
     {
         getTodayTasks(); 
         getWeekTasks();

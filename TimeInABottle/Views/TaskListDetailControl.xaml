@@ -9,6 +9,7 @@
 
     <UserControl.Resources>
         <helper:TaskToSpecialtyStringConverter x:Key="TaskToSpecialtyStringConverter"/>
+        <helper:TaskTypeToIconConverter x:Key="TaskTypeToIconConverter"/>
     </UserControl.Resources>
     
     <ScrollViewer
@@ -16,16 +17,15 @@
         HorizontalAlignment="Stretch"
         VerticalScrollMode="Enabled"
         IsTabStop="True">
-        <StackPanel HorizontalAlignment="Left" Padding="{StaticResource SmallPadding}">
+        <StackPanel HorizontalAlignment="Stretch" Padding="{StaticResource LargePadding}" Background="{ThemeResource LayerFillColorDefaultBrush}">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-                <!--
+
                 <FontIcon
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    FontSize="48"
-                    Glyph="{x:Bind ListDetailsMenuItem.Symbol, Mode=OneWay}"
-                    AutomationProperties.Name="{x:Bind ListDetailsMenuItem.SymbolName, Mode=OneWay}"  />
-                -->
+                    FontSize="36"
+                    Glyph="{x:Bind ListDetailsMenuItem, Converter={StaticResource TaskTypeToIconConverter}, Mode=OneWay}"  />
+
                 <TextBlock
                     Margin="{StaticResource SmallLeftMargin}"
                     VerticalAlignment="Center"
@@ -33,11 +33,11 @@
                     Style="{ThemeResource TitleTextBlockStyle}" />
             </StackPanel>
             <StackPanel Padding="0,15,0,0">
-                <TextBlock Text="Start" Style="{StaticResource DetailSubTitleStyle}" />
+                <TextBlock Text="Start:" Style="{StaticResource DetailSubTitleStyle}" />
 
                 <TextBlock Text="{x:Bind ListDetailsMenuItem.Start, Mode=OneWay}" Style="{StaticResource DetailBodyBaseMediumStyle}" />
 
-                <TextBlock Text="End" Style="{StaticResource DetailSubTitleStyle}" />
+                <TextBlock Text="End:" Style="{StaticResource DetailSubTitleStyle}" />
 
                 <TextBlock Text="{x:Bind ListDetailsMenuItem.End, Mode=OneWay}" Style="{StaticResource DetailBodyBaseMediumStyle}" />
 
@@ -45,7 +45,7 @@
 
                 <TextBlock
                     Margin="{StaticResource SmallTopMargin}"
-                    Text="Description"
+                    Text="Description:"
                     Style="{StaticResource DetailSubTitleStyle}" />
                 <TextBlock Text="{x:Bind ListDetailsMenuItem.Description, Mode=OneWay}" Style="{StaticResource DetailBodyBaseMediumStyle}" />
             </StackPanel>
