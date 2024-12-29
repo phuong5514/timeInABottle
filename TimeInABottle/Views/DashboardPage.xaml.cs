@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Text;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
@@ -38,7 +39,7 @@ public sealed partial class DashboardPage : Page
         SetGrid();
         SetTitles();
         LoadData();
-
+        StartGridUpdateTimer();
     }
 
     /// <summary>
@@ -216,15 +217,35 @@ public sealed partial class DashboardPage : Page
     {
         var columns = 8;
         var rows = 49;
+
+        var startTime = DateTime.Now;
+        startTime = startTime.AddHours(-startTime.Hour).AddMinutes(-startTime.Minute).AddSeconds(-startTime.Second);
+        if (startTime.DayOfWeek == DayOfWeek.Sunday)
+        {
+            startTime = startTime.AddDays(-7);
+        }
+        startTime = startTime.AddDays(-(int)startTime.DayOfWeek);
+
         for (var i = 0; i < columns; i++)
         {
 
             for (var j = 0; j < rows; j++)
             {
+                DateTime? cellTime = null;
+                if (i > 0 && j > 0) {
+                    cellTime = startTime.AddMinutes(j * 30).AddDays(i);
+                }
+
                 Border emptyCell = new Border
                 {
-                    Style = GetStyle("Cell")
+                    Style = GetStyle("Cell"),
+                    Tag = cellTime
                 };
+
+                if (cellTime != null) { 
+                    UpdateCellStyle(emptyCell, cellTime);
+                }
+
                 Grid.SetColumn(emptyCell, i);
                 Grid.SetRow(emptyCell, j);
                 CalendarContainer.Children.Add(emptyCell);
@@ -232,6 +253,44 @@ public sealed partial class DashboardPage : Page
 
         }
     }
+
+
+    private void UpdateCellStyle(Border cell, DateTime? cellTime)
+    {
+        var now = DateTime.Now;
+        if (cellTime < now)
+        {
+            // Time has passed
+            cell.Background = (Brush)Microsoft.UI.Xaml.Application.Current.Resources["SurfaceStrokeColorDefaultBrush"];
+        }
+        else
+        {
+            // Future or current time
+            cell.Background = new SolidColorBrush(Colors.Transparent); // Default color
+        }
+    }
+
+    private void StartGridUpdateTimer()
+    {
+        var timer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromMinutes(5) 
+        };
+
+        timer.Tick += (s, e) =>
+        {
+            foreach (var child in CalendarContainer.Children)
+            {
+                if (child is Border cell && cell.Tag is DateTime cellTime)
+                {
+                    UpdateCellStyle(cell, cellTime);
+                }
+            }
+        };
+
+        timer.Start();
+    }
+
 
     /// <summary>
     /// Gets the style from the application resources.
@@ -242,6 +301,8 @@ public sealed partial class DashboardPage : Page
     {
         return (Style)Microsoft.UI.Xaml.Application.Current.Resources[key];
     }
+
+    
 
     /// <summary>
     /// Handles the click event of the toggle button to show or hide the sidebar.
