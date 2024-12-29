@@ -193,7 +193,7 @@
             x:Uid="TaskList"
             x:Name="ListDetailsViewControl"
             BackButtonBehavior="Manual"
-            Background="Transparent"
+            Background="{ThemeResource SolidBackgroundFillColorBaseBrush}"
             BorderBrush="Transparent"
             DetailsTemplate="{StaticResource DetailsTemplate}"
             ItemsSource="{x:Bind ViewModel.Tasks}"
@@ -202,6 +202,8 @@
             NoSelectionContentTemplate="{StaticResource NoSelectionContentTemplate}"
             SelectedItem="{x:Bind ViewModel.Selected, Mode=TwoWay}"
             ViewStateChanged="OnViewStateChanged"
+            CornerRadius="8"
+            Margin="0,0,0,32"
             />
     </Grid>
 
