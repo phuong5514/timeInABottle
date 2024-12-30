@@ -38,10 +38,19 @@ public class LocalStorageDaoService : IDaoService
             }
         }
 
-        var path = Path.Combine(AppContext.BaseDirectory, _filename);
-        var jsonString = File.ReadAllText(path);
-        var jsonTasks = JsonConvert.DeserializeObject<List<JsonTask>>(jsonString);
-        _taskList = (List<ITask>)TaskToJsonTaskConverter.ConvertListBack(jsonTasks);
+        try
+        {
+            var path = Path.Combine(AppContext.BaseDirectory, _filename);
+            var jsonString = File.ReadAllText(path);
+            var jsonTasks = JsonConvert.DeserializeObject<List<JsonTask>>(jsonString);
+            _taskList = (List<ITask>)TaskToJsonTaskConverter.ConvertListBack(jsonTasks);
+        }
+        catch (Exception ex) {
+            // do nothing, the file is not created yet due to the lack of changes in the db
+            // 2nd scenerio: the file is tampered with manually 
+            return;
+        }
+
     }
 
     FullObservableCollection<ITask> IDaoService.GetTodayTasks()

@@ -15,6 +15,12 @@ namespace TimeInABottle.Services;
 /// </summary>
 public class BackgroundTaskRegisterService : IBackgroundTaskRegisterService
 {
+    public void RegisterBackgroundTask(uint refreshRate)
+    {
+        CleanRegister();
+        RegisterBackgroundTask("NotificationBackgroundTasks", "TimeInABottle.Background.NotificationBackgroundTasks", new TimeTrigger(refreshRate, false));
+    }
+
     /// <summary>
     /// Registers a background task with the specified name, entry point, and trigger.
     /// </summary>

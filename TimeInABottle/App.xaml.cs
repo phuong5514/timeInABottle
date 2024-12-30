@@ -119,23 +119,13 @@ public partial class App : Application
         await App.GetService<IActivationService>().ActivateAsync(args);
 
         // init
-        RegisterBackgroundTask();
-        registerTaskFactory();
+        RegisterTaskFactory();
 
         var behaviorController = App.GetService<IBehaviorController>();
         await behaviorController.RunAsync();
     }
 
-    private void RegisterBackgroundTask()
-    {
-        var backgroundTaskRegisterService = App.GetService<IBackgroundTaskRegisterService>();
-
-        backgroundTaskRegisterService.CleanRegister();
-
-        backgroundTaskRegisterService.RegisterBackgroundTask("NotificationBackgroundTasks", "TimeInABottle.Background.NotificationBackgroundTasks", new TimeTrigger(15, false));
-    }
-
-    private void registerTaskFactory()
+    private void RegisterTaskFactory()
     {
         var taskType = typeof(ITask);
         var assembly = taskType.Assembly;

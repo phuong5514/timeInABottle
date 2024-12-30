@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Text;
+using System.Xml.Linq;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI;
@@ -9,6 +10,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
+using TimeInABottle.Core.Helpers;
 using TimeInABottle.Core.Models.Tasks;
 using TimeInABottle.Core.Services;
 using TimeInABottle.Models;
@@ -22,6 +24,20 @@ namespace TimeInABottle.Views;
 /// </summary>
 public sealed partial class DashboardPage : Page
 {
+
+    private int _increment;
+    private int _frequency;
+    private int _rowCount;
+
+    private void ReadConfig()
+    {
+        var incrementString = ConfigHandler.GetConfigValue("TimeSlotIncrement");
+        _increment = int.Parse(incrementString);
+        _frequency = 60 / _increment;
+        _rowCount = 24 * _frequency;
+    }
+
+
     /// <summary>
     /// Gets the ViewModel associated with the dashboard page.
     /// </summary>
@@ -34,6 +50,7 @@ public sealed partial class DashboardPage : Page
     {
         ViewModel = App.GetService<DashboardViewModel>();
         //ViewModel.Innit();
+        ReadConfig();
         InitializeComponent();
 
         SetGrid();
@@ -125,7 +142,7 @@ public sealed partial class DashboardPage : Page
     /// </summary>
     /// <param name="time">The time to calculate the row for.</param>
     /// <returns>The row index.</returns>
-    private int CalculateRow(TimeOnly time) => 1 + (time.Minute / 30) + (time.Hour * 2);
+    private int CalculateRow(TimeOnly time) => 1 + (time.Minute / _increment) + (time.Hour * _frequency);
 
     /// <summary>
     /// Calculates the row span based on the start and end times.
@@ -135,8 +152,8 @@ public sealed partial class DashboardPage : Page
     /// <returns>The row span.</returns>
     private int CalculateRowSpan(TimeOnly start, TimeOnly end)
     {
-        int startRow = CalculateRow(start);
-        int endRow = CalculateRow(end);
+        var startRow = CalculateRow(start);
+        var endRow = CalculateRow(end);
         return endRow - startRow;
     }
 
@@ -152,8 +169,8 @@ public sealed partial class DashboardPage : Page
             CalendarContainer.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) });
         }
 
-        // Add rows (48 rows for 30-minute intervals over 24 hours)
-        for (var i = 0; i <= 48; i++) // 30-minute intervals
+        // Add rows
+        for (var i = 0; i <= _rowCount; i++) // 15 - 30 - 45 - 60minute intervals
         {
             CalendarContainer.RowDefinitions.Add(new RowDefinition { Height = new GridLength(40) });
         }
@@ -194,20 +211,25 @@ public sealed partial class DashboardPage : Page
 
         }
 
-        // Add time labels in the first column (0)
-        for (var i = 0; i < 24; i++) // 24 hours (two blocks per hour)
-        {
+        var timeSpan = new TimeSpan();
+        var sqrtFrequency = (int)Math.Floor(Math.Sqrt(_frequency));
+        for (var i = 0; i < _rowCount / sqrtFrequency; i++) { 
+            
             TextBlock timeLabel = new TextBlock
             {
-                Text = $"{(i % 24)}:00",
+                Text = timeSpan.ToString(@"hh\:mm"),
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Center,
             };
-            var rowIndex = (i * 2) + 1;
+
+            var rowIndex = (i * sqrtFrequency) + 1;
             Grid.SetRow(timeLabel, rowIndex); // First half of the hour
             Grid.SetColumn(timeLabel, 0);
             CalendarContainer.Children.Add(timeLabel);
+
+            timeSpan = timeSpan.Add(TimeSpan.FromMinutes(_increment * sqrtFrequency));
         }
+
     }
 
     /// <summary>
@@ -216,7 +238,7 @@ public sealed partial class DashboardPage : Page
     private void SetGrid()
     {
         var columns = 8;
-        var rows = 49;
+        var rows = _rowCount;
 
         var startTime = DateTime.Now;
         startTime = startTime.AddHours(-startTime.Hour).AddMinutes(-startTime.Minute).AddSeconds(-startTime.Second);
@@ -229,7 +251,7 @@ public sealed partial class DashboardPage : Page
         for (var i = 0; i < columns; i++)
         {
 
-            for (var j = 0; j < rows; j++)
+            for (var j = 0; j <= rows; j++)
             {
                 DateTime? cellTime = null;
                 if (i > 0 && j > 0) {

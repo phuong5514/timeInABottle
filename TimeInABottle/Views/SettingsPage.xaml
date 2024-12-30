@@ -9,59 +9,124 @@
     mc:Ignorable="d">
     <Page.Resources>
         <helpers:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
+        <helpers:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Page.Resources>
     <Grid>
-        <StackPanel
-            x:Name="ContentArea">
-            <TextBlock x:Uid="Settings_Personalization" Style="{ThemeResource SubtitleTextBlockStyle}" />
-            <StackPanel Margin="{StaticResource SmallTopBottomMargin}">
-                <TextBlock x:Uid="Settings_Theme" />
+        <ScrollView>
+            <StackPanel
+                x:Name="ContentArea">
+                <TextBlock x:Uid="Settings_Personalization" Style="{ThemeResource SubtitleTextBlockStyle}" />
+                <StackPanel Margin="{StaticResource SmallTopBottomMargin}"  Background="{ThemeResource LayerFillColorAltBrush}" Padding="{StaticResource MediumPadding}">
+                    <TextBlock x:Uid="Settings_Theme" />
 
-                <StackPanel Margin="{StaticResource XSmallTopMargin}">
-                    <RadioButton
-                        x:Uid="Settings_Theme_Light"
-                        Command="{x:Bind ViewModel.SwitchThemeCommand}"
-                        IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light, Mode=OneWay}"
-                        FontSize="15"
-                        GroupName="AppTheme">
-                        <RadioButton.CommandParameter>
-                            <xaml:ElementTheme>Light</xaml:ElementTheme>
-                        </RadioButton.CommandParameter>
-                    </RadioButton>
-                    <RadioButton
-                        x:Uid="Settings_Theme_Dark"
-                        Command="{x:Bind ViewModel.SwitchThemeCommand}"
-                        IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=OneWay}"
-                        FontSize="15"
-                        GroupName="AppTheme">
-                        <RadioButton.CommandParameter>
-                            <xaml:ElementTheme>Dark</xaml:ElementTheme>
-                        </RadioButton.CommandParameter>
-                    </RadioButton>
-                    <RadioButton
-                        x:Uid="Settings_Theme_Default"
-                        Command="{x:Bind ViewModel.SwitchThemeCommand}"
-                        IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Default, Mode=OneWay}"
-                        FontSize="15"
-                        GroupName="AppTheme">
-                        <RadioButton.CommandParameter>
-                            <xaml:ElementTheme>Default</xaml:ElementTheme>
-                        </RadioButton.CommandParameter>
-                    </RadioButton>
+                    <StackPanel Margin="{StaticResource XSmallTopMargin}">
+                        <RadioButton
+                            x:Uid="Settings_Theme_Light"
+                            Command="{x:Bind ViewModel.SwitchThemeCommand}"
+                            IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light, Mode=OneWay}"
+                            FontSize="15"
+                            GroupName="AppTheme">
+                            <RadioButton.CommandParameter>
+                                <xaml:ElementTheme>Light</xaml:ElementTheme>
+                            </RadioButton.CommandParameter>
+                        </RadioButton>
+                        <RadioButton
+                            x:Uid="Settings_Theme_Dark"
+                            Command="{x:Bind ViewModel.SwitchThemeCommand}"
+                            IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=OneWay}"
+                            FontSize="15"
+                            GroupName="AppTheme">
+                            <RadioButton.CommandParameter>
+                                <xaml:ElementTheme>Dark</xaml:ElementTheme>
+                            </RadioButton.CommandParameter>
+                        </RadioButton>
+                        <RadioButton
+                            x:Uid="Settings_Theme_Default"
+                            Command="{x:Bind ViewModel.SwitchThemeCommand}"
+                            IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Default, Mode=OneWay}"
+                            FontSize="15"
+                            GroupName="AppTheme">
+                            <RadioButton.CommandParameter>
+                                <xaml:ElementTheme>Default</xaml:ElementTheme>
+                            </RadioButton.CommandParameter>
+                        </RadioButton>
+                    </StackPanel>
+                </StackPanel>
+
+                <TextBlock x:Uid="Settings_General" Style="{ThemeResource SubtitleTextBlockStyle}" />
+                <StackPanel Margin="{StaticResource SmallTopBottomMargin}"  Background="{ThemeResource LayerFillColorAltBrush}" Padding="{StaticResource MediumPadding}">
+                    <TextBlock x:Uid="Settings_TimeSlotSize" />
+                    <StackPanel Orientation="Horizontal">
+                        <ComboBox
+                            x:Name="TimeSlotSizeCombobox"
+                            ItemsSource="{x:Bind ViewModel.TimeSlotIncrements}"
+                            SelectedValue="{x:Bind ViewModel.TimeSlotIncrement, Mode=TwoWay}"/>
+
+                        <TextBlock VerticalAlignment="Center" Margin="{StaticResource SmallLeftMargin}"> minutes </TextBlock>
+
+                    </StackPanel>
+                </StackPanel>
+
+
+                <TextBlock x:Uid="Settings_Notification" Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                <StackPanel Margin="{StaticResource SmallTopBottomMargin}" Background="{ThemeResource LayerFillColorAltBrush}" Padding="{StaticResource MediumPadding}">
+                    <TextBlock x:Uid="Settings_Enable_Notification" />
+                    <ToggleSwitch
+                        x:Uid="Settings_Enable_Notification_ToggleSwitch"
+                        IsOn="{x:Bind ViewModel.IsNotificationEnabled, Mode=TwoWay}"
+                        OnContent="On"
+                        OffContent="Off"/>
+
+                    <StackPanel Visibility="{x:Bind ViewModel.IsNotificationEnabled, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <TextBlock x:Uid="Settings_Notification_Refresh_Rate"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                            <TextBlock Text="{x:Bind ViewModel.BackgroundTaskRefreshRate, Mode=OneWay}" Width="24" VerticalAlignment="Center" Margin="{StaticResource SmallRightMargin}"  Padding="{StaticResource SmallPadding}"/>
+                            <Slider Value="{x:Bind ViewModel.BackgroundTaskRefreshRate, Mode=TwoWay}" Minimum="1" Maximum="30" Width="200"/>
+                        </StackPanel>
+
+
+                        <TextBlock x:Uid="Settings_Notification_Time"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                            <TextBlock Text="{x:Bind ViewModel.NotificationTime, Mode=OneWay}" Width="24" VerticalAlignment="Center" Margin="{StaticResource SmallRightMargin}"  Padding="{StaticResource SmallPadding}"/>
+                            <Slider Value="{x:Bind ViewModel.NotificationTime, Mode=TwoWay}" Minimum="15" Maximum="90" StepFrequency="5" SmallChange="5" Width="200"/>
+                        </StackPanel>
+
+
+
+                   
+                        <TextBlock x:Uid="Settings_Notitication_Duration"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                            <TextBlock Text="{x:Bind ViewModel.NotificationDuration, Mode=OneWay}" Width="24" VerticalAlignment="Center" Margin="{StaticResource SmallRightMargin}" Padding="{StaticResource SmallPadding}"/>
+                            <Slider Value="{x:Bind ViewModel.NotificationDuration, Mode=TwoWay}" Minimum="5" Maximum="30" Width="200"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <Button x:Name="Settings_Notification_Save" Command="{x:Bind ViewModel.NotificationSaveCommand}" Background="{ThemeResource SystemFillColorSuccessBackgroundBrush}" Margin="{StaticResource SmallTopMargin}">Save changes</Button>
+                </StackPanel>
+
+                <TextBlock x:Uid="Settings_Scheduling" Style="{ThemeResource SubtitleTextBlockStyle}" />
+                <StackPanel Margin="{StaticResource SmallTopBottomMargin}"  Background="{ThemeResource LayerFillColorAltBrush}" Padding="{StaticResource MediumPadding}">
+                    <TextBlock x:Uid="Settings_Scheduling_Start"/>
+                    <TimePicker Time="{x:Bind ViewModel.SchedulingStartTime, Mode=TwoWay}" ClockIdentifier="24HourClock"/>
+                    <TextBlock x:Uid="Settings_Scheduling_End"/>
+                    <TimePicker Time="{x:Bind ViewModel.SchedulingStartTime, Mode=TwoWay}" ClockIdentifier="24HourClock"/>
+
+
+                    <Button x:Name="Settings_Scheduling_Save" Command="{x:Bind ViewModel.ScheduleSaveCommand}" Background="{ThemeResource SystemFillColorSuccessBackgroundBrush}" Margin="{StaticResource SmallTopMargin}">Save changes</Button>
+
+                </StackPanel>
+
+                <TextBlock x:Uid="Settings_About" Style="{ThemeResource SubtitleTextBlockStyle}" />
+                <StackPanel Margin="{StaticResource SmallTopBottomMargin}"  Background="{ThemeResource LayerFillColorAltBrush}" Padding="{StaticResource SmallPadding}">
+                    <TextBlock Text="{x:Bind ViewModel.VersionDescription, Mode=OneWay}" Style="{ThemeResource BodyTextBlockStyle}" />
+
+                    <TextBlock
+                        x:Uid="Settings_AboutDescription"
+                        Margin="{StaticResource XSmallTopMargin}"
+                        Style="{ThemeResource BodyTextBlockStyle}" />
+
                 </StackPanel>
             </StackPanel>
-
-            <TextBlock x:Uid="Settings_About" Style="{ThemeResource SubtitleTextBlockStyle}" />
-
-            <StackPanel Margin="{StaticResource XSmallTopMargin}">
-                <TextBlock Text="{x:Bind ViewModel.VersionDescription, Mode=OneWay}" Style="{ThemeResource BodyTextBlockStyle}" />
-
-                <TextBlock
-                    x:Uid="Settings_AboutDescription"
-                    Margin="{StaticResource XSmallTopMargin}"
-                    Style="{ThemeResource BodyTextBlockStyle}" />
-                <HyperlinkButton x:Uid="SettingsPage_PrivacyTermsLink" Margin="{StaticResource SettingsPageHyperlinkButtonMargin}" />
-            </StackPanel>
-        </StackPanel>
+        </ScrollView>
     </Grid>
 </Page>
