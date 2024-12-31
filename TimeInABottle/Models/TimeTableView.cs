@@ -4,40 +4,37 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommunityToolkit.WinUI.UI;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media;
 using TimeInABottle.Core.Models.Tasks;
 
 namespace TimeInABottle.Models;
-internal class TimeTableView : Grid, INotifyPropertyChanged
+public class TimeTableView : Grid, INotifyPropertyChanged
 {
     private static readonly int _columnCount = 8;
-    private readonly int _taskTimeUnit;
     private readonly int _rowCount;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    public bool TrackTime {
-        set; get;
-    }
 
-    //private List<ITask> _values;
-    //public List<ITask> Values
-    //{
-    //    get => _values;
-    //    set
-    //    {
-    //        _values = value;
-    //        OnPropertyChanged(nameof(Values));
-    //        LoadData(); // Reload the grid whenever Values changes
-    //    }
-    //}
+    public static readonly DependencyProperty TaskTimeUnitProperty =
+        DependencyProperty.Register(
+            nameof(TaskTimeUnit),
+            typeof(int),
+            typeof(TimeTableView),
+            new PropertyMetadata(15, OnTaskTimeUnitChanged));
 
-    //private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
+    public static readonly DependencyProperty TrackTimeProperty =
+        DependencyProperty.Register(
+            nameof(TrackTime),
+            typeof(bool),
+            typeof(TimeTableView),
+            new PropertyMetadata(false, OnTrackTimeChanged));
 
     public static readonly DependencyProperty ValuesProperty =
         DependencyProperty.Register(
@@ -46,30 +43,61 @@ internal class TimeTableView : Grid, INotifyPropertyChanged
             typeof(TimeTableView),
             new PropertyMetadata(new List<ITask>(), OnValuesChanged));
 
-    public List<ITask> Values
+
+
+    public int TaskTimeUnit {
+        set; get;
+    }
+
+    public bool TrackTime
     {
-        get => (List<ITask>)GetValue(ValuesProperty);
+        set; get;
+    }
+
+    public IEnumerable<ITask> Values
+    {
+        get => (IEnumerable<ITask>)GetValue(ValuesProperty);
         set => SetValue(ValuesProperty, value);
+    }
+
+
+    public static void OnTaskTimeUnitChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is TimeTableView view && e.NewValue is int)
+        {
+            view.InitializeGrid(); // Refresh the grid when TaskTimeUnit changes
+        }
+    }
+
+    public static void OnTrackTimeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is TimeTableView view && e.NewValue is bool)
+        {
+            view.InitializeGrid(); // Refresh the grid when TrackTime changes
+        }
     }
 
     private static void OnValuesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is TimeTableView view && e.NewValue is List<ITask>)
+        if (d is TimeTableView view && e.NewValue is IEnumerable<ITask>)
         {
-            view.LoadData(); // Refresh the grid when Values changes
+            view.InitializeGrid(); // Refresh the grid when Values changes
         }
     }
 
-    public TimeTableView(int taskTimeUnit = 15, bool trackTime = false)
+    public TimeTableView()
     {
-        _taskTimeUnit = taskTimeUnit;
-        _rowCount = 24 * 60 / taskTimeUnit;
-        TrackTime = trackTime;
-        Values = new List<ITask>();
+
+        TaskTimeUnit = 15;
+        TrackTime = false;
+        Values = [];
+
+        _rowCount = 24 * 60 / TaskTimeUnit;
         InitializeGrid();
     }
 
     private void InitializeGrid() { 
+        Children.Clear();
         SetGrid();
         SetTitles();
         LoadData();
@@ -130,7 +158,7 @@ internal class TimeTableView : Grid, INotifyPropertyChanged
                 if (TrackTime) {
                     if (i > 0 && j > 0)
                     {
-                        cellTime = startTime.AddMinutes(j * _taskTimeUnit).AddDays(i);
+                        cellTime = startTime.AddMinutes(j * TaskTimeUnit).AddDays(i);
                     }
                 }
 
@@ -170,6 +198,7 @@ internal class TimeTableView : Grid, INotifyPropertyChanged
 
     private void LoadData()
     {
+        //ClearData();
         foreach (var task in Values)
         {
             var weekdays = task.GetWeekdaysInt();
@@ -189,7 +218,7 @@ internal class TimeTableView : Grid, INotifyPropertyChanged
 
     private void ClearData()
     {
-        var template = (DataTemplate)Resources["CalendarTaskItem"];
+        var template = (DataTemplate)this.FindResource("CalendarTaskItem");
         if (template == null)
         {
             throw new InvalidOperationException("DataTemplate 'CalendarTaskItem' not found in resources.");
@@ -218,7 +247,17 @@ internal class TimeTableView : Grid, INotifyPropertyChanged
     private UIElement CreateTaskGrid(ITask task)
     {
         // Retrieve the DataTemplate
-        var template = (DataTemplate)Resources["CalendarTaskItem"];
+        //var parent = this.Parent as FrameworkElement;
+        //if (parent == null)
+        //{
+        //    throw new InvalidOperationException("Parent is not a FrameworkElement.");
+        //}
+        //var template = (DataTemplate)parent.Resources["CalendarTaskItem"];
+        //var template = (DataTemplate)Application.Current.Resources["CalendarTaskItem"];
+
+        //var template = (DataTemplate)Resources["CalendarTaskItem"];
+
+        var template = (DataTemplate)this.FindResource("CalendarTaskItem");
         if (template == null)
         {
             throw new InvalidOperationException("DataTemplate 'CalendarTaskItem' not found in resources.");
@@ -248,8 +287,8 @@ internal class TimeTableView : Grid, INotifyPropertyChanged
     /// <returns>The row index.</returns>
     private int CalculateRow(TimeOnly time)
     {
-        var hourIndex = (time.Hour * 60 / _taskTimeUnit);
-        var minuteIndex = time.Minute / _taskTimeUnit;
+        var hourIndex = (time.Hour * 60 / TaskTimeUnit);
+        var minuteIndex = time.Minute / TaskTimeUnit;
         return 1 + minuteIndex + hourIndex;
     }
 
@@ -322,7 +361,8 @@ internal class TimeTableView : Grid, INotifyPropertyChanged
         }
 
         var timeSpan = new TimeSpan();
-        var sqrtFrequency = (int)Math.Floor(Math.Sqrt(_taskTimeUnit));
+        var interval = 60 / TaskTimeUnit;
+        var sqrtFrequency = (int)Math.Floor(Math.Sqrt(interval));
         for (var i = 0; i < _rowCount / sqrtFrequency; i++)
         {
 
@@ -338,7 +378,7 @@ internal class TimeTableView : Grid, INotifyPropertyChanged
             Grid.SetColumn(timeLabel, 0);
             Children.Add(timeLabel);
 
-            timeSpan = timeSpan.Add(TimeSpan.FromMinutes(_taskTimeUnit * sqrtFrequency));
+            timeSpan = timeSpan.Add(TimeSpan.FromMinutes(TaskTimeUnit * sqrtFrequency));
         }
 
     }

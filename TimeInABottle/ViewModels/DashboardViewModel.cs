@@ -67,6 +67,8 @@ public partial class DashboardViewModel : ObservableRecipient
         set; get;
     }
 
+    public int TaskTimeUnit = int.TryParse(ConfigHandler.GetConfigValue("TimeSlotIncrement"), out var result) ? result : 15;
+
 
     private ITask? _nextTask;
     public ITask? NextTask

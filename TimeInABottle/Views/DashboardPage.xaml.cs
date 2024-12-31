@@ -53,96 +53,96 @@ public sealed partial class DashboardPage : Page
         ReadConfig();
         InitializeComponent();
 
-        SetGrid();
-        SetTitles();
-        LoadData();
-        StartGridUpdateTimer();
+        //SetGrid();
+        //SetTitles();
+        //LoadData();
+        //StartGridUpdateTimer();
     }
 
     /// <summary>
     /// Loads the data for the dashboard page.
     /// </summary>
-    private void LoadData()
-    {
-        if (ViewModel == null) return;
+    //private void LoadData()
+    //{
+    //    if (ViewModel == null) return;
 
-        var thisWeekTasks = ViewModel.ThisWeekTasks;
-        foreach (var task in thisWeekTasks)
-        {
-            var weekdays = task.GetWeekdaysInt();
-            foreach (var weekday in weekdays)
-            {
-                var position = weekday;
-                if (position <= 0)
-                {
-                    position += 7;
-                }
-                var weeklyEvent = CreateTaskGrid(task);
-                Grid.SetColumn((FrameworkElement)weeklyEvent, position); // Convert weekday to column index
-                CalendarContainer.Children.Add(weeklyEvent);
-            }
-        }
-    }
+    //    var thisWeekTasks = ViewModel.ThisWeekTasks;
+    //    foreach (var task in thisWeekTasks)
+    //    {
+    //        var weekdays = task.GetWeekdaysInt();
+    //        foreach (var weekday in weekdays)
+    //        {
+    //            var position = weekday;
+    //            if (position <= 0)
+    //            {
+    //                position += 7;
+    //            }
+    //            var weeklyEvent = CreateTaskGrid(task);
+    //            Grid.SetColumn((FrameworkElement)weeklyEvent, position); // Convert weekday to column index
+    //            CalendarContainer.Children.Add(weeklyEvent);
+    //        }
+    //    }
+    //}
 
-    private void ClearData()
-    {
-        var template = (DataTemplate)Resources["CalendarTaskItem"];
-        if (template == null)
-        {
-            throw new InvalidOperationException("DataTemplate 'CalendarTaskItem' not found in resources.");
-        }
+    //private void ClearData()
+    //{
+    //    var template = (DataTemplate)Resources["CalendarTaskItem"];
+    //    if (template == null)
+    //    {
+    //        throw new InvalidOperationException("DataTemplate 'CalendarTaskItem' not found in resources.");
+    //    }
 
-        var content = template.LoadContent();
-        var contentType = content.GetType();
+    //    var content = template.LoadContent();
+    //    var contentType = content.GetType();
 
-        var childrenToRemove = CalendarContainer.Children
-            .OfType<FrameworkElement>()
-            .Where(child => child.GetType() == contentType)
-            .ToList();
+    //    var childrenToRemove = CalendarContainer.Children
+    //        .OfType<FrameworkElement>()
+    //        .Where(child => child.GetType() == contentType)
+    //        .ToList();
 
-        foreach (var child in childrenToRemove)
-        {
-            CalendarContainer.Children.Remove(child);
-        }
-    }
+    //    foreach (var child in childrenToRemove)
+    //    {
+    //        CalendarContainer.Children.Remove(child);
+    //    }
+    //}
 
     /// <summary>
     /// Creates a grid for a task.
     /// </summary>
     /// <param name="task">The task to create a grid for.</param>
     /// <returns>A grid representing the task.</returns>
-    private UIElement CreateTaskGrid(ITask task)
-    {
-        // Retrieve the DataTemplate
-        var template = (DataTemplate)Resources["CalendarTaskItem"];
-        if (template == null)
-        {
-            throw new InvalidOperationException("DataTemplate 'CalendarTaskItem' not found in resources.");
-        }
+    //private UIElement CreateTaskGrid(ITask task)
+    //{
+    //    // Retrieve the DataTemplate
+    //    var template = (DataTemplate)Resources["CalendarTaskItem"];
+    //    if (template == null)
+    //    {
+    //        throw new InvalidOperationException("DataTemplate 'CalendarTaskItem' not found in resources.");
+    //    }
 
-        // Load the template content
-        var content = (FrameworkElement)template.LoadContent();
+    //    // Load the template content
+    //    var content = (FrameworkElement)template.LoadContent();
         
-        // Set the data context to bind the task
-        content.DataContext = task;
+    //    // Set the data context to bind the task
+    //    content.DataContext = task;
 
-        // Retrieve the appropriate row and row span
-        var row = CalculateRow(task.Start);
-        var rowSpan = CalculateRowSpan(task.Start, task.End);
+    //    // Retrieve the appropriate row and row span
+    //    var row = CalculateRow(task.Start);
+    //    var rowSpan = CalculateRowSpan(task.Start, task.End);
 
-        // Apply grid row and row span properties
-        Grid.SetRow(content, row);
-        Grid.SetRowSpan(content, rowSpan);
+    //    // Apply grid row and row span properties
+    //    Grid.SetRow(content, row);
+    //    Grid.SetRowSpan(content, rowSpan);
 
-        return content;
-    }
+    //    return content;
+    //}
 
     /// <summary>
     /// Calculates the row index based on the time.
     /// </summary>
     /// <param name="time">The time to calculate the row for.</param>
     /// <returns>The row index.</returns>
-    private int CalculateRow(TimeOnly time) => 1 + (time.Minute / _increment) + (time.Hour * _frequency);
+    //private int CalculateRow(TimeOnly time) => 1 + (time.Minute / _increment) + (time.Hour * _frequency);
 
     /// <summary>
     /// Calculates the row span based on the start and end times.
@@ -150,168 +150,168 @@ public sealed partial class DashboardPage : Page
     /// <param name="start">The start time.</param>
     /// <param name="end">The end time.</param>
     /// <returns>The row span.</returns>
-    private int CalculateRowSpan(TimeOnly start, TimeOnly end)
-    {
-        var startRow = CalculateRow(start);
-        var endRow = CalculateRow(end);
-        return endRow - startRow;
-    }
+    //private int CalculateRowSpan(TimeOnly start, TimeOnly end)
+    //{
+    //    var startRow = CalculateRow(start);
+    //    var endRow = CalculateRow(end);
+    //    return endRow - startRow;
+    //}
 
     /// <summary>
     /// Sets the titles for the calendar grid.
     /// </summary>
-    private void SetTitles()
-    {
-        // Add columns (1 for time labels, the rest for days)
-        CalendarContainer.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) }); // Time Column
-        for (var i = 0; i < 7; i++) // For Monday to Sunday
-        {
-            CalendarContainer.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) });
-        }
+    //private void SetTitles()
+    //{
+    //    // Add columns (1 for time labels, the rest for days)
+    //    CalendarContainer.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) }); // Time Column
+    //    for (var i = 0; i < 7; i++) // For Monday to Sunday
+    //    {
+    //        CalendarContainer.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) });
+    //    }
 
-        // Add rows
-        for (var i = 0; i <= _rowCount; i++) // 15 - 30 - 45 - 60minute intervals
-        {
-            CalendarContainer.RowDefinitions.Add(new RowDefinition { Height = new GridLength(40) });
-        }
+    //    // Add rows
+    //    for (var i = 0; i <= _rowCount; i++) // 15 - 30 - 45 - 60minute intervals
+    //    {
+    //        CalendarContainer.RowDefinitions.Add(new RowDefinition { Height = new GridLength(40) });
+    //    }
 
-        var titles = new[] { "Time", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
-        var today = DateTime.Now;
-        var dayIterator = today.AddDays(-(int)today.DayOfWeek + 1);
-        if (today.DayOfWeek == DayOfWeek.Sunday)
-        {
-            dayIterator = dayIterator.AddDays(-7);
-        }
+    //    var titles = new[] { "Time", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+    //    var today = DateTime.Now;
+    //    var dayIterator = today.AddDays(-(int)today.DayOfWeek + 1);
+    //    if (today.DayOfWeek == DayOfWeek.Sunday)
+    //    {
+    //        dayIterator = dayIterator.AddDays(-7);
+    //    }
 
-        for (var i = 0; i < titles.Length; i++)
-        {
-            string? title;
-            if (i != 0)
-            {
-                var formatedDayString = dayIterator.ToString("M");
-                title = $"{titles[i]}\n{formatedDayString}";
-                dayIterator = dayIterator.AddDays(1);
-            }
-            else {
-                title = titles[i];
-            }
+    //    for (var i = 0; i < titles.Length; i++)
+    //    {
+    //        string? title;
+    //        if (i != 0)
+    //        {
+    //            var formatedDayString = dayIterator.ToString("M");
+    //            title = $"{titles[i]}\n{formatedDayString}";
+    //            dayIterator = dayIterator.AddDays(1);
+    //        }
+    //        else {
+    //            title = titles[i];
+    //        }
 
-            var columnTitle = new TextBlock
-            {
-                Text = title,
-                VerticalAlignment = VerticalAlignment.Center,
-                HorizontalAlignment = HorizontalAlignment.Center,
-            };
+    //        var columnTitle = new TextBlock
+    //        {
+    //            Text = title,
+    //            VerticalAlignment = VerticalAlignment.Center,
+    //            HorizontalAlignment = HorizontalAlignment.Center,
+    //        };
 
-            Grid.SetRow(columnTitle, 0);
-            Grid.SetColumn(columnTitle, i);
+    //        Grid.SetRow(columnTitle, 0);
+    //        Grid.SetColumn(columnTitle, i);
 
 
-            CalendarContainer.Children.Add(columnTitle);
+    //        CalendarContainer.Children.Add(columnTitle);
 
-        }
+    //    }
 
-        var timeSpan = new TimeSpan();
-        var sqrtFrequency = (int)Math.Floor(Math.Sqrt(_frequency));
-        for (var i = 0; i < _rowCount / sqrtFrequency; i++) { 
+    //    var timeSpan = new TimeSpan();
+    //    var sqrtFrequency = (int)Math.Floor(Math.Sqrt(_frequency));
+    //    for (var i = 0; i < _rowCount / sqrtFrequency; i++) { 
             
-            TextBlock timeLabel = new TextBlock
-            {
-                Text = timeSpan.ToString(@"hh\:mm"),
-                VerticalAlignment = VerticalAlignment.Center,
-                HorizontalAlignment = HorizontalAlignment.Center,
-            };
+    //        TextBlock timeLabel = new TextBlock
+    //        {
+    //            Text = timeSpan.ToString(@"hh\:mm"),
+    //            VerticalAlignment = VerticalAlignment.Center,
+    //            HorizontalAlignment = HorizontalAlignment.Center,
+    //        };
 
-            var rowIndex = (i * sqrtFrequency) + 1;
-            Grid.SetRow(timeLabel, rowIndex); // First half of the hour
-            Grid.SetColumn(timeLabel, 0);
-            CalendarContainer.Children.Add(timeLabel);
+    //        var rowIndex = (i * sqrtFrequency) + 1;
+    //        Grid.SetRow(timeLabel, rowIndex); // First half of the hour
+    //        Grid.SetColumn(timeLabel, 0);
+    //        CalendarContainer.Children.Add(timeLabel);
 
-            timeSpan = timeSpan.Add(TimeSpan.FromMinutes(_increment * sqrtFrequency));
-        }
+    //        timeSpan = timeSpan.Add(TimeSpan.FromMinutes(_increment * sqrtFrequency));
+    //    }
 
-    }
+    //}
 
     /// <summary>
     /// Sets the grid for the calendar.
     /// </summary>
-    private void SetGrid()
-    {
-        var columns = 8;
-        var rows = _rowCount;
+    //private void SetGrid()
+    //{
+    //    var columns = 8;
+    //    var rows = _rowCount;
 
-        var startTime = DateTime.Now;
-        startTime = startTime.AddHours(-startTime.Hour).AddMinutes(-startTime.Minute).AddSeconds(-startTime.Second);
-        if (startTime.DayOfWeek == DayOfWeek.Sunday)
-        {
-            startTime = startTime.AddDays(-7);
-        }
-        startTime = startTime.AddDays(-(int)startTime.DayOfWeek);
+    //    var startTime = DateTime.Now;
+    //    startTime = startTime.AddHours(-startTime.Hour).AddMinutes(-startTime.Minute).AddSeconds(-startTime.Second);
+    //    if (startTime.DayOfWeek == DayOfWeek.Sunday)
+    //    {
+    //        startTime = startTime.AddDays(-7);
+    //    }
+    //    startTime = startTime.AddDays(-(int)startTime.DayOfWeek);
 
-        for (var i = 0; i < columns; i++)
-        {
+    //    for (var i = 0; i < columns; i++)
+    //    {
 
-            for (var j = 0; j <= rows; j++)
-            {
-                DateTime? cellTime = null;
-                if (i > 0 && j > 0) {
-                    cellTime = startTime.AddMinutes(j * 30).AddDays(i);
-                }
+    //        for (var j = 0; j <= rows; j++)
+    //        {
+    //            DateTime? cellTime = null;
+    //            if (i > 0 && j > 0) {
+    //                cellTime = startTime.AddMinutes(j * 30).AddDays(i);
+    //            }
 
-                Border emptyCell = new Border
-                {
-                    Style = GetStyle("Cell"),
-                    Tag = cellTime
-                };
+    //            Border emptyCell = new Border
+    //            {
+    //                Style = GetStyle("Cell"),
+    //                Tag = cellTime
+    //            };
 
-                if (cellTime != null) { 
-                    UpdateCellStyle(emptyCell, cellTime);
-                }
+    //            if (cellTime != null) { 
+    //                UpdateCellStyle(emptyCell, cellTime);
+    //            }
 
-                Grid.SetColumn(emptyCell, i);
-                Grid.SetRow(emptyCell, j);
-                CalendarContainer.Children.Add(emptyCell);
-            }
+    //            Grid.SetColumn(emptyCell, i);
+    //            Grid.SetRow(emptyCell, j);
+    //            CalendarContainer.Children.Add(emptyCell);
+    //        }
 
-        }
-    }
+    //    }
+    //}
 
 
-    private void UpdateCellStyle(Border cell, DateTime? cellTime)
-    {
-        var now = DateTime.Now;
-        if (cellTime < now)
-        {
-            // Time has passed
-            cell.Background = (Brush)Microsoft.UI.Xaml.Application.Current.Resources["SurfaceStrokeColorDefaultBrush"];
-        }
-        else
-        {
-            // Future or current time
-            cell.Background = new SolidColorBrush(Colors.Transparent); // Default color
-        }
-    }
+    //private void UpdateCellStyle(Border cell, DateTime? cellTime)
+    //{
+    //    var now = DateTime.Now;
+    //    if (cellTime < now)
+    //    {
+    //        // Time has passed
+    //        cell.Background = (Brush)Microsoft.UI.Xaml.Application.Current.Resources["SurfaceStrokeColorDefaultBrush"];
+    //    }
+    //    else
+    //    {
+    //        // Future or current time
+    //        cell.Background = new SolidColorBrush(Colors.Transparent); // Default color
+    //    }
+    //}
 
-    private void StartGridUpdateTimer()
-    {
-        var timer = new DispatcherTimer
-        {
-            Interval = TimeSpan.FromMinutes(5) 
-        };
+    //private void StartGridUpdateTimer()
+    //{
+    //    var timer = new DispatcherTimer
+    //    {
+    //        Interval = TimeSpan.FromMinutes(5) 
+    //    };
 
-        timer.Tick += (s, e) =>
-        {
-            foreach (var child in CalendarContainer.Children)
-            {
-                if (child is Border cell && cell.Tag is DateTime cellTime)
-                {
-                    UpdateCellStyle(cell, cellTime);
-                }
-            }
-        };
+    //    timer.Tick += (s, e) =>
+    //    {
+    //        foreach (var child in CalendarContainer.Children)
+    //        {
+    //            if (child is Border cell && cell.Tag is DateTime cellTime)
+    //            {
+    //                UpdateCellStyle(cell, cellTime);
+    //            }
+    //        }
+    //    };
 
-        timer.Start();
-    }
+    //    timer.Start();
+    //}
 
 
     /// <summary>
@@ -319,10 +319,10 @@ public sealed partial class DashboardPage : Page
     /// </summary>
     /// <param name="key">The key of the style.</param>
     /// <returns>The style.</returns>
-    private static Style GetStyle(string key)
-    {
-        return (Style)Microsoft.UI.Xaml.Application.Current.Resources[key];
-    }
+    //private static Style GetStyle(string key)
+    //{
+    //    return (Style)Microsoft.UI.Xaml.Application.Current.Resources[key];
+    //}
 
     
 
@@ -391,8 +391,8 @@ public sealed partial class DashboardPage : Page
             if (code == FunctionResultCode.SUCCESS)
             {
                 ViewModel.LoadData();
-                ClearData();
-                LoadData();
+                //ClearData();
+                //LoadData();
 
             }
             else
@@ -430,8 +430,8 @@ public sealed partial class DashboardPage : Page
             if (dialogViewModel.DeleteTask())
             {
                 ViewModel.LoadData();
-                ClearData();
-                LoadData();
+                //ClearData();
+                //LoadData();
             }
         }
         else
@@ -513,8 +513,8 @@ public sealed partial class DashboardPage : Page
             {
                 // tell the view model that data is changed
                 ViewModel.LoadData();
-                ClearData();
-                LoadData();
+                //ClearData();
+                //LoadData();
             }
             else
             {
