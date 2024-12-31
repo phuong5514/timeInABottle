@@ -78,7 +78,7 @@ public partial class App : Application
             // Core Services
             //services.AddSingleton<IDaoService, MockDaoService>();
             services.AddSingleton<IWeatherService, ApiWeatherService>();
-            services.AddSingleton<IAvailableTimesGetter>(provider => new AvailableTimesGetter(provider.GetRequiredService<IDaoService>(), 30));
+            services.AddSingleton<IAvailableTimesGetter>(provider => new AvailableTimesGetter(provider.GetRequiredService<IDaoService>()));
             services.AddSingleton<IDaoService, SqliteDaoService>();
             services.AddSingleton<ISampleDataService, SampleDataService>();
             services.AddSingleton<IFileService, FileService>();
@@ -119,23 +119,13 @@ public partial class App : Application
         await App.GetService<IActivationService>().ActivateAsync(args);
 
         // init
-        RegisterBackgroundTask();
-        registerTaskFactory();
+        RegisterTaskFactory();
 
         var behaviorController = App.GetService<IBehaviorController>();
         await behaviorController.RunAsync();
     }
 
-    private void RegisterBackgroundTask()
-    {
-        var backgroundTaskRegisterService = App.GetService<IBackgroundTaskRegisterService>();
-
-        backgroundTaskRegisterService.CleanRegister();
-
-        backgroundTaskRegisterService.RegisterBackgroundTask("NotificationBackgroundTasks", "TimeInABottle.Background.NotificationBackgroundTasks", new TimeTrigger(15, false));
-    }
-
-    private void registerTaskFactory()
+    private void RegisterTaskFactory()
     {
         var taskType = typeof(ITask);
         var assembly = taskType.Assembly;

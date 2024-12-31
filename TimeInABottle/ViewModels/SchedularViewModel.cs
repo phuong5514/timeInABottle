@@ -22,55 +22,17 @@ public partial class SchedularViewModel : ObservableRecipient
     private IPlannerService _plannerService;
 
     private List<ITask> _tasksForScheduling;
-    //private FullObservableCollection<TaskWrapper> _tasksWrapperForScheduling;
     public FullObservableCollection<TaskWrapper> TasksForScheduling
     {
-        //private set
-        //{
-        //    //_tasksWrapperForScheduling.ItemAdded -= OnThisWeekTaskAdded;
-        //    if (_tasksWrapperForScheduling != null)
-        //    {
-        //        _tasksWrapperForScheduling.ItemAdded -= OnThisWeekTaskAdded;
-        //    }
-        //    _tasksWrapperForScheduling = value;
-        //    _tasksWrapperForScheduling.ItemAdded += OnThisWeekTaskAdded;
-        //}
         private set;
         get;
         //get => _tasksWrapperForScheduling;
     }
 
-    //private void OnThisWeekTaskAdded(object? sender, TaskWrapper addedTask)
-    //{
-    //    SelectedTask = addedTask;
-    //}
-
     public FullObservableCollection<ITask> ThisWeekTasks
     {
         private set; get;
     }
-
-    //[ObservableProperty]
-    //public TaskWrapper? selectedTask;
-
-    //public event Action<TaskWrapper?>? SelectedTaskChanged;
-
-
-    //private TaskWrapper? _selectedTask;
-    //public TaskWrapper? SelectedTask
-    //{
-    //    get;
-    //    set;
-    //    //get => _selectedTask;
-    //    //set
-    //    //{
-    //    //    if (_selectedTask != value)
-    //    //    {
-    //    //        _selectedTask = value;
-    //    //        OnPropertyChanged(nameof(SelectedTask));
-    //    //    }
-    //    //}
-    //}
 
     private TaskWrapper? _selectedTask;
     public TaskWrapper? SelectedTask
@@ -177,21 +139,25 @@ public partial class SchedularViewModel : ObservableRecipient
         EnsureItemSelected();
     }
 
-    //public ICommand ScheduleSelectedTaskCommand => new RelayCommand(ScheduleSelectedTaskExecute);
     public bool IsOnlyFromNow { set; get; }
+    public bool PreserveOldTasks
+    {
+        set; get;
+    }
+
+
     public void ScheduleSelectedTaskExecute()
     {
         try
         {
             // clear previous derived tasks
-            var derivedTasks = _dao?.CustomQuery(new DerivedTaskFilter());
-            _dao.DeleteTasks(derivedTasks);
-            //foreach (var task in derivedTasks)
-            //{
-            //    _dao?.DeleteTask(task);
-            //}
+            if (!PreserveOldTasks)
+            {
+                var derivedTasks = _dao?.CustomQuery(new DerivedTaskFilter());
+                _dao?.DeleteTasks(derivedTasks);
+            }
 
-            if (SelectedTask == null)
+            if (TasksForScheduling.Count <= 0)
             {
                 return;
             }
@@ -205,7 +171,7 @@ public partial class SchedularViewModel : ObservableRecipient
                 result = (List<DerivedTask>)_plannerService.ScheduleThisWeek(TasksForScheduling);
             }
 
-            _dao.AddTasks(result);
+            _dao?.AddTasks(result);
             LoadData();
 
             SelectedTask = null;

@@ -8,6 +8,9 @@ using Windows.ApplicationModel.Background;
 using Windows.Data.Xml.Dom;
 using Windows.UI.Notifications;
 using TimeInABottle.Core.Models.Tasks;
+using System.IO;
+using System.Xml.Linq;
+using System.Collections.Generic;
 
 
 namespace TimeInABottle.Background;
@@ -21,6 +24,10 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
     private static FullObservableCollection<ITask>? _todayTasks;
     private static int _index;
 
+    private int _notificationTime;
+    private int _notificationDuration;
+    private int _refreshRate;
+
     public void Run(IBackgroundTaskInstance? taskInstance)
     {
         if (taskInstance == null)
@@ -29,12 +36,14 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
         }
 
         taskInstance.Canceled += TaskInstance_Canceled;
-        Debug.WriteLine("Background " + taskInstance.Task.Name + " Starting...");
+        //Debug.WriteLine("Background " + taskInstance.Task.Name + " Starting...");
         _taskDeferral = taskInstance.GetDeferral();
 
-        Debug.WriteLine("Background " + taskInstance.Task.Name + " Starting...");
+        //Debug.WriteLine("Background " + taskInstance.Task.Name + " Starting...");
         _dao = new LocalStorageDaoService();
         //_dao = new SqliteDaoService();
+
+        readConfig();
         LoadTasksList();
 
         bufferService = new WeatherBasedBufferService();
@@ -49,11 +58,18 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
         _taskDeferral.Complete();
     }
 
-    private static void SendToast()
+    private void readConfig() {
+        var configurations = (List<string>)ConfigHandler.GetConfigValues(["NotificationTime", "NotificationDuration", "BackgroundTaskRefreshRate"]);
+
+        _notificationTime = int.Parse(configurations[0]);
+        _notificationDuration = int.Parse(configurations[1]);
+        _refreshRate = int.Parse(configurations[2]);
+    }
+
+    private void SendToast()
     {
         if (_todayTasks == null || _todayTasks.Count == 0 || bufferService == null)
         {
-            Debug.WriteLine("No tasks available to send notification or bufferService is null.");
             return;
         }
 
@@ -71,16 +87,11 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
         textElements[0].AppendChild(toastXml.CreateTextNode(notificationText));
         textElements[1].AppendChild(toastXml.CreateTextNode($"{taskToSend.Name}"));
 
-        //var buffer = bufferService.BufferSize;
-        //if (buffer > 0) {
-        //    var adjustedStartTime = taskToSend.Start.AddMinutes(-bufferService.BufferSize);
-        //    textElements[0].AppendChild(toastXml.CreateTextNode($"Up next at {taskToSend.Start}, should start {buffer}m earlier at {adjustedStartTime}"));
-        //} else {
-        //    textElements[0].AppendChild(toastXml.CreateTextNode($"Up next at {taskToSend.Start}"));
-        //}
-        //textElements[1].AppendChild(toastXml.CreateTextNode($"{taskToSend.Name}"));
+        ToastNotification notification = new(toastXml)
+        {
+            ExpirationTime = DateTimeOffset.Now.AddSeconds(_notificationDuration)
+        };
 
-        ToastNotification notification = new(toastXml);
         ToastNotificationManager.CreateToastNotifier().Show(notification);
     }
 
@@ -98,7 +109,9 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
         var adjustedStartTime = taskStartTime.AddMinutes(-bufferService.BufferSize);
 
         var currentTime = TimeOnly.FromDateTime(now);
-        var notificationTime = currentTime.AddMinutes(60);
+
+        var total = _notificationTime + _refreshRate;
+        var notificationTime = currentTime.AddMinutes(total);
 
         return adjustedStartTime <= notificationTime;
     }

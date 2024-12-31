@@ -35,11 +35,11 @@
 
             <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Stretch">
                 <!-- Start -->
-                <TimePicker Header="From" ClockIdentifier="12HourClock" MinuteIncrement="30" Time="{Binding InputStart, Mode=TwoWay}" />
+                <TimePicker Header="From" ClockIdentifier="12HourClock" MinuteIncrement="15" Time="{Binding InputStart, Mode=TwoWay}" />
                 <!-- Seperator -->
                 <TextBlock Text="|" VerticalAlignment="Center" />
                 <!-- End -->
-                <TimePicker Header="To" ClockIdentifier="12HourClock" MinuteIncrement="30" Time="{Binding InputEnd, Mode=TwoWay}" />
+                <TimePicker Header="To" ClockIdentifier="12HourClock" MinuteIncrement="15" Time="{Binding InputEnd, Mode=TwoWay}" />
             </StackPanel>
             
             <!-- Type picker -->
@@ -47,6 +47,7 @@
             <ComboBox
                 ItemsSource="{Binding TaskOptions}"
                 SelectedItem="{Binding SelectedTaskOption, Mode=TwoWay}"
+                IsEnabled="{Binding IsComboboxEnabled}"
                 PlaceholderText="Select a type"
                 HorizontalAlignment="Stretch">
                 <ComboBox.ItemTemplate>

@@ -68,6 +68,11 @@ public partial class DashboardViewModel : ObservableRecipient
     }
 
 
+    //public int TaskTimeUnit {
+    //    set; get;
+    //}
+
+
     private ITask? _nextTask;
     public ITask? NextTask
     {
@@ -127,6 +132,7 @@ public partial class DashboardViewModel : ObservableRecipient
         LoadData();
         Time = TimeOnly.FromDateTime(DateTime.Now);
         Weather = App.GetService<IWeatherService>().GetCurrentWeather();
+        //TaskTimeUnit = int.TryParse(ConfigHandler.GetConfigValue("TimeSlotIncrement"), out var result) ? result : 15;
         StartTimer();
     }
 

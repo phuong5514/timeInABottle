@@ -14,10 +14,10 @@ public class AvailableTimesGetter : IAvailableTimesGetter
     private readonly int _timeIncrement;
 
     private readonly IDaoService _daoQueryService;
-    public AvailableTimesGetter(IDaoService daoQueryService, int timeIncrement)
+    public AvailableTimesGetter(IDaoService daoQueryService)
     {
         _daoQueryService = daoQueryService;
-        _timeIncrement = timeIncrement;
+        _timeIncrement = int.Parse(ConfigHandler.GetConfigValue("TimeSlotIncrement"));
     }
 
     private Tuple<IEnumerable<TimeSpan>, IEnumerable<TimeSpan>> GetAvailableTimes(IEnumerable<ITask> taskList, TimeSpan startTime, TimeSpan endTime)

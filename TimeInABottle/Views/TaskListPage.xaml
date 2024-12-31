@@ -17,6 +17,7 @@
         <helpers:TimeRangeConverter x:Key="TimeRangeConverter" />
         -->
         <helpers:FilterToStringConverter x:Key="FilterConverter"/>
+        <helpers:TaskTypeToBooleanConverter x:Key="TaskTypeToBooleanConverter"/>
 
         <DataTemplate x:Key="ItemTemplate" x:DataType="task:ITask">
             <Grid Height="60">
@@ -166,7 +167,7 @@
             <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" Grid.Column="1" HorizontalAlignment="Right">
                 <AppBarButton Icon="Add" Label="Add" Click="OnAddButtonClick"/>
                 <AppBarSeparator />
-                <AppBarButton Icon="Edit" Label="Edit" Click="OnChangeButtonClick"/>
+                <AppBarButton Icon="Edit" Label="Edit" Click="OnChangeButtonClick" IsEnabled="{x:Bind ViewModel.Selected, Converter={StaticResource TaskTypeToBooleanConverter}, Mode=OneWay}"/>
                 <AppBarSeparator />
                 <AppBarButton Icon="Delete" Label="Delete" Click="OnDeleteButtonClick"/>
             </CommandBar>

@@ -11,4 +11,5 @@ public interface IBackgroundTaskRegisterService
     public void RegisterBackgroundTask(string name, string entrypoint, IBackgroundTrigger trigger);
     public void UnregisterBackgroundTask(string name);
     public void CleanRegister();
+    void RegisterBackgroundTask(uint backgroundTaskRefreshRate);
 }

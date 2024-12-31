@@ -12,7 +12,6 @@
                 <ResourceDictionary Source="/Styles/ListItems.xaml"/>
                 <ResourceDictionary Source="/Styles/GridCells.xaml"/>
                 <ResourceDictionary Source="/Styles/Buttons.xaml"/>
-
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

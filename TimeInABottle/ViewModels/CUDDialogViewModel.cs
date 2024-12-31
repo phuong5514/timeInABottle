@@ -42,6 +42,7 @@ public partial class CUDDialogViewModel : ObservableRecipient
 
     }
 
+    public bool IsComboboxEnabled => !(IsEditMode && _task is DerivedTask);
 
     private ITask _task;
 
@@ -113,6 +114,11 @@ public partial class CUDDialogViewModel : ObservableRecipient
             }
         }
 
+        if (task is DerivedTask)
+        {
+            SelectedTaskOption = new DerivedTask();
+        }
+
         foreach (var option in TaskOptions)
         {
             if (option.TypeName() == task.TypeName())
@@ -121,6 +127,8 @@ public partial class CUDDialogViewModel : ObservableRecipient
                 break;
             }
         }
+
+        
     }
 
     private void SetTaskOptions()
@@ -137,6 +145,10 @@ public partial class CUDDialogViewModel : ObservableRecipient
         {
             if (Activator.CreateInstance(type) is ITask taskInstance)
             {
+                if (taskInstance is DerivedTask)
+                {
+                    continue;
+                }
                 TaskOptions.Add(taskInstance);
                 //Core.Models.Tasks.TaskFactory.RegisterTask(type.Name, type);
             }
@@ -201,6 +213,7 @@ public partial class CUDDialogViewModel : ObservableRecipient
                 break;
         }
 
+        // if not using roll back
         //if (IsEditMode)
         //{
         //    var milestone = _task.Start.ToTimeSpan();
