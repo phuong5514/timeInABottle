@@ -78,7 +78,7 @@ public partial class App : Application
             // Core Services
             //services.AddSingleton<IDaoService, MockDaoService>();
             services.AddSingleton<IWeatherService, ApiWeatherService>();
-            services.AddSingleton<IAvailableTimesGetter>(provider => new AvailableTimesGetter(provider.GetRequiredService<IDaoService>(), 30));
+            services.AddSingleton<IAvailableTimesGetter>(provider => new AvailableTimesGetter(provider.GetRequiredService<IDaoService>()));
             services.AddSingleton<IDaoService, SqliteDaoService>();
             services.AddSingleton<ISampleDataService, SampleDataService>();
             services.AddSingleton<IFileService, FileService>();

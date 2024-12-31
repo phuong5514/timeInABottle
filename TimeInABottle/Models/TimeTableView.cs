@@ -17,7 +17,7 @@ namespace TimeInABottle.Models;
 public class TimeTableView : Grid, INotifyPropertyChanged
 {
     private static readonly int _columnCount = 8;
-    private readonly int _rowCount;
+    private int _rowCount;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -65,6 +65,7 @@ public class TimeTableView : Grid, INotifyPropertyChanged
     {
         if (d is TimeTableView view && e.NewValue is int)
         {
+
             view.InitializeGrid(); // Refresh the grid when TaskTimeUnit changes
         }
     }
@@ -92,12 +93,13 @@ public class TimeTableView : Grid, INotifyPropertyChanged
         TrackTime = false;
         Values = [];
 
-        _rowCount = 24 * 60 / TaskTimeUnit;
         InitializeGrid();
     }
 
-    private void InitializeGrid() { 
+    private void InitializeGrid() {
+        _rowCount = 24 * 60 / TaskTimeUnit;
         Children.Clear();
+        SetDefinitions();
         SetGrid();
         SetTitles();
         LoadData();
@@ -128,8 +130,28 @@ public class TimeTableView : Grid, INotifyPropertyChanged
         timer.Start();
     }
 
+    private void SetDefinitions()
+    {
+        ColumnDefinitions.Clear();
+        RowDefinitions.Clear();
+
+        ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) }); // Time Column
+        for (var i = 0; i < 7; i++) // For Monday to Sunday
+        {
+            ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) });
+        }
+
+        // Add rows
+        for (var i = 0; i <= _rowCount; i++) // 15 - 30 - 45 - 60minute intervals
+        {
+            RowDefinitions.Add(new RowDefinition { Height = new GridLength(60) });
+        }
+    }
+
     private void SetGrid()
     {
+        // Add columns (1 for time labels, the rest for days)
+
         DateTime startTime = DateTime.MinValue;
         if (TrackTime)
         {
@@ -310,19 +332,6 @@ public class TimeTableView : Grid, INotifyPropertyChanged
     /// </summary>
     private void SetTitles()
     {
-        // Add columns (1 for time labels, the rest for days)
-        ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) }); // Time Column
-        for (var i = 0; i < 7; i++) // For Monday to Sunday
-        {
-            ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) });
-        }
-
-        // Add rows
-        for (var i = 0; i <= _rowCount; i++) // 15 - 30 - 45 - 60minute intervals
-        {
-            RowDefinitions.Add(new RowDefinition { Height = new GridLength(60) });
-        }
-
         var titles = new[] { "Time", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
         var today = DateTime.Now;
         var dayIterator = today.AddDays(-(int)today.DayOfWeek + 1);

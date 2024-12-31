@@ -25,16 +25,6 @@ public partial class SchedularViewModel : ObservableRecipient
     //private FullObservableCollection<TaskWrapper> _tasksWrapperForScheduling;
     public FullObservableCollection<TaskWrapper> TasksForScheduling
     {
-        //private set
-        //{
-        //    //_tasksWrapperForScheduling.ItemAdded -= OnThisWeekTaskAdded;
-        //    if (_tasksWrapperForScheduling != null)
-        //    {
-        //        _tasksWrapperForScheduling.ItemAdded -= OnThisWeekTaskAdded;
-        //    }
-        //    _tasksWrapperForScheduling = value;
-        //    _tasksWrapperForScheduling.ItemAdded += OnThisWeekTaskAdded;
-        //}
         private set;
         get;
         //get => _tasksWrapperForScheduling;

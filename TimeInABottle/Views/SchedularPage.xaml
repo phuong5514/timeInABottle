@@ -55,23 +55,7 @@
             </Grid>
         </DataTemplate>
 
-        <DataTemplate x:Key="CalendarTaskItem" x:DataType="task:ITask">
-            <Button 
-                Style="{StaticResource CellContentButton}"
-                Click="CalendarItem_Click"
-                IsEnabled="{Binding Converter={StaticResource TaskTypeToBooleanConverter}}">
-                <StackPanel 
-                    Orientation="Vertical" 
-                    Style="{StaticResource CellContentStackPanel}">
-                    <TextBlock Style="{StaticResource CalendarTaskItem}">
-                        <Run Text="{x:Bind Name}"/>
-                    </TextBlock>
-                    <TextBlock Style="{StaticResource CalendarTaskItem}">
-                        <Run Text="{x:Bind Start, Converter={StaticResource TimeToStringConverter}}"/> - <Run Text="{x:Bind End, Converter={StaticResource TimeToStringConverter}}"/>
-                    </TextBlock>
-                </StackPanel>
-            </Button>
-        </DataTemplate>
+        
     </Page.Resources>
 
     <Grid x:Name="ContentArea">
@@ -195,9 +179,31 @@
 
 			<!-- CalendarContainer: contains task available for scheduling-->
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Grid.Row="1" Margin="0,0,16,32" >
-                <Grid
-                    x:Name="CalendarContainer"
-                    Style="{StaticResource TimeTable}"/>
+                <model:TimeTableView x:Name="CalendarContainer" 
+                       Style="{StaticResource TimeTable}"
+                       Values="{x:Bind ViewModel.ThisWeekTasks, Mode=OneWay}"
+                       TrackTime="False"
+                       >
+                    <model:TimeTableView.Resources>
+                        <DataTemplate x:Key="CalendarTaskItem" x:DataType="task:ITask">
+                            <Button 
+                                Style="{StaticResource CellContentButton}"
+                                Click="CalendarItem_Click"
+                                IsEnabled="{Binding Converter={StaticResource TaskTypeToBooleanConverter}}">
+                                <StackPanel 
+                                    Orientation="Vertical" 
+                                    Style="{StaticResource CellContentStackPanel}">     
+                                    <TextBlock Style="{StaticResource CalendarTaskItem}">
+                                        <Run Text="{x:Bind Name}"/>
+                                    </TextBlock>
+                                    <TextBlock Style="{StaticResource CalendarTaskItem}">
+                                        <Run Text="{x:Bind Start, Converter={StaticResource TimeToStringConverter}}"/> - <Run Text="{x:Bind End, Converter={StaticResource TimeToStringConverter}}"/>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Button>
+                        </DataTemplate>
+                    </model:TimeTableView.Resources>
+                </model:TimeTableView>
                 <!---->
             </ScrollViewer>
             <!-- Basic Grid structure, we will add rows and columns in the code-behind -->

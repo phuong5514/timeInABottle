@@ -28,10 +28,10 @@ public partial class SettingsViewModel : ObservableRecipient
     [ObservableProperty]
     private string _versionDescription;
 
-    partial void OnTimeSlotIncrementChanged();
-    partial void OnTimeSlotIncrementChanged() => ConfigHandler.SetConfigValue("TimeSlotIncrement", TimeSlotIncrement.ToString());
-    [ObservableProperty]
-    private int _timeSlotIncrement; // calendar time slot "size" in minutes (e.g. 15, 30, 60)
+    //partial void OnTimeSlotIncrementChanged();
+    //partial void OnTimeSlotIncrementChanged() => ConfigHandler.SetConfigValue("TimeSlotIncrement", TimeSlotIncrement.ToString());
+    //[ObservableProperty]
+    //private int _timeSlotIncrement; // calendar time slot "size" in minutes (e.g. 15, 30, 60)
 
     [ObservableProperty]
     private List<int> _timeSlotIncrements; // possible time slot increments
@@ -109,7 +109,7 @@ public partial class SettingsViewModel : ObservableRecipient
 
     private void SaveScheduleSettings()
     {
-        if (SchedulingEndTime < SchedulingStartTime)
+        if (SchedulingEndTime <= SchedulingStartTime)
         {
             // set error message
             return;
@@ -140,22 +140,17 @@ public partial class SettingsViewModel : ObservableRecipient
 
     private void ReadConfig()
     {
-        var configurations = (List<string>)ConfigHandler.GetConfigValues(["TimeSlotIncrement", "IsNotificationEnabled", "BackgroundTaskRefreshRate", "NotificationTime", "NotificationDuration", "SchedulingStartTime", "SchedulingEndTime"]);
-
-        // general
-        TimeSlotIncrement = int.Parse(configurations[0]);
-        var listString = ConfigHandler.GetConfigValue("TimeSlotIncrements");
-        TimeSlotIncrements = listString.Split(',').Select(int.Parse).ToList(); // Parse the string into a list of integers
+        var configurations = (List<string>)ConfigHandler.GetConfigValues(["IsNotificationEnabled", "BackgroundTaskRefreshRate", "NotificationTime", "NotificationDuration", "SchedulingStartTime", "SchedulingEndTime"]);
 
         // notification
-        IsNotificationEnabled = bool.Parse(configurations[1]);
-        BackgroundTaskRefreshRate = int.Parse(configurations[2]);
-        NotificationTime = int.Parse(configurations[3]);
-        NotificationDuration = int.Parse(configurations[4]);
+        IsNotificationEnabled = bool.Parse(configurations[0]);
+        BackgroundTaskRefreshRate = int.Parse(configurations[1]);
+        NotificationTime = int.Parse(configurations[2]);
+        NotificationDuration = int.Parse(configurations[3]);
 
         // scheduling
-        SchedulingStartTime = TimeSpan.Parse(configurations[5]);
-        SchedulingEndTime = TimeSpan.Parse(configurations[6]);
+        SchedulingStartTime = TimeSpan.Parse(configurations[4]);
+        SchedulingEndTime = TimeSpan.Parse(configurations[5]);
 
         var registerService = App.GetService<IBackgroundTaskRegisterService>();
         if (IsNotificationEnabled)

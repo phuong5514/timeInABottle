@@ -53,21 +53,6 @@
                     </StackPanel>
                 </StackPanel>
 
-                <TextBlock x:Uid="Settings_General" Style="{ThemeResource SubtitleTextBlockStyle}" />
-                <StackPanel Margin="{StaticResource SmallTopBottomMargin}"  Background="{ThemeResource LayerFillColorAltBrush}" Padding="{StaticResource MediumPadding}">
-                    <TextBlock x:Uid="Settings_TimeSlotSize" />
-                    <StackPanel Orientation="Horizontal">
-                        <ComboBox
-                            x:Name="TimeSlotSizeCombobox"
-                            ItemsSource="{x:Bind ViewModel.TimeSlotIncrements}"
-                            SelectedValue="{x:Bind ViewModel.TimeSlotIncrement, Mode=TwoWay}"/>
-
-                        <TextBlock VerticalAlignment="Center" Margin="{StaticResource SmallLeftMargin}"> minutes </TextBlock>
-
-                    </StackPanel>
-                </StackPanel>
-
-
                 <TextBlock x:Uid="Settings_Notification" Style="{ThemeResource SubtitleTextBlockStyle}"/>
                 <StackPanel Margin="{StaticResource SmallTopBottomMargin}" Background="{ThemeResource LayerFillColorAltBrush}" Padding="{StaticResource MediumPadding}">
                     <TextBlock x:Uid="Settings_Enable_Notification" />
@@ -109,7 +94,7 @@
                     <TextBlock x:Uid="Settings_Scheduling_Start"/>
                     <TimePicker Time="{x:Bind ViewModel.SchedulingStartTime, Mode=TwoWay}" ClockIdentifier="24HourClock"/>
                     <TextBlock x:Uid="Settings_Scheduling_End"/>
-                    <TimePicker Time="{x:Bind ViewModel.SchedulingStartTime, Mode=TwoWay}" ClockIdentifier="24HourClock"/>
+                    <TimePicker Time="{x:Bind ViewModel.SchedulingEndTime, Mode=TwoWay}" ClockIdentifier="24HourClock"/>
 
 
                     <Button x:Name="Settings_Scheduling_Save" Command="{x:Bind ViewModel.ScheduleSaveCommand}" Background="{ThemeResource SystemFillColorSuccessBackgroundBrush}" Margin="{StaticResource SmallTopMargin}">Save changes</Button>
