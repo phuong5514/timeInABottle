@@ -65,7 +65,7 @@ public class ConfigHandler
 
         var defaultValues = new Dictionary<string, string>
         {
-            { "TimeSlotIncrement", "30" },
+            { "TimeSlotIncrement", "15" },
             { "TimeSlotIncrements", "15,30,60" },
             { "IsNotificationEnabled", "true" },
             { "BackgroundTaskRefreshRate", "15" },

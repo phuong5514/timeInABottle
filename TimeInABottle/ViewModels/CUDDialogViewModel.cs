@@ -201,6 +201,7 @@ public partial class CUDDialogViewModel : ObservableRecipient
                 break;
         }
 
+        // if not using roll back
         //if (IsEditMode)
         //{
         //    var milestone = _task.Start.ToTimeSpan();

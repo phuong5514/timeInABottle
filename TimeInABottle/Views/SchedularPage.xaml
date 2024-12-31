@@ -155,6 +155,7 @@
 				<StackPanel Orientation="Vertical">
 					<TextBlock Style="{StaticResource VerticalListTitleStyle}">Schedule settings</TextBlock>
 					<CheckBox Content="Only times from now" IsChecked="{x:Bind ViewModel.IsOnlyFromNow, Mode=TwoWay}" HorizontalAlignment="Stretch"/>
+                    <CheckBox Content="Keep old derived tasks" IsChecked="{x:Bind ViewModel.PreserveOldTasks, Mode=TwoWay}" HorizontalAlignment="Stretch"/>
                     <Button x:Name="ScheduleButton"
                             Content="Schedule for this week"
                             Click="ScheduleButton_Click"
@@ -182,7 +183,7 @@
                 <model:TimeTableView x:Name="CalendarContainer" 
                        Style="{StaticResource TimeTable}"
                        Values="{x:Bind ViewModel.ThisWeekTasks, Mode=OneWay}"
-                       TrackTime="False"
+                       TrackTime="True"
                        >
                     <model:TimeTableView.Resources>
                         <DataTemplate x:Key="CalendarTaskItem" x:DataType="task:ITask">

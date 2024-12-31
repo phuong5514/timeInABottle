@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TimeInABottle.Contracts.Services;
 using TimeInABottle.Core.Contracts.Services;
+using TimeInABottle.Core.Helpers;
 using TimeInABottle.Core.Models.Tasks;
 using TimeInABottle.Core.Services;
 using TimeInABottle.Models;
@@ -14,6 +15,7 @@ public class TimeSlotBasedPlannerService : IPlannerService
 {
     private TimeSpan _minimumStart;
     private TimeSpan _maximumEnd;
+    private int _increment;
 
 
     private readonly IAvailableTimesGetter _availableTimesGetter;
@@ -44,8 +46,10 @@ public class TimeSlotBasedPlannerService : IPlannerService
 
     private void ReadConfig()
     {
-        _minimumStart = new TimeSpan(8, 0, 0);
-        _maximumEnd = new TimeSpan(20, 0, 0);
+        var configs = ConfigHandler.GetConfigValues(new[] { "SchedulingStartTime", "SchedulingEndTime", "TimeSlotIncrement" }).ToList();
+        _minimumStart = TimeSpan.Parse(configs[0]);
+        _maximumEnd = TimeSpan.Parse(configs[1]);
+        _increment = int.Parse(configs[2]);
     }
 
     private FunctionResultCode LoadDayOfWeekTimeSlots(DayOfWeek dayOfWeek, IEnumerable<TimeSpan> availableTimes)
@@ -61,10 +65,10 @@ public class TimeSlotBasedPlannerService : IPlannerService
 
         while (end < _maximumEnd)
         {
-            // If the end time is available, increment it by 30 minutes: goal is to make the largest time slot possible
+            // If the end time is available, increment it by _increment minutes: goal is to make the largest time slot possible
             if (availableTimes.Contains(end))
             {
-                end = end.Add(TimeSpan.FromMinutes(30));
+                end = end.Add(TimeSpan.FromMinutes(_increment));
             }
             else
             {
@@ -76,7 +80,7 @@ public class TimeSlotBasedPlannerService : IPlannerService
                 // skip the unavailable time slots
                 while (!availableTimes.Contains(end))
                 {
-                    end = end.Add(TimeSpan.FromMinutes(30));
+                    end = end.Add(TimeSpan.FromMinutes(_increment));
                 }
                 start = end;
             }
@@ -163,7 +167,7 @@ public class TimeSlotBasedPlannerService : IPlannerService
             date = date.AddDays((int)day - (int)date.DayOfWeek);
             if (day is DayOfWeek.Sunday)
             {
-                date = date.AddDays(7);
+                date = date.AddDays(-7);
             }
 
             var availableTimes = _availableTimesGetter.GetAvailableTimesForWeek([day]);
@@ -192,7 +196,7 @@ public class TimeSlotBasedPlannerService : IPlannerService
             var date = DateOnly.FromDateTime(DateTime.Now);
             date = date.AddDays((int)day - (int)date.DayOfWeek);
             if (day is DayOfWeek.Sunday) {
-                date = date.AddDays(7);
+                date = date.AddDays(-7);
             }
 
             if (date < now)
@@ -267,7 +271,7 @@ public class TimeSlotBasedPlannerService : IPlannerService
         }
     }
 
-    private TimeSpan EstimateDefaultTime(TaskWrapper taskWrapper, int timeUnitMinutes = 30)
+    private TimeSpan EstimateDefaultTime(TaskWrapper taskWrapper)
     {
         // Base difficulty time in hours
         var baseDifficultyTime = taskWrapper.DifficultyLevel switch
@@ -300,7 +304,7 @@ public class TimeSlotBasedPlannerService : IPlannerService
         var totalMinutes = baseDifficultyTime * 60 * importanceMultiplier * urgencyMultiplier;
 
         // Round up to the nearest time unit
-        var roundedMinutes = (int)Math.Ceiling(totalMinutes / timeUnitMinutes) * timeUnitMinutes;
+        var roundedMinutes = (int)Math.Ceiling(totalMinutes / _increment) * _increment;
 
         return TimeSpan.FromMinutes(roundedMinutes);
     }
