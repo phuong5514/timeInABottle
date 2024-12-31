@@ -17,6 +17,7 @@
         <helpers:WeatherInfoWrapperToWeatherTypeConverter x:Key="WeatherInfoWrapperToWeatherTypeConverter"/>
         <helpers:TaskToSpecialtyStringConverter x:Key="TaskToSpecialtyStringConverter"/>
         <helpers:TaskTypeToIconConverter x:Key="TaskTypeToIconConverter"/>
+        <helpers:TaskTypeToBooleanConverter x:Key="TaskTypeToBooleanConverter"/>
 
         <DataTemplate x:Key ="ListItem" x:DataType="task:ITask">
             <StackPanel Orientation="Horizontal" Style="{StaticResource BaseListItemContainerStyle}" Spacing="8">
@@ -217,7 +218,7 @@
                                                         <ColumnDefinition Width="*"/>
                                                     </Grid.ColumnDefinitions>
 
-                                                    <Button Grid.Column="0" Click="CalendarItemEdit_Click" Content="Edit" HorizontalAlignment="Stretch"/>
+                                                    <Button Grid.Column="0" Click="CalendarItemEdit_Click" Content="Edit" HorizontalAlignment="Stretch" IsEnabled="{Binding Converter={StaticResource TaskTypeToBooleanConverter}}"/>
 
                                                     <Button Grid.Column="1" Click="CalendarItemDelete_Click" Content="Delete" HorizontalAlignment="Stretch"/>
                                                 </Grid>

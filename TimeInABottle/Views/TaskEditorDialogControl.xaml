@@ -47,6 +47,7 @@
             <ComboBox
                 ItemsSource="{Binding TaskOptions}"
                 SelectedItem="{Binding SelectedTaskOption, Mode=TwoWay}"
+                IsEnabled="{Binding IsComboboxEnabled}"
                 PlaceholderText="Select a type"
                 HorizontalAlignment="Stretch">
                 <ComboBox.ItemTemplate>
