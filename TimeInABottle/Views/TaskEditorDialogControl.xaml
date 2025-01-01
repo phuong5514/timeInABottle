@@ -60,11 +60,11 @@
             <!-- WeeklyTask: day of week selector -->
             <StackPanel x:Name="WeeklyTaskSpInput"
                         Visibility="{Binding SelectedTaskOption, Mode=OneWay, Converter={StaticResource WeeklyTaskToVisibilityConverter}}">
-                <CheckBox x:Name="WeeklyTaskOptionsAllCheckBox" Content="Select all" IsThreeState="True"
-                      Checked="SelectAll_Checked" Unchecked="SelectAll_Unchecked"
-                      Indeterminate="SelectAll_Indeterminate" />
+                <CheckBox x:Name="WeeklyTaskOptionsAllCheckBox" Content="Select all" IsThreeState="False"
+                      Checked="SelectAll_Checked" Unchecked="SelectAll_Unchecked"/>
 
                 <ScrollView HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden" >
+                    <!-- change to list if have time, this was made before I knew how to use datatemplate-->
                     <StackPanel Orientation="Horizontal" x:Name="Weekdays" Padding="{StaticResource LargePadding}">
                         <CheckBox Content="Sunday" Checked="Option_Checked" Unchecked="Option_Unchecked" IsChecked="{Binding InputWeekDays, Mode=OneWay, Converter={StaticResource ListContainsConverter}, ConverterParameter=Sunday}"/>
                         <CheckBox Content="Monday" Checked="Option_Checked" Unchecked="Option_Unchecked" IsChecked="{Binding InputWeekDays, Mode=OneWay, Converter={StaticResource ListContainsConverter}, ConverterParameter=Monday}"/>

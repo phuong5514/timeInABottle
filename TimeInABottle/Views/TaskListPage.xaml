@@ -13,9 +13,6 @@
     behaviors:NavigationViewHeaderBehavior.HeaderMode="Never"
     mc:Ignorable="d">
     <Page.Resources>
-        <!--
-        <helpers:TimeRangeConverter x:Key="TimeRangeConverter" />
-        -->
         <helpers:FilterToStringConverter x:Key="FilterConverter"/>
         <helpers:TaskTypeToBooleanConverter x:Key="TaskTypeToBooleanConverter"/>
 
@@ -25,23 +22,11 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <!-- TODO: converter: task type -> icon -->
-                <!--
-                <FontIcon
-                    Grid.Column="0"
-                    VerticalAlignment="Center"
-                    FontSize="32"
-                    Glyph="{x:Bind Symbol}"
-                    AutomationProperties.Name="{x:Bind SymbolName}" />
-                -->
                 <StackPanel
                     Grid.Column="1"
                     Margin="{StaticResource SmallLeftMargin}"
                     VerticalAlignment="Center">
                     <TextBlock Text="{x:Bind Name}" Style="{StaticResource ListTitleStyle}" />
-                    <!--
-                    <TextBlock Text="{x:Bind Start}" Style="{StaticResource ListSubTitleStyle}" />
-                    -->
                     <TextBlock Text="{x:Bind FormattedTime}" Style="{StaticResource ListSubTitleStyle}" />
                 </StackPanel>
             </Grid>

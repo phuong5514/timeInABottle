@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TimeInABottle.Core.Models.Tasks;
+﻿using TimeInABottle.Core.Models.Tasks;
 
 namespace TimeInABottle.Core.Helpers;
 /// <summary>
@@ -60,6 +55,4 @@ internal class TaskListSorter
             }
         }
     }
-
-    // TODO: Implement SortByDay method
 }

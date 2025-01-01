@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using TimeInABottle.Core.Models.Tasks;
 
 namespace TimeInABottle.Models;
 public class TaskWrapper(ITask task) : INotifyPropertyChanged
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TaskWrapper"/> class by copying values from another instance.
+    /// </summary>
+    /// <param name="value">The <see cref="TaskWrapper"/> instance to copy values from.</param>
     public TaskWrapper(TaskWrapper value) : this(value.Task)
     {
         EstimatedCompletionTime = value.EstimatedCompletionTime;
@@ -74,7 +73,8 @@ public class TaskWrapper(ITask task) : INotifyPropertyChanged
     public static Array UrgencyValues => Enum.GetValues(typeof(Urgency));
     public static Array DifficultyValues => Enum.GetValues(typeof(Difficulty));
 
-    internal void CopyFrom(TaskWrapper other) {
+    internal void CopyFrom(TaskWrapper other)
+    {
         if (other == null) return;
 
         DifficultyLevel = other.DifficultyLevel;

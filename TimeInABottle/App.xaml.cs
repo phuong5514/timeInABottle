@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
-
 using TimeInABottle.Activation;
-using TimeInABottle.Background;
 using TimeInABottle.Contracts.Services;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Models.Tasks;
@@ -12,8 +10,6 @@ using TimeInABottle.Models;
 using TimeInABottle.Services;
 using TimeInABottle.ViewModels;
 using TimeInABottle.Views;
-
-using Windows.ApplicationModel.Background;
 
 namespace TimeInABottle;
 
@@ -62,7 +58,6 @@ public partial class App : Application
             // Services
             services.AddSingleton<ILocalSettingsService, LocalSettingsService>();
             services.AddSingleton<IThemeSelectorService, ThemeSelectorService>();
-            services.AddTransient<IWebViewService, WebViewService>();
             services.AddTransient<INavigationViewService, NavigationViewService>();
 
             services.AddSingleton<IActivationService, ActivationService>();
@@ -76,11 +71,9 @@ public partial class App : Application
 
 
             // Core Services
-            //services.AddSingleton<IDaoService, MockDaoService>();
             services.AddSingleton<IWeatherService, ApiWeatherService>();
             services.AddSingleton<IAvailableTimesGetter>(provider => new AvailableTimesGetter(provider.GetRequiredService<IDaoService>()));
             services.AddSingleton<IDaoService, SqliteDaoService>();
-            services.AddSingleton<ISampleDataService, SampleDataService>();
             services.AddSingleton<IFileService, FileService>();
 
             // Views and ViewModels
@@ -91,10 +84,8 @@ public partial class App : Application
             services.AddTransient<DashboardViewModel>();
             services.AddTransient<DashboardPage>();
             services.AddTransient<CUDDialogViewModel>(); 
-
             services.AddTransient<SettingsViewModel>();
             services.AddTransient<SettingsPage>();
-
             services.AddTransient<ShellPage>();
             services.AddTransient<ShellViewModel>();
 
@@ -108,8 +99,7 @@ public partial class App : Application
 
     private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
     {
-        // TODO: Log and handle exceptions as appropriate.
-        // https://docs.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.application.unhandledexception.
+        LogException(ex: e.Exception);
     }
 
     protected async override void OnLaunched(LaunchActivatedEventArgs args)
@@ -145,6 +135,14 @@ public partial class App : Application
                 Core.Models.Tasks.TaskFactory.RegisterTask(type.Name, type);
             }
         }
+    }
+
+    private void LogException(Exception ex)
+    {
+        var logFilePath = Path.Combine(AppContext.BaseDirectory, "error.log");
+        var logMessage = $"{DateTime.Now}: {ex.Message}{Environment.NewLine}{ex.StackTrace}{Environment.NewLine}";
+
+        File.AppendAllText(logFilePath, logMessage);
     }
 
 }

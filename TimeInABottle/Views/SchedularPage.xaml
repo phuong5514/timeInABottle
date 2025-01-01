@@ -17,8 +17,7 @@
         <helpers:TimeToStringConverter x:Key="TimeToStringConverter"/>
         <helpers:TaskToNotificationConverter x:Key="TaskToNotificationConverter"/>
         <helpers:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-		<helpers:TaskTypeToBooleanConverter x:Key="TaskTypeToBooleanConverter"/>
-        <helpers:ListToAvailabilityColorConverter x:Key="ListToAvailabilityColorConverter"/>
+        <helpers:TaskTypeToBooleanConverter x:Key="TaskTypeToBooleanConverter"/>
         <helpers:TaskTypeToIconConverter x:Key="TaskTypeToIconConverter"/>
 
         <DataTemplate x:Key ="ListItem" x:DataType="model:TaskWrapper">

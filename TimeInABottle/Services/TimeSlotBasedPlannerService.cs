@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TimeInABottle.Contracts.Services;
+﻿using TimeInABottle.Contracts.Services;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Helpers;
 using TimeInABottle.Core.Models.Tasks;
-using TimeInABottle.Core.Services;
 using TimeInABottle.Models;
 
 namespace TimeInABottle.Services;
@@ -17,28 +11,33 @@ public class TimeSlotBasedPlannerService : IPlannerService
     private TimeSpan _maximumEnd;
     private int _increment;
 
-
     private readonly IAvailableTimesGetter _availableTimesGetter;
 
-    // Dictionary to store the time slots for each day of the week
-    // think of it like pagetable in OS
-    private Dictionary<DayOfWeek, List<TimeSlot>> TimeSlots;
-
+    /// <summary>
+    /// Dictionary to store the time slots for each day of the week.
+    /// Inspired by OS pagetables 
+    /// </summary>
+    private readonly Dictionary<DayOfWeek, List<TimeSlot>> TimeSlots;
 
     private class TimeSlot
     {
-        public TimeSpan StartTime
-        {
-            get; set;
-        }
-        public TimeSpan EndTime
-        {
-            get; set;
-        }
+        /// <summary>
+        /// Gets or sets the start time of the time slot.
+        /// </summary>
+        public TimeSpan StartTime { get; set; }
+
+        /// <summary>
+        /// Gets or sets the end time of the time slot.
+        /// </summary>
+        public TimeSpan EndTime { get; set; }
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TimeSlotBasedPlannerService"/> class.
+    /// </summary>
     public TimeSlotBasedPlannerService()
     {
+        TimeSlots = [];
         _availableTimesGetter = App.GetService<IAvailableTimesGetter>();
         ReadConfig();
         InitializeTimeSlots();
@@ -54,8 +53,8 @@ public class TimeSlotBasedPlannerService : IPlannerService
 
     private FunctionResultCode LoadDayOfWeekTimeSlots(DayOfWeek dayOfWeek, IEnumerable<TimeSpan> availableTimes)
     {
-
-        if (!TimeSlots.ContainsKey(dayOfWeek)) {
+        if (!TimeSlots.ContainsKey(dayOfWeek))
+        {
             return FunctionResultCode.ERROR_INVALID_INPUT;
         }
 
@@ -86,22 +85,20 @@ public class TimeSlotBasedPlannerService : IPlannerService
             }
         }
 
-        if (start != end) {
+        if (start != end)
+        {
             list.Add(new TimeSlot { StartTime = start, EndTime = end });
         }
-
 
         TimeSlots[dayOfWeek] = list;
         return FunctionResultCode.SUCCESS;
     }
 
-
     private void InitializeTimeSlots()
     {
-        TimeSlots = [];
         foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
         {
-            TimeSlots.Add(day, new List<TimeSlot>());
+            TimeSlots.Add(day, []);
         }
     }
 
@@ -145,7 +142,7 @@ public class TimeSlotBasedPlannerService : IPlannerService
         return priority;
     }
 
-    private static List<DayOfWeek> DAY_OF_WEEKS =
+    private static readonly List<DayOfWeek> DAY_OF_WEEKS =
         [
         DayOfWeek.Monday,
         DayOfWeek.Tuesday,
@@ -195,7 +192,8 @@ public class TimeSlotBasedPlannerService : IPlannerService
 
             var date = DateOnly.FromDateTime(DateTime.Now);
             date = date.AddDays((int)day - (int)date.DayOfWeek);
-            if (day is DayOfWeek.Sunday) {
+            if (day is DayOfWeek.Sunday)
+            {
                 date = date.AddDays(-7);
             }
 
@@ -225,7 +223,6 @@ public class TimeSlotBasedPlannerService : IPlannerService
 
         return result;
     }
-
 
     // Handles processing a single task within a time slot
     private void ProcessTaskInTimeSlot(List<TimeSlot> dayTimeSlots, List<TaskWrapper> sortedTasks, List<DerivedTask> result, DateOnly date)
@@ -315,17 +312,24 @@ public class TimeSlotBasedPlannerService : IPlannerService
         {
             case "WeeklyTask":
                 var weeklyTask = task as WeeklyTask;
-                return DateTime.Now.AddDays(weeklyTask.WeekDays.Min() - DateTime.Now.DayOfWeek);
+                if (weeklyTask?.WeekDays != null && weeklyTask.WeekDays.Any())
+                {
+                    return DateTime.Now.AddDays((double)(weeklyTask.WeekDays.Min() - (int)DateTime.Now.DayOfWeek));
+                }
+                break;
             case "MonthlyTask":
-                var monthlyTask = task as MonthlyTask;
-                return new DateTime(DateTime.Now.Year, DateTime.Now.Month, monthlyTask.Date);
+                if (task is MonthlyTask monthlyTask)
+                {
+                    return new DateTime(DateTime.Now.Year, DateTime.Now.Month, monthlyTask.Date);
+                }
+                break;
             case "NonRepeatedTask":
-                var nonRepeatedTask = task as NonRepeatedTask;
-                return nonRepeatedTask.Date.ToDateTime(nonRepeatedTask.Start);
-            default:
-                return DateTime.Now;
+                if (task is NonRepeatedTask nonRepeatedTask)
+                {
+                    return nonRepeatedTask.Date.ToDateTime(nonRepeatedTask.Start);
+                }
+                break;
         }
+        return DateTime.Now;
     }
-
-
 }

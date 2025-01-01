@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.UI.Xaml.Data;
+﻿using Microsoft.UI.Xaml.Data;
 using TimeInABottle.Core.Models.Tasks;
 
 namespace TimeInABottle.Helpers;
+/// <summary>
+/// Converts a task type to a boolean value.
+/// </summary>
+/// <remarks>
+/// This converter returns false for null values and instances of DerivedTask.
+/// It returns true for instances of ITask.
+/// </remarks>
 public class TaskTypeToBooleanConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
@@ -17,7 +19,8 @@ public class TaskTypeToBooleanConverter : IValueConverter
             return false;
         }
 
-        if (value is ITask) { 
+        if (value is ITask)
+        {
             return true;
         }
 

@@ -3,7 +3,6 @@ using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Models.Weather;
 using RestSharp;
 using Newtonsoft.Json;
-using TimeInABottle.Core.Helpers;
 
 namespace TimeInABottle.Core.Services;
 /// <summary>

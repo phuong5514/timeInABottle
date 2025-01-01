@@ -1,12 +1,8 @@
 ﻿using System.Runtime.InteropServices;
-
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Media;
-
 using Windows.UI;
 using Windows.UI.ViewManagement;
-
 namespace TimeInABottle.Helpers;
 
 // Helper class to workaround custom title bar bugs.

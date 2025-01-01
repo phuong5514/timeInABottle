@@ -1,18 +1,12 @@
-﻿using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls.Primitives;
 using TimeInABottle.Contracts.Services;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Helpers;
 using TimeInABottle.Core.Models.Filters;
 using TimeInABottle.Core.Models.Tasks;
-using TimeInABottle.Core.Models.Weather;
 using TimeInABottle.Models;
-using Windows.Graphics.Printing3D;
 
 namespace TimeInABottle.ViewModels;
 

@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 using System.Xml.Linq;
 using Newtonsoft.Json;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Helpers;
 using TimeInABottle.Core.Models.Filters;
 using TimeInABottle.Core.Models.Tasks;
-using TimeInABottle.Core.Models.Weather;
 
+/// <summary>
+/// Service for managing tasks using local storage.
+/// Implements the <see cref="IDaoService"/> interface.
+/// </summary>
 namespace TimeInABottle.Core.Services;
 public class LocalStorageDaoService : IDaoService
 {
@@ -45,7 +43,8 @@ public class LocalStorageDaoService : IDaoService
             var jsonTasks = JsonConvert.DeserializeObject<List<JsonTask>>(jsonString);
             _taskList = (List<ITask>)TaskToJsonTaskConverter.ConvertListBack(jsonTasks);
         }
-        catch (Exception ex) {
+        catch (Exception)
+        {
             // do nothing, the file is not created yet due to the lack of changes in the db
             // 2nd scenerio: the file is tampered with manually 
             return;

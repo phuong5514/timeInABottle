@@ -1,20 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Helpers;
 using TimeInABottle.Core.Models.Filters;
 using TimeInABottle.Core.Models.Tasks;
 
 namespace TimeInABottle.Core.Services;
+/// <summary>
+/// Service for interacting with SQLite database for task management.
+/// </summary>
 public class SqliteDaoService : IDaoService
 {
     private readonly TaskContext _db;
-    private string _exportPath;
+    private readonly string _exportPath;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SqliteDaoService"/> class.
+    /// Loads configuration and initializes the database context.
+    /// </summary>
     public SqliteDaoService()
     {
         var configPath = Path.Combine(AppContext.BaseDirectory, "secret.config");
@@ -28,12 +30,19 @@ public class SqliteDaoService : IDaoService
             }
             else
             {
+                // Handle the case where the filename is not found in the configuration
             }
         }
 
         _db = new();
     }
 
+    /// <summary>
+    /// Executes a custom query based on the provided filter and sorting order.
+    /// </summary>
+    /// <param name="filter">The filter criteria to apply to the query.</param>
+    /// <param name="isSortAscending">Indicates whether the results should be sorted in ascending order.</param>
+    /// <returns>A collection of tasks that match the filter criteria.</returns>
     public FullObservableCollection<ITask> CustomQuery(IFilter filter, bool isSortAscending = true)
     {
         var tasks = _db.Tasks.ToList();
@@ -41,12 +50,20 @@ public class SqliteDaoService : IDaoService
         return new FullObservableCollection<ITask>(filteredTasks);
     }
 
-
-    public FullObservableCollection<ITask> GetAllTasks() {
+    /// <summary>
+    /// Retrieves all tasks.
+    /// </summary>
+    /// <returns>A collection of all tasks.</returns>
+    public FullObservableCollection<ITask> GetAllTasks()
+    {
         var tasks = _db.Tasks.ToList();
         return new FullObservableCollection<ITask>(tasks);
     }
 
+    /// <summary>
+    /// Retrieves tasks scheduled for the current month.
+    /// </summary>
+    /// <returns>A collection of this month's tasks.</returns>
     public FullObservableCollection<ITask> GetThisMonthTasks()
     {
         var tasks = _db.Tasks.ToList();
@@ -62,7 +79,12 @@ public class SqliteDaoService : IDaoService
         return new FullObservableCollection<ITask>(thisMonthTasks);
     }
 
-    public FullObservableCollection<ITask> GetThisWeekTasks() {
+    /// <summary>
+    /// Retrieves tasks scheduled for the current week.
+    /// </summary>
+    /// <returns>A collection of this week's tasks.</returns>
+    public FullObservableCollection<ITask> GetThisWeekTasks()
+    {
         var tasks = _db.Tasks.ToList();
         var startOfWeek = DateOnly.FromDateTime(DateTime.Now.StartOfWeek(DayOfWeek.Monday));
         var endOfWeek = startOfWeek.AddDays(6);
@@ -70,7 +92,7 @@ public class SqliteDaoService : IDaoService
             .Where(task =>
                 task is WeeklyTask ||
                 (task is NonRepeatedTask nrt && nrt.Date >= startOfWeek && nrt.Date <= endOfWeek) ||
-                (task is DerivedTask dt && dt.AssignedDate >= startOfWeek && dt.AssignedDate <= endOfWeek) || 
+                (task is DerivedTask dt && dt.AssignedDate >= startOfWeek && dt.AssignedDate <= endOfWeek) ||
                 task is DailyTask ||
                 (task is MonthlyTask mt && mt.Date >= startOfWeek.Day && (mt.Date <= endOfWeek.Day || endOfWeek.Day < startOfWeek.Day))
             )
@@ -78,7 +100,12 @@ public class SqliteDaoService : IDaoService
         return new FullObservableCollection<ITask>(thisWeekTasks);
     }
 
-    public FullObservableCollection<ITask> GetTodayTasks() {
+    /// <summary>
+    /// Retrieves tasks scheduled for today.
+    /// </summary>
+    /// <returns>A collection of today's tasks.</returns>
+    public FullObservableCollection<ITask> GetTodayTasks()
+    {
         var tasks = _db.Tasks.ToList();
         var today = DateOnly.FromDateTime(DateTime.Now);
         var todayTasks = tasks
@@ -94,14 +121,23 @@ public class SqliteDaoService : IDaoService
         return new FullObservableCollection<ITask>(todayTasks);
     }
 
-
-    public void AddTask(ITask task) {
+    /// <summary>
+    /// Adds a new task to the database.
+    /// </summary>
+    /// <param name="task">The task to add.</param>
+    public void AddTask(ITask task)
+    {
         _db.Tasks.Add(task);
         saveChanges();
     }
 
-    // potentially deprecated and unused
-    public void UpdateTask(ITask task) {
+    /// <summary>
+    /// Updates an existing task in the database.
+    /// </summary>
+    /// <param name="task">The task to update.</param>
+    /// <exception cref="InvalidOperationException">Thrown when the task is not found in the database.</exception>
+    public void UpdateTask(ITask task)
+    {
         var existingTask = _db.Tasks.Find(task.Id);
         if (existingTask != null)
         {
@@ -113,24 +149,32 @@ public class SqliteDaoService : IDaoService
             // Handle the case where the task does not exist in the database
             throw new InvalidOperationException("Task not found.");
         }
-
-        //_db.Tasks.Update(task);
-        //saveChanges();
     }
 
+    /// <summary>
+    /// Deletes a task from the database.
+    /// </summary>
+    /// <param name="task">The task to delete.</param>
     public void DeleteTask(ITask task)
     {
         _db.Tasks.Remove(task);
         saveChanges();
     }
 
+    /// <summary>
+    /// Saves changes to the database and exports the tasks to a JSON file.
+    /// </summary>
     private void saveChanges()
     {
         _db.SaveChanges();
         Export();
     }
 
-    public void Export() {
+    /// <summary>
+    /// Exports the tasks to a JSON file.
+    /// </summary>
+    public void Export()
+    {
         var tasks = _db.Tasks.ToList();
         var today = DateOnly.FromDateTime(DateTime.Now);
         var optimisedTasks = tasks
@@ -141,12 +185,17 @@ public class SqliteDaoService : IDaoService
                 task is WeeklyTask)
             .ToList();
 
-
         var jsonTasks = TaskToJsonTaskConverter.ConvertList(optimisedTasks);
         LocalStorageWriter.Write(_exportPath, jsonTasks);
     }
 
-    public FullObservableCollection<ITask> FindTaskFromDate(DateOnly date) {
+    /// <summary>
+    /// Finds tasks scheduled for a specific date.
+    /// </summary>
+    /// <param name="date">The date to search for tasks.</param>
+    /// <returns>A collection of tasks scheduled for the specified date.</returns>
+    public FullObservableCollection<ITask> FindTaskFromDate(DateOnly date)
+    {
         var tasks = _db.Tasks.ToList();
         var filteredTasks = tasks
             .Where(task =>
@@ -160,7 +209,13 @@ public class SqliteDaoService : IDaoService
         return new FullObservableCollection<ITask>(filteredTasks);
     }
 
-    public FullObservableCollection<ITask> GetThisWeekTasks(IEnumerable<DayOfWeek> weekdays) {
+    /// <summary>
+    /// Retrieves tasks scheduled for the current week based on specified weekdays.
+    /// </summary>
+    /// <param name="weekdays">The weekdays to filter tasks.</param>
+    /// <returns>A collection of tasks scheduled for the specified weekdays.</returns>
+    public FullObservableCollection<ITask> GetThisWeekTasks(IEnumerable<DayOfWeek> weekdays)
+    {
         var tasks = _db.Tasks.ToList();
         var startOfWeek = DateOnly.FromDateTime(DateTime.Now.StartOfWeek(DayOfWeek.Monday));
         var endOfWeek = startOfWeek.AddDays(6);
@@ -168,7 +223,7 @@ public class SqliteDaoService : IDaoService
             .Where(task =>
                 (task is WeeklyTask wt && wt.WeekDays.Intersect(weekdays).Any()) ||
                 (task is NonRepeatedTask nrt && weekdays.Contains(nrt.Date.DayOfWeek) && nrt.Date <= endOfWeek) ||
-                (task is DerivedTask dt && weekdays.Contains(dt.AssignedDate.DayOfWeek) && dt.AssignedDate <= endOfWeek) || 
+                (task is DerivedTask dt && weekdays.Contains(dt.AssignedDate.DayOfWeek) && dt.AssignedDate <= endOfWeek) ||
                 task is DailyTask
             ).ToList();
 
@@ -181,7 +236,12 @@ public class SqliteDaoService : IDaoService
         return new FullObservableCollection<ITask>(filteredTasks);
     }
 
-    public FullObservableCollection<ITask> GetNextWeekTasks() {
+    /// <summary>
+    /// Retrieves tasks scheduled for the next week.
+    /// </summary>
+    /// <returns>A collection of next week's tasks.</returns>
+    public FullObservableCollection<ITask> GetNextWeekTasks()
+    {
         var tasks = _db.Tasks.ToList();
         var startOfWeek = DateOnly.FromDateTime(DateTime.Now.StartOfWeek(DayOfWeek.Monday)).AddDays(7);
         var endOfWeek = startOfWeek.AddDays(6);
@@ -198,7 +258,12 @@ public class SqliteDaoService : IDaoService
         return new FullObservableCollection<ITask>(thisWeekTasks);
     }
 
-    public FullObservableCollection<ITask> GetThisWeekTasksFromNow() {
+    /// <summary>
+    /// Retrieves tasks scheduled for the current week from now.
+    /// </summary>
+    /// <returns>A collection of tasks scheduled for the rest of the week from now.</returns>
+    public FullObservableCollection<ITask> GetThisWeekTasksFromNow()
+    {
         var tasks = _db.Tasks.ToList();
         var endOfWeek = DateOnly.FromDateTime(DateTime.Now.StartOfWeek(DayOfWeek.Monday)).AddDays(6);
         var today = DateOnly.FromDateTime(DateTime.Now);
@@ -215,7 +280,12 @@ public class SqliteDaoService : IDaoService
         return new FullObservableCollection<ITask>(filteredTasks);
     }
 
-    public void AddTasks(IEnumerable<ITask> tasks) {
+    /// <summary>
+    /// Adds multiple tasks to the database.
+    /// </summary>
+    /// <param name="tasks">The tasks to add.</param>
+    public void AddTasks(IEnumerable<ITask> tasks)
+    {
         foreach (var task in tasks)
         {
             _db.Tasks.Add(task);
@@ -223,12 +293,22 @@ public class SqliteDaoService : IDaoService
         saveChanges();
     }
 
-    public void UpdateTasks(IEnumerable<ITask> tasks) { 
+    /// <summary>
+    /// Updates multiple tasks in the database.
+    /// </summary>
+    /// <param name="tasks">The tasks to update.</param>
+    public void UpdateTasks(IEnumerable<ITask> tasks)
+    {
         foreach (var task in tasks)
         {
             UpdateTask(task);
         }
     }
+
+    /// <summary>
+    /// Deletes multiple tasks from the database.
+    /// </summary>
+    /// <param name="tasks">The tasks to delete.</param>
     public void DeleteTasks(IEnumerable<ITask> tasks)
     {
         foreach (var task in tasks)
@@ -236,4 +316,4 @@ public class SqliteDaoService : IDaoService
             DeleteTask(task);
         }
     }
-}   
+}

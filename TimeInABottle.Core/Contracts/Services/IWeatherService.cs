@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TimeInABottle.Core.Models.Weather;
+﻿using TimeInABottle.Core.Models.Weather;
 
 namespace TimeInABottle.Core.Contracts.Services;
 public interface IWeatherService
@@ -18,7 +13,7 @@ public interface IWeatherService
 
     public WeatherInfo GetCurrentWeatherInfo()
     {
-        DateTime now = DateTime.Now;
+        var now = DateTime.Now;
 
         if (WeatherTimeline == null)
         {
@@ -74,7 +69,7 @@ public interface IWeatherService
 
         foreach (var weather in WeatherTimeline.Intervals)
         {
-            DateTime weatherDateTime = DateTime.Parse(weather.StartTime);
+            var weatherDateTime = DateTime.Parse(weather.StartTime);
             // check if now and weatherDateTime is in the same hour
             if (now.Hour == weatherDateTime.Hour)
             {
@@ -86,7 +81,7 @@ public interface IWeatherService
 
     public WeatherInfoWrapper GetNextHourWeather()
     {
-        DateTime now = DateTime.Now;
+        var now = DateTime.Now;
 
         if (WeatherTimeline == null)
         {
@@ -100,7 +95,7 @@ public interface IWeatherService
 
         foreach (var weather in WeatherTimeline.Intervals)
         {
-            DateTime weatherDateTime = DateTime.Parse(weather.StartTime);
+            var weatherDateTime = DateTime.Parse(weather.StartTime);
             if (weatherDateTime > now)
             {
                 return new WeatherInfoWrapper(weather);
