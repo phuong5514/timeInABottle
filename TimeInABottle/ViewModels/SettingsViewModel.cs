@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using System.Windows.Input;
-using System.Xml.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -11,10 +10,11 @@ using TimeInABottle.Core.Helpers;
 using TimeInABottle.Helpers;
 
 using Windows.ApplicationModel;
-using Windows.ApplicationModel.Background;
-
 namespace TimeInABottle.ViewModels;
 
+/// <summary>
+/// ViewModel for managing application settings, including theme, notifications, and scheduling.
+/// </summary>
 public partial class SettingsViewModel : ObservableRecipient
 {
     private readonly IThemeSelectorService _themeSelectorService;
@@ -28,13 +28,15 @@ public partial class SettingsViewModel : ObservableRecipient
     [ObservableProperty]
     private string _versionDescription;
 
+
+    // unused due to complications with the task creation system and the display of the time slots (ex: display a task that starts at 10:15 with a 30 minutes increment unit timeslot timetable)
     //partial void OnTimeSlotIncrementChanged();
     //partial void OnTimeSlotIncrementChanged() => ConfigHandler.SetConfigValue("TimeSlotIncrement", TimeSlotIncrement.ToString());
     //[ObservableProperty]
     //private int _timeSlotIncrement; // calendar time slot "size" in minutes (e.g. 15, 30, 60)
 
-    [ObservableProperty]
-    private List<int> _timeSlotIncrements; // possible time slot increments
+    //[ObservableProperty]
+    //private List<int> _timeSlotIncrements; // possible time slot increments\
 
     [ObservableProperty]
     private bool _isNotificationEnabled; // whether or not the notification (background task) is enabled
@@ -67,8 +69,6 @@ public partial class SettingsViewModel : ObservableRecipient
         _themeSelectorService = themeSelectorService;
         _elementTheme = _themeSelectorService.Theme;
         _versionDescription = GetVersionDescription();
-
-        //_configPath = Path.Combine(AppContext.BaseDirectory, _filename);
         ReadConfig();
 
         SwitchThemeCommand = new RelayCommand<ElementTheme>(
@@ -102,7 +102,8 @@ public partial class SettingsViewModel : ObservableRecipient
             };
             ConfigHandler.SetConfigValues(dictionary);
         }
-        else { 
+        else
+        {
             registerService.CleanRegister();
         }
     }

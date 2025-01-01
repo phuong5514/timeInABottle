@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using CommunityToolkit.WinUI.UI;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media;
 using TimeInABottle.Core.Models.Tasks;
 
+/// <summary>
+/// Represents a view for displaying a timetable.
+/// </summary>
+/// <remarks>
+/// This class inherits from <see cref="Grid"/> and implements <see cref="INotifyPropertyChanged"/>.
+/// It provides properties for task time unit, tracking time, and a collection of tasks.
+/// </remarks>
 namespace TimeInABottle.Models;
 public class TimeTableView : Grid, INotifyPropertyChanged
 {
@@ -45,15 +45,25 @@ public class TimeTableView : Grid, INotifyPropertyChanged
 
 
 
-    public int TaskTimeUnit {
+    /// <summary>
+    /// Gets or sets the task time unit.
+    /// </summary>
+    public int TaskTimeUnit
+    {
         set; get;
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether to track time.
+    /// </summary>
     public bool TrackTime
     {
         set; get;
     }
 
+    /// <summary>
+    /// Gets or sets the collection of tasks.
+    /// </summary>
     public IEnumerable<ITask> Values
     {
         get => (IEnumerable<ITask>)GetValue(ValuesProperty);
@@ -61,15 +71,24 @@ public class TimeTableView : Grid, INotifyPropertyChanged
     }
 
 
+    /// <summary>
+    /// Handles changes to the TaskTimeUnit property.
+    /// </summary>
+    /// <param name="d">The dependency object.</param>
+    /// <param name="e">The event arguments.</param>
     public static void OnTaskTimeUnitChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is TimeTableView view && e.NewValue is int)
         {
-
             view.InitializeGrid(); // Refresh the grid when TaskTimeUnit changes
         }
     }
 
+    /// <summary>
+    /// Handles changes to the TrackTime property.
+    /// </summary>
+    /// <param name="d">The dependency object.</param>
+    /// <param name="e">The event arguments.</param>
     public static void OnTrackTimeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is TimeTableView view && e.NewValue is bool)
@@ -78,6 +97,11 @@ public class TimeTableView : Grid, INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// Handles changes to the Values property.
+    /// </summary>
+    /// <param name="d">The dependency object.</param>
+    /// <param name="e">The event arguments.</param>
     private static void OnValuesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is TimeTableView view && e.NewValue is IEnumerable<ITask>)

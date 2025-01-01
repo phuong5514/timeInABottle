@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using TimeInABottle.Core.Models.Tasks;
 
 
@@ -18,7 +11,7 @@ namespace TimeInABottle.Core.Models.Filters;
 /// </summary>
 public class CompositeFilter : IFilter
 {
-    private readonly Dictionary<Type, List<IFilter>> _filtersByType = new();
+    private readonly Dictionary<Type, List<IFilter>> _filtersByType = [];
 
     public event PropertyChangedEventHandler PropertyChanged;
 
@@ -34,7 +27,7 @@ public class CompositeFilter : IFilter
         {
             if (!_filtersByType.ContainsKey(filterType))
             {
-                _filtersByType[filter.GetType()] = new List<IFilter>();
+                _filtersByType[filter.GetType()] = [];
             }
             var list = _filtersByType[filter.GetType()];
             foreach (var item in list.Cast<IValueFilter>())
@@ -54,7 +47,7 @@ public class CompositeFilter : IFilter
         {
             if (!_filtersByType.ContainsKey(typeof(ITypeFilter)))
             {
-                _filtersByType[typeof(ITypeFilter)] = new List<IFilter>();
+                _filtersByType[typeof(ITypeFilter)] = [];
             }
             var list = _filtersByType[typeof(ITypeFilter)];
 
@@ -71,9 +64,6 @@ public class CompositeFilter : IFilter
         {
             throw new ArgumentException("Unrecognized filter type!");
         }
-
-        return false;
-
     }
 
 

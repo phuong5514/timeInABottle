@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TimeInABottle.Core.Contracts.Services;
-using TimeInABottle.Core.Helpers;
+﻿using TimeInABottle.Core.Helpers;
 
 
 namespace TimeInABottle.Core.Models.Tasks;
@@ -67,7 +60,7 @@ public class WeeklyTask : IRepeatedTask
         List<int> weekdaysInt = new List<int>();
         foreach(DayOfWeek day in WeekDays)
         {
-            int dayOfWeek = (int)day;
+            var dayOfWeek = (int)day;
             weekdaysInt.Add(dayOfWeek);
         }
         return weekdaysInt;

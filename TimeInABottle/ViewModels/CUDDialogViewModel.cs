@@ -1,35 +1,65 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Helpers;
 using TimeInABottle.Core.Models.Tasks;
 using TimeInABottle.Models;
 
 namespace TimeInABottle.ViewModels;
+/// <summary>
+/// ViewModel for Create, Update, Delete (CUD) dialog operations.
+/// </summary>
 public partial class CUDDialogViewModel : ObservableRecipient
 {
+    /// <summary>
+    /// Gets or sets the input name.
+    /// </summary>
     public string InputName { set; get; }
+
+    /// <summary>
+    /// Gets or sets the input description.
+    /// </summary>
     public string InputDescription { set; get; }
+
+    /// <summary>
+    /// Gets or sets the input start time.
+    /// </summary>
     public TimeSpan InputStart { set; get; }
+
+    /// <summary>
+    /// Gets or sets the input end time.
+    /// </summary>
     public TimeSpan InputEnd { set; get; }
+
+    /// <summary>
+    /// Gets or sets the task ID.
+    /// </summary>
     public int Id
     {
         set; get;
     }
+
+    /// <summary>
+    /// Gets a value indicating whether the dialog is in edit mode.
+    /// </summary>
     public bool IsEditMode => Id != 0;
 
+    /// <summary>
+    /// Gets the list of task options.
+    /// </summary>
     public List<ITask> TaskOptions { private set; get; }
-    public ITask SelectedTaskOption
+
+    /// <summary>
+    /// Gets or sets the selected task option.
+    /// </summary>
+    public ITask? SelectedTaskOption
     {
         set; get;
     }
-    public String TypeName
+
+    /// <summary>
+    /// Gets the type name of the selected task option.
+    /// </summary>
+    public string TypeName
     {
         get
         {
@@ -39,36 +69,55 @@ public partial class CUDDialogViewModel : ObservableRecipient
             }
             return SelectedTaskOption.TypeName();
         }
-
     }
 
+    /// <summary>
+    /// Gets a value indicating whether the combobox is enabled.
+    /// </summary>
     public bool IsComboboxEnabled => !(IsEditMode && _task is DerivedTask);
 
-    private ITask _task;
+    private ITask? _task;
 
+    /// <summary>
+    /// List of weekdays.
+    /// </summary>
     public static readonly List<string> Weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
-    // specialized input
+    /// <summary>
+    /// Gets or sets the input weekdays.
+    /// </summary>
     public List<DayOfWeek> InputWeekDays
     {
         set; get;
     }
 
+    /// <summary>
+    /// Gets or sets the input monthly day.
+    /// </summary>
     public int InputMonthlyDay
     {
         set; get;
     }
 
     private static readonly List<int> _daysInMonths = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-                                                           13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-                                                           25, 26, 27, 28, 29, 30, 31 ];
+                                                                   13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+                                                                   25, 26, 27, 28, 29, 30, 31 ];
 
+    /// <summary>
+    /// Gets the list of days in a month.
+    /// </summary>
     public List<int> DaysInMonth => _daysInMonths;
 
+    /// <summary>
+    /// Gets or sets the input specific day.
+    /// </summary>
     public DateTime InputSpecificDay;
 
     private readonly IDaoService _daoService;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CUDDialogViewModel"/> class.
+    /// </summary>
     public CUDDialogViewModel()
     {
         _daoService = App.GetService<IDaoService>();
@@ -79,12 +128,20 @@ public partial class CUDDialogViewModel : ObservableRecipient
         InputWeekDays = [];
         InputMonthlyDay = 0;
         InputSpecificDay = DateTime.Now;
+        TaskOptions = [];
+        _task = null;
+        SelectedTaskOption = null;
         SetTaskOptions();
     }
 
+    /// <summary>
+    /// Sets the ViewModel to edit mode with the specified task.
+    /// </summary>
+    /// <param name="task">The task to edit.</param>
     public void EditMode(ITask task)
     {
-        if (task == null) {
+        if (task == null)
+        {
             return;
         }
 
@@ -95,9 +152,8 @@ public partial class CUDDialogViewModel : ObservableRecipient
         InputEnd = task.End.ToTimeSpan();
         Id = task.Id;
 
-
         var taskVisitor = new GetTaskSpecialtiesVisitor();
-        var specialisedValue = taskVisitor.visitTask(task);
+        var specialisedValue = taskVisitor.VisitTask(task);
         if (specialisedValue != null)
         {
             if (specialisedValue is List<DayOfWeek> weekdays)
@@ -127,13 +183,13 @@ public partial class CUDDialogViewModel : ObservableRecipient
                 break;
             }
         }
-
-        
     }
 
+    /// <summary>
+    /// Sets the task options available for selection.
+    /// </summary>
     private void SetTaskOptions()
     {
-        TaskOptions = [];
         var taskType = typeof(ITask);
         var assembly = taskType.Assembly;
 
@@ -150,11 +206,14 @@ public partial class CUDDialogViewModel : ObservableRecipient
                     continue;
                 }
                 TaskOptions.Add(taskInstance);
-                //Core.Models.Tasks.TaskFactory.RegisterTask(type.Name, type);
             }
         }
     }
 
+    /// <summary>
+    /// Validates the input fields.
+    /// </summary>
+    /// <returns>The result code of the validation.</returns>
     private FunctionResultCode ValidateInput()
     {
         if (!ValidateEmptyInput())
@@ -165,13 +224,17 @@ public partial class CUDDialogViewModel : ObservableRecipient
         return ValidateTime() ? FunctionResultCode.SUCCESS : FunctionResultCode.ERROR_INVALID_INPUT;
     }
 
+    /// <summary>
+    /// Validates that the input fields are not empty.
+    /// </summary>
+    /// <returns>True if the input fields are not empty; otherwise, false.</returns>
     private bool ValidateEmptyInput()
     {
         var result = true;
         result &= !string.IsNullOrWhiteSpace(InputName);
         result &= !string.IsNullOrWhiteSpace(TypeName);
 
-        switch(TypeName)
+        switch (TypeName)
         {
             case "WeeklyTask":
                 result &= InputWeekDays.Count > 0;
@@ -186,6 +249,10 @@ public partial class CUDDialogViewModel : ObservableRecipient
         return result;
     }
 
+    /// <summary>
+    /// Validates the input start and end times.
+    /// </summary>
+    /// <returns>True if the input times are valid; otherwise, false.</returns>
     private bool ValidateTime()
     {
         if (InputStart >= InputEnd)
@@ -213,47 +280,15 @@ public partial class CUDDialogViewModel : ObservableRecipient
                 break;
         }
 
-        // if not using roll back
-        //if (IsEditMode)
-        //{
-        //    var milestone = _task.Start.ToTimeSpan();
-        //    var increment = TimeSpan.FromMinutes(30);
-
-        //    // add the old's occupied time as available
-        //    while (milestone < _task.End.ToTimeSpan())
-        //    {
-        //        allowedStarts = allowedStarts.Append(milestone);
-        //        allowedEnds = allowedEnds.Append(milestone + increment);
-        //        milestone += increment;
-        //    }
-        //}
-
-
         return allowedStarts.Contains(InputStart) && allowedEnds.Contains(InputEnd);
     }
 
-
+    /// <summary>
+    /// Saves the changes made to the task.
+    /// </summary>
+    /// <returns>The result code of the save operation.</returns>
     public FunctionResultCode SaveChanges()
     {
-        // validate before commit change
-        // pros: easier failure management: if fail no need to do anything
-        // con: edge case validation: edit a task time when but it is occupied by the soon-to-be deleted task -> need additional handling
-        //var validationResult = ValidateInput();
-        //if (validationResult != FunctionResultCode.SUCCESS)
-        //{
-        //    return validationResult;
-        //}
-
-        //if (IsEditMode)
-        //{
-        //    _daoService.DeleteTask(_task);
-        //}
-
-
-
-        // delete old task first and implement rollback
-        // pros: fewer code, simple handling for edge case
-        // con: performence: is deleting and adding 1 time more efficent than 
         if (IsEditMode)
         {
             _daoService.DeleteTask(_task);
@@ -262,12 +297,10 @@ public partial class CUDDialogViewModel : ObservableRecipient
         var validationResult = ValidateInput();
         if (validationResult != FunctionResultCode.SUCCESS)
         {
-            // roll back
             if (IsEditMode)
             {
                 _daoService.AddTask(_task);
             }
-
 
             return validationResult;
         }
@@ -280,7 +313,6 @@ public partial class CUDDialogViewModel : ObservableRecipient
         {
             _task = Core.Models.Tasks.TaskFactory.CreateTask(TypeName);
         }
-
 
         _task.Name = InputName;
         _task.Description = InputDescription;
@@ -303,6 +335,10 @@ public partial class CUDDialogViewModel : ObservableRecipient
         return FunctionResultCode.SUCCESS;
     }
 
+    /// <summary>
+    /// Deletes the current task.
+    /// </summary>
+    /// <returns>True if the task was successfully deleted; otherwise, false.</returns>
     public bool DeleteTask()
     {
         _daoService.DeleteTask(_task);

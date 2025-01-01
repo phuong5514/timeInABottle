@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TimeInABottle.Core.Contracts.Services;
-using TimeInABottle.Core.Helpers;
+﻿using TimeInABottle.Core.Helpers;
 
 namespace TimeInABottle.Core.Models.Tasks;
 /// <summary>
@@ -53,7 +46,7 @@ public class MonthlyTask : IRepeatedTask
 
     public override IEnumerable<int> GetWeekdaysInt() {
         var thisMonthDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, Date);
-        int weekday = (int)thisMonthDate.DayOfWeek;
+        var weekday = (int)thisMonthDate.DayOfWeek;
         return new List<int> { weekday };
     }
 }

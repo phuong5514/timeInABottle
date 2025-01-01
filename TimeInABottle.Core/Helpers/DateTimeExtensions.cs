@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TimeInABottle.Core.Helpers;
+﻿namespace TimeInABottle.Core.Helpers;
 //https://stackoverflow.com/questions/38039/how-can-i-get-the-datetime-for-the-start-of-the-week
 
 /// <summary>

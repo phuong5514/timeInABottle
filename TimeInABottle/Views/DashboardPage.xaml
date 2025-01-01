@@ -19,6 +19,7 @@
         <helpers:TaskTypeToIconConverter x:Key="TaskTypeToIconConverter"/>
         <helpers:TaskTypeToBooleanConverter x:Key="TaskTypeToBooleanConverter"/>
 
+        <!--side bar list item-->
         <DataTemplate x:Key ="ListItem" x:DataType="task:ITask">
             <StackPanel Orientation="Horizontal" Style="{StaticResource BaseListItemContainerStyle}" Spacing="8">
                 <FontIcon 
@@ -31,9 +32,6 @@
             </StackPanel>
         </DataTemplate>
 
-        <!--PointerEntered="CalendarTaskItem_PointerEntered"-->
-
-        
     </Page.Resources>
 
     <Grid x:Name="ContentArea">
@@ -144,6 +142,7 @@
 
 			<!-- CalendarContainer: chua lich chinh -->
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Grid.Row="1" Margin="0,0,16,32" >
+                <!-- TimeTableView: lich chinh -->
                 <models:TimeTableView x:Name="CalendarContainer" 
                                      Style="{StaticResource TimeTable}"
                                      RightTapped="CalendarContainer_RightTapped"
@@ -161,7 +160,7 @@
                                 Icon="Cancel" />
                         </MenuFlyout>
 
-
+                        <!-- cac thanh phan con trong time table view, dc tach rieng -->
                         <DataTemplate x:Key="CalendarTaskItem" x:DataType="task:ITask">
                             <Button Style="{StaticResource CellContentButton}" HorizontalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical" Style="{StaticResource CellContentStackPanel}">
@@ -212,7 +211,7 @@
                                                     VerticalAlignment="Stretch"
                                                     Padding="{StaticResource LargePadding}"
                                                     ColumnSpacing="12"
-                                                    >       
+                                                    >
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="*"/>
@@ -231,7 +230,6 @@
                     </models:TimeTableView.Resources>
                 </models:TimeTableView>
             </ScrollViewer>
-            <!-- Basic Grid structure, we will add rows and columns in the code-behind -->
 
 
 

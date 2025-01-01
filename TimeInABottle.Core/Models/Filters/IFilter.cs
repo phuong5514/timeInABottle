@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using TimeInABottle.Core.Models.Tasks;
 
 namespace TimeInABottle.Core.Models.Filters;
@@ -16,6 +11,4 @@ public interface IFilter : INotifyPropertyChanged
     public string ToString() => "Filter";
 
     public string Name();
-
-    public event PropertyChangedEventHandler PropertyChanged;
 }

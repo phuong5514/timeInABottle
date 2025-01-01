@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
-using Newtonsoft.Json;
 using TimeInABottle.Contracts.ViewModels;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Helpers;

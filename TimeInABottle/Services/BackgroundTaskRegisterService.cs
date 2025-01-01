@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Data.Xml.Dom;
-using TimeInABottle.Contracts.Services;
+﻿using TimeInABottle.Contracts.Services;
 using Windows.ApplicationModel.Background;
-using Windows.UI.Notifications;
-using WinUIEx.Messaging;
+
 
 namespace TimeInABottle.Services;
 /// <summary>

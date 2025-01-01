@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.UI.Xaml.Data;
-using TimeInABottle.Core.Models;
+﻿using Microsoft.UI.Xaml.Data;
 
 namespace TimeInABottle.Helpers;
 /// <summary>
@@ -22,13 +16,12 @@ public class TimeToStringConverter : IValueConverter
     /// <returns>A string representation of the TimeOnly object in the format "HH:mm".</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        var timeValue = (TimeOnly)value;
-        if (timeValue == null)
+        if (value == null)
         {
-            return new ArgumentNullException();
+            throw new ArgumentNullException(nameof(value));
         }
 
-
+        var timeValue = (TimeOnly)value;
         var hours = timeValue.Hour;
         var minutes = timeValue.Minute;
         var result = string.Format("{0:00}:{1:00}", hours, minutes);

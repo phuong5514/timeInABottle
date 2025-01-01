@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using System.Text;
+﻿using System.Text;
 using CommunityToolkit.WinUI.UI.Controls;
 
 using Microsoft.UI.Xaml.Controls;
@@ -187,15 +186,7 @@ public sealed partial class TaskListPage : Page
             CloseButtonText = "Ok",
             XamlRoot = this.Content.XamlRoot, // Ensure the dialog is shown in the correct XAML root
         };
-        var result = await dialog.ShowAsync();
-        //if (result == ContentDialogResult.Primary)
-        //{
-        //    // left blank
-        //}
-        //else
-        //{
-        //    // left blank
-        //}
+        _ = await dialog.ShowAsync();
     }
 
     private async Task CreateAddDialog()
@@ -265,10 +256,11 @@ public sealed partial class TaskListPage : Page
             {
                 ViewModel.LoadTask();
             }
-            else {
+            else
+            {
                 _ = CreateFailureDialog(code);
             }
-            
+
         }
         else
         {
@@ -279,6 +271,11 @@ public sealed partial class TaskListPage : Page
 
     private async Task CreateDeleteConfirmationDialog()
     {
+        if (ViewModel.Selected == null)
+        {
+            return;
+        }
+
         var dialogViewModel = App.GetService<CUDDialogViewModel>();
         dialogViewModel.EditMode(ViewModel.Selected);
 
@@ -297,7 +294,8 @@ public sealed partial class TaskListPage : Page
         var result = await dialog.ShowAsync();
         if (result == ContentDialogResult.Primary)
         {
-            if (dialogViewModel.DeleteTask()) { 
+            if (dialogViewModel.DeleteTask())
+            {
                 ViewModel.LoadTask();
             }
         }

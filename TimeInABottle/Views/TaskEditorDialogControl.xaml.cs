@@ -1,27 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using TimeInABottle.Core.Helpers;
 using TimeInABottle.ViewModels;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace TimeInABottle.Views;
+/// <summary>
+/// Represents a user control for editing tasks in a dialog.
+/// </summary>
 public sealed partial class TaskEditorDialogControl : UserControl
 {
-    
+
+    /// <summary>
+    /// Gets or sets the ViewModel for the dialog.
+    /// </summary>
     public CUDDialogViewModel ViewModel
     {
         get => _viewModel;
@@ -34,9 +24,11 @@ public sealed partial class TaskEditorDialogControl : UserControl
             }
         }
     }
-    private CUDDialogViewModel _viewModel;
-    
+    private CUDDialogViewModel _viewModel = null!;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TaskEditorDialogControl"/> class.
+    /// </summary>
     public TaskEditorDialogControl()
     {
         InitializeComponent();
@@ -64,7 +56,8 @@ public sealed partial class TaskEditorDialogControl : UserControl
     private DayOfWeek ExtractCheckboxOptionValue(CheckBox sender)
     {
         var optionContentString = sender.Content.ToString();
-        if (optionContentString == null) {
+        if (optionContentString == null)
+        {
             throw new ArgumentNullException(nameof(optionContentString));
         }
         return (DayOfWeek)Enum.Parse(typeof(DayOfWeek), optionContentString);
@@ -93,10 +86,16 @@ public sealed partial class TaskEditorDialogControl : UserControl
         }
     }
 
-    private void SelectAll_Indeterminate(object sender, RoutedEventArgs e)
-    {
-
-    }
+    //private void SelectAll_Indeterminate(object sender, RoutedEventArgs e)
+    //{
+    //    foreach (var child in Weekdays.Children)
+    //    {
+    //        if (child is CheckBox checkbox)
+    //        {
+    //            checkbox.IsChecked = false;
+    //        }
+    //    }
+    //}
 
     private void NonRepeatedTaskDatePicker_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
     {
