@@ -96,6 +96,7 @@ public partial class SettingsViewModel : ObservableRecipient
             registerService.RegisterBackgroundTask((uint)BackgroundTaskRefreshRate);
             var dictionary = new Dictionary<string, string>
             {
+                ["IsNotificationEnabled"] = IsNotificationEnabled.ToString(),
                 ["BackgroundTaskRefreshRate"] = BackgroundTaskRefreshRate.ToString(),
                 ["NotificationTime"] = NotificationTime.ToString(),
                 ["NotificationDuration"] = NotificationDuration.ToString()

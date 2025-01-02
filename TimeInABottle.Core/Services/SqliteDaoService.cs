@@ -94,7 +94,7 @@ public class SqliteDaoService : IDaoService
                 (task is NonRepeatedTask nrt && nrt.Date >= startOfWeek && nrt.Date <= endOfWeek) ||
                 (task is DerivedTask dt && dt.AssignedDate >= startOfWeek && dt.AssignedDate <= endOfWeek) ||
                 task is DailyTask ||
-                (task is MonthlyTask mt && mt.Date >= startOfWeek.Day && (mt.Date <= endOfWeek.Day || endOfWeek.Day < startOfWeek.Day))
+                task is MonthlyTask mt && (( mt.Date >= startOfWeek.Day || mt.Date <= endOfWeek.Day && startOfWeek.Month != endOfWeek.Month) || (mt.Date >= startOfWeek.Day && mt.Date <= endOfWeek.Day))
             )
             .ToList();
         return new FullObservableCollection<ITask>(thisWeekTasks);
@@ -229,7 +229,7 @@ public class SqliteDaoService : IDaoService
 
         var monthlyTasks = tasks
             .Where(task =>
-                task is MonthlyTask mt && weekdays.Contains(DayOfWeekGetter.GetDayOfWeekThisMonth(mt.Date)) && (mt.Date <= endOfWeek.Day || endOfWeek.Day <= startOfWeek.Day) && mt.Date >= startOfWeek.Day
+                task is MonthlyTask mt && weekdays.Contains(DayOfWeekGetter.GetDayOfWeekThisMonth(mt.Date)) && ((mt.Date >= startOfWeek.Day || mt.Date <= endOfWeek.Day && startOfWeek.Month != endOfWeek.Month) || (mt.Date >= startOfWeek.Day && mt.Date <= endOfWeek.Day))
             ).ToList();
 
         filteredTasks.AddRange(monthlyTasks);
