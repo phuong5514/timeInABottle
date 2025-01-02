@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Windows.Storage;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using TimeInABottle.Contracts.Services;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Models.Weather;
@@ -166,17 +160,12 @@ public class ApiWeatherServiceBehaviorController : IBehaviorController
             }
             else
             {
-
                 weatherService.WeatherTimeline = storage.Read<WeatherTimeline>(key);
-                // debug only
-                //Update();
             }
         }
         else
         {
             weatherService.WeatherTimeline = storage.Read<WeatherTimeline>(key);
-            // debug only
-            //Update();
         }
     }
 }

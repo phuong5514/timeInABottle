@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace TimeInABottle.Core.Helpers;
 public sealed class FullObservableCollection<T> : ObservableCollection<T>
     where T : INotifyPropertyChanged
@@ -20,7 +14,7 @@ public sealed class FullObservableCollection<T> : ObservableCollection<T>
     {
         foreach (var item in pItems)
         {
-            this.Add(item);
+            Add(item);
         }
     }
 
@@ -28,14 +22,15 @@ public sealed class FullObservableCollection<T> : ObservableCollection<T>
     {
         if (e.NewItems != null)
         {
-            foreach (Object item in e.NewItems)
+            foreach (var item in e.NewItems)
             {
                 ((INotifyPropertyChanged)item).PropertyChanged += ItemPropertyChanged;
+                //OnItemAdded((T)item);
             }
         }
         if (e.OldItems != null)
         {
-            foreach (Object item in e.OldItems)
+            foreach (var item in e.OldItems)
             {
                 ((INotifyPropertyChanged)item).PropertyChanged -= ItemPropertyChanged;
             }
@@ -47,4 +42,10 @@ public sealed class FullObservableCollection<T> : ObservableCollection<T>
         NotifyCollectionChangedEventArgs args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, sender, sender, IndexOf((T)sender));
         OnCollectionChanged(args);
     }
+
+    //public event EventHandler<T> ItemAdded;
+    //private void OnItemAdded(T item)
+    //{
+    //    ItemAdded?.Invoke(this, item);
+    //}
 }

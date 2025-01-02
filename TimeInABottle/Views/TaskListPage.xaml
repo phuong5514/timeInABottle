@@ -13,10 +13,8 @@
     behaviors:NavigationViewHeaderBehavior.HeaderMode="Never"
     mc:Ignorable="d">
     <Page.Resources>
-        <!--
-        <helpers:TimeRangeConverter x:Key="TimeRangeConverter" />
-        -->
         <helpers:FilterToStringConverter x:Key="FilterConverter"/>
+        <helpers:TaskTypeToBooleanConverter x:Key="TaskTypeToBooleanConverter"/>
 
         <DataTemplate x:Key="ItemTemplate" x:DataType="task:ITask">
             <Grid Height="60">
@@ -24,23 +22,11 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <!-- TODO: converter: task type -> icon -->
-                <!--
-                <FontIcon
-                    Grid.Column="0"
-                    VerticalAlignment="Center"
-                    FontSize="32"
-                    Glyph="{x:Bind Symbol}"
-                    AutomationProperties.Name="{x:Bind SymbolName}" />
-                -->
                 <StackPanel
                     Grid.Column="1"
                     Margin="{StaticResource SmallLeftMargin}"
                     VerticalAlignment="Center">
                     <TextBlock Text="{x:Bind Name}" Style="{StaticResource ListTitleStyle}" />
-                    <!--
-                    <TextBlock Text="{x:Bind Start}" Style="{StaticResource ListSubTitleStyle}" />
-                    -->
                     <TextBlock Text="{x:Bind FormattedTime}" Style="{StaticResource ListSubTitleStyle}" />
                 </StackPanel>
             </Grid>
@@ -84,9 +70,17 @@
         
 
         <DataTemplate x:Key="FilterTagTemplate" x:DataType="filters:IFilter">
-            <TextBlock
-                Text="{Binding Converter= {StaticResource FilterConverter}}"
-                ToolTipService.ToolTip="Click to remove filter criteria"/>
+            <StackPanel 
+                Orientation="Horizontal"
+                VerticalAlignment="Center"
+                Style="{StaticResource FilterTag}">
+                
+                <TextBlock
+                    
+                    Text="{Binding Converter= {StaticResource FilterConverter}}"
+                    ToolTipService.ToolTip="Click to remove filter criteria"/>
+            </StackPanel>
+
         </DataTemplate>
 
 
@@ -156,16 +150,11 @@
 
             <!-- Action buttons stack -->
             <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" Grid.Column="1" HorizontalAlignment="Right">
-                <AppBarButton Icon="Add" Label="Add"/>
-                <AppBarButton Icon="Edit" Label="Edit"/>
-                <AppBarButton Icon="Delete" Label="Delete"/>
-                <CommandBar.SecondaryCommands>
-                    <AppBarButton Icon="Setting" Label="Settings">
-                        <AppBarButton.KeyboardAccelerators>
-                            <KeyboardAccelerator Modifiers="Control" Key="I" />
-                        </AppBarButton.KeyboardAccelerators>
-                    </AppBarButton>
-                </CommandBar.SecondaryCommands>
+                <AppBarButton Icon="Add" Label="Add" Click="OnAddButtonClick"/>
+                <AppBarSeparator />
+                <AppBarButton Icon="Edit" Label="Edit" Click="OnChangeButtonClick" IsEnabled="{x:Bind ViewModel.Selected, Converter={StaticResource TaskTypeToBooleanConverter}, Mode=OneWay}"/>
+                <AppBarSeparator />
+                <AppBarButton Icon="Delete" Label="Delete" Click="OnDeleteButtonClick"/>
             </CommandBar>
             
         </Grid>
@@ -190,7 +179,7 @@
             x:Uid="TaskList"
             x:Name="ListDetailsViewControl"
             BackButtonBehavior="Manual"
-            Background="Transparent"
+            Background="{ThemeResource SolidBackgroundFillColorBaseBrush}"
             BorderBrush="Transparent"
             DetailsTemplate="{StaticResource DetailsTemplate}"
             ItemsSource="{x:Bind ViewModel.Tasks}"
@@ -199,6 +188,8 @@
             NoSelectionContentTemplate="{StaticResource NoSelectionContentTemplate}"
             SelectedItem="{x:Bind ViewModel.Selected, Mode=TwoWay}"
             ViewStateChanged="OnViewStateChanged"
+            CornerRadius="8"
+            Margin="0,0,0,32"
             />
     </Grid>
 

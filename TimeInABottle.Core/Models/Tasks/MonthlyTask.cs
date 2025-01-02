@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using TimeInABottle.Core.Helpers;
 
 namespace TimeInABottle.Core.Models.Tasks;
 /// <summary>
@@ -36,9 +31,22 @@ public class MonthlyTask : IRepeatedTask
         Date = date;
     }
 
+    public MonthlyTask() : base() // For EF Core
+    {
+    }
+
     /// <summary>
     /// Returns a string that represents the current <see cref="MonthlyTask"/>.
     /// </summary>
     /// <returns>A string that represents the current <see cref="MonthlyTask"/>.</returns>
     public override string ToString() => "MonthlyTask";
+    public override object Accept(GetTaskSpecialtiesVisitor visitor) {
+        return visitor.VisitMonthlyTask(this);   
+    }
+
+    public override IEnumerable<int> GetWeekdaysInt() {
+        var thisMonthDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, Date);
+        var weekday = (int)thisMonthDate.DayOfWeek;
+        return new List<int> { weekday };
+    }
 }

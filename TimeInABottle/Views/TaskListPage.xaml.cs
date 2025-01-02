@@ -1,7 +1,9 @@
-﻿using CommunityToolkit.WinUI.UI.Controls;
+﻿using System.Text;
+using CommunityToolkit.WinUI.UI.Controls;
 
 using Microsoft.UI.Xaml.Controls;
 using TimeInABottle.Core.Models.Filters;
+using TimeInABottle.Models;
 using TimeInABottle.ViewModels;
 
 namespace TimeInABottle.Views;
@@ -22,6 +24,7 @@ public sealed partial class TaskListPage : Page
     public TaskListPage()
     {
         ViewModel = App.GetService<TaskListViewModel>();
+        
         // set data context for Filter to show
         //DataContext = ViewModel;
         InitializeComponent();
@@ -96,6 +99,7 @@ public sealed partial class TaskListPage : Page
     /// <param name="e">The event arguments.</param>
     private void OnAddButtonClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
+        _ = CreateAddDialog();
     }
 
     /// <summary>
@@ -105,6 +109,7 @@ public sealed partial class TaskListPage : Page
     /// <param name="e">The event arguments.</param>
     private void OnDeleteButtonClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
+        _ = CreateDeleteConfirmationDialog();
     }
 
     /// <summary>
@@ -114,6 +119,7 @@ public sealed partial class TaskListPage : Page
     /// <param name="e">The event arguments.</param>
     private void OnChangeButtonClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
+        _ = CreateEditDialog();
     }
 
     /// <summary>
@@ -143,6 +149,160 @@ public sealed partial class TaskListPage : Page
         }
 
         ViewModel.resetFilterChoice();
+    }
+
+    private async Task CreateFailureDialog(FunctionResultCode code)
+    {
+        var message = "";
+        switch (code)
+        {
+            case FunctionResultCode.ERROR:
+                message = "An error occurred";
+                break;
+
+            case FunctionResultCode.ERROR_INVALID_INPUT:
+                var stringBuilder = new StringBuilder();
+                stringBuilder.AppendLine("Invalid input, make sure to check your input!");
+                stringBuilder.AppendLine("");
+                stringBuilder.AppendLine("Commonly occured scenarios:");
+                stringBuilder.AppendLine("1. Start time is after or is the same as end time");
+                stringBuilder.AppendLine("2. there is already a task occupied that time");
+                message = stringBuilder.ToString(); 
+                break;
+
+            case FunctionResultCode.ERROR_MISSING_INPUT:
+                message = "Missing input(s), make sure to fill all the required fields!";
+                break;
+
+            case FunctionResultCode.ERROR_UNKNOWN:
+                message = "An unknown error occurred";
+                break;
+        }
+
+        var dialog = new ContentDialog
+        {
+            Title = "Error",
+            Content = new UserControl() { Content = new TextBlock() { Text = message } },
+            CloseButtonText = "Ok",
+            XamlRoot = this.Content.XamlRoot, // Ensure the dialog is shown in the correct XAML root
+        };
+        _ = await dialog.ShowAsync();
+    }
+
+    private async Task CreateAddDialog()
+    {
+        var dialogViewModel = App.GetService<CUDDialogViewModel>();
+
+        var dialogContent = new TaskEditorDialogControl();
+        dialogContent.ViewModel = dialogViewModel;
+
+        var dialog = new ContentDialog
+        {
+            Title = "Add Task",
+            Content = dialogContent,
+            PrimaryButtonText = "Add",
+            CloseButtonText = "Cancel",
+            XamlRoot = this.Content.XamlRoot, // Ensure the dialog is shown in the correct XAML root
+            DataContext = dialogViewModel
+        };
+
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary)
+        {
+            var code = dialogViewModel.SaveChanges();
+            if (code == Models.FunctionResultCode.SUCCESS)
+            {
+                // tell the view model that data is changed
+                ViewModel.LoadTask();
+            }
+            else {
+                _ = CreateFailureDialog(code);
+            };
+            
+        }
+        else
+        {
+            // left blank
+        }
+    }
+
+    private async Task CreateEditDialog()
+    {
+        if (ViewModel.Selected == null)
+        {
+            return;
+        }
+
+        var dialogViewModel = App.GetService<CUDDialogViewModel>();
+        dialogViewModel.EditMode(ViewModel.Selected);
+
+        var dialogContent = new TaskEditorDialogControl();
+        dialogContent.ViewModel = dialogViewModel;
+
+        var dialog = new ContentDialog
+        {
+            Title = "Edit Task",
+            Content = dialogContent,
+            PrimaryButtonText = "Save changes",
+            CloseButtonText = "Cancel",
+            XamlRoot = this.Content.XamlRoot, // Ensure the dialog is shown in the correct XAML root
+            DataContext = dialogViewModel
+        };
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary)
+        {
+            var code = dialogViewModel.SaveChanges();
+            if (code == FunctionResultCode.SUCCESS)
+            {
+                ViewModel.LoadTask();
+            }
+            else
+            {
+                _ = CreateFailureDialog(code);
+            }
+
+        }
+        else
+        {
+            // left blank
+        }
+    }
+
+
+    private async Task CreateDeleteConfirmationDialog()
+    {
+        if (ViewModel.Selected == null)
+        {
+            return;
+        }
+
+        var dialogViewModel = App.GetService<CUDDialogViewModel>();
+        dialogViewModel.EditMode(ViewModel.Selected);
+
+        var dialog = new ContentDialog
+        {
+            Title = "Delete Task",
+            Content = new UserControl()
+            {
+                Content = new TextBlock() { Text = $"Are you sure you want to delete {ViewModel.Selected.Name}?" }
+            },
+            PrimaryButtonText = "Delete",
+            CloseButtonText = "Cancel",
+            XamlRoot = this.Content.XamlRoot, // Ensure the dialog is shown in the correct XAML root
+            DataContext = dialogViewModel
+        };
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary)
+        {
+            if (dialogViewModel.DeleteTask())
+            {
+                ViewModel.LoadTask();
+            }
+        }
+        else
+        {
+            // left blank
+        }
     }
 
     /// <summary>

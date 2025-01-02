@@ -12,25 +12,34 @@ using TimeInABottle.Core.Models.Weather;
 namespace TimeInABottle.Services;
 internal class LocalStorageService : IStorageService
 {
-    public T? Read<T>(string key)
+    public T Read<T>(string key)
     {
         var settings = ApplicationData.Current.LocalSettings;
         if (settings.Values.TryGetValue(key, out var value))
         {
             if (value is string jsonString)
             {
-                try {
-
-                    return JsonConvert.DeserializeObject<T>(jsonString);
+                try
+                {
+                    var result = JsonConvert.DeserializeObject<T>(jsonString);
+                    if (result != null)
+                    {
+                        return result;
+                    }
+                    else
+                    {
+                        throw new Exception();
+                    }
                 } // yeah this is bad, but I'm not sure what to do here
-                catch (Exception) {
+                catch (Exception)
+                {
                     return (T)value;
                 }
 
             }
             return (T)value;
         }
-        return default(T);
+        return default(T)!;
     }
 
     public void Write<T>(string key, T value)

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TimeInABottle.Core.Helpers;
+﻿using TimeInABottle.Core.Helpers;
 
 
 namespace TimeInABottle.Core.Models.Tasks;
@@ -26,6 +20,10 @@ public class WeeklyTask : IRepeatedTask
     {
     }
 
+    public WeeklyTask() : base() // For EF Core
+    {
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="WeeklyTask"/> class.
     /// </summary>
@@ -34,7 +32,7 @@ public class WeeklyTask : IRepeatedTask
     /// <param name="startingTime">The starting time of the weekly task.</param>
     /// <param name="endingTime">The ending time of the weekly task.</param>
     /// <param name="weekdays">The list of weekdays on which the task occurs.</param>
-    public WeeklyTask(string name, string description, TimeOnly startingTime, TimeOnly endingTime, List<Values.Weekdays> weekdays)
+    public WeeklyTask(string name, string description, TimeOnly startingTime, TimeOnly endingTime, List<DayOfWeek> weekdays)
         : base(name, description, startingTime, endingTime)
     {
         WeekDays = weekdays;
@@ -43,7 +41,7 @@ public class WeeklyTask : IRepeatedTask
     /// <summary>
     /// Gets or sets the list of weekdays on which the task occurs.
     /// </summary>
-    public List<Values.Weekdays> WeekDays
+    public List<DayOfWeek> WeekDays
     {
         get; set;
     }
@@ -53,4 +51,18 @@ public class WeeklyTask : IRepeatedTask
     /// </summary>
     /// <returns>A string that represents the current weekly task.</returns>
     public override string ToString() => "WeeklyTask";
+    public override object Accept(GetTaskSpecialtiesVisitor visitor) { 
+        return visitor.VisitWeeklyTask(this);
+    }
+
+    public override IEnumerable<int> GetWeekdaysInt()
+    {
+        List<int> weekdaysInt = new List<int>();
+        foreach(DayOfWeek day in WeekDays)
+        {
+            var dayOfWeek = (int)day;
+            weekdaysInt.Add(dayOfWeek);
+        }
+        return weekdaysInt;
+    }
 }

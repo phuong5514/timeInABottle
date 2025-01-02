@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.UI.Xaml.Data;
-
-using TimeInABottle.Core.Models;
-
+﻿using Microsoft.UI.Xaml.Data;
 namespace TimeInABottle.Helpers;
+
 /// <summary>
 /// Converts a TimeOnly value to a greeting string based on the time of day.
 /// </summary>

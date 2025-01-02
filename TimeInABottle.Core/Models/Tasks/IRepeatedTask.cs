@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace TimeInABottle.Core.Models.Tasks;
 /// <summary>
 /// Represents an abstract repeated task that inherits from the ITask class.
 /// </summary>
 public abstract class IRepeatedTask : ITask
 {
+    protected IRepeatedTask() : base() // For EF Core
+    {
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="IRepeatedTask"/> class.
     /// </summary>

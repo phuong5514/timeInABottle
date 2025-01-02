@@ -1,6 +1,4 @@
 ﻿using TimeInABottle.Core.Contracts.Services;
-using TimeInABottle.Core.Models.Weather;
-
 
 namespace TimeInABottle.Core.Services;
 /// <summary>

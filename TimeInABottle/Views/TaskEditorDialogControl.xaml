@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="TimeInABottle.Views.TaskEditorDialogControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TimeInABottle.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:helper="using:TimeInABottle.Helpers"
+    xmlns:models="using:TimeInABottle.Core.Models.Tasks" xmlns:viewmodels="using:TimeInABottle.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:CUDDialogViewModel}"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <helper:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <helper:TaskToNameConverter x:Key="TaskToNameConverter"/>
+        <helper:WeeklyTaskToVisibilityConverter x:Key="WeeklyTaskToVisibilityConverter"/>
+        <helper:MonthlyTaskToVisibilityConverter x:Key="MonthlyTaskToVisibilityConverter"/>
+        <helper:NonRepeatedTaskToVisibilityConverter x:Key="NonRepeatedTaskToVisibilityConverter"/>
+        <helper:DateTimeToDateTimeOffsetConverter x:Key="DateTimeToDateTimeOffsetConverter"/>
+        <helper:ListContainsConverter x:Key="ListContainsConverter"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <StackPanel Spacing="4">
+            <!-- Name -->
+            <TextBlock Text="Name:" Style="{StaticResource BodyTextBlockStyle}" />
+            <TextBox Text="{Binding InputName, Mode=TwoWay}" PlaceholderText="Enter a name" />
+
+            <!-- Description -->
+            <TextBlock Text="Description:" Style="{StaticResource BodyTextBlockStyle}" />
+            <TextBox Text="{Binding InputDescription, Mode=TwoWay}" PlaceholderText="Enter a description" />
+
+            <!-- Timeframe -->
+            <TextBlock Text="Timeframe:" Style="{StaticResource BodyTextBlockStyle}" />
+
+            <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Stretch">
+                <!-- Start -->
+                <TimePicker Header="From" ClockIdentifier="12HourClock" MinuteIncrement="15" Time="{Binding InputStart, Mode=TwoWay}" />
+                <!-- Seperator -->
+                <TextBlock Text="|" VerticalAlignment="Center" />
+                <!-- End -->
+                <TimePicker Header="To" ClockIdentifier="12HourClock" MinuteIncrement="15" Time="{Binding InputEnd, Mode=TwoWay}" />
+            </StackPanel>
+            
+            <!-- Type picker -->
+            <TextBlock Text="Type:" Style="{StaticResource BodyTextBlockStyle}" />
+            <ComboBox
+                ItemsSource="{Binding TaskOptions}"
+                SelectedItem="{Binding SelectedTaskOption, Mode=TwoWay}"
+                IsEnabled="{Binding IsComboboxEnabled}"
+                PlaceholderText="Select a type"
+                HorizontalAlignment="Stretch">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate x:DataType="models:ITask">
+                        <TextBlock Text="{Binding Converter={StaticResource TaskToNameConverter}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <!-- WeeklyTask: day of week selector -->
+            <StackPanel x:Name="WeeklyTaskSpInput"
+                        Visibility="{Binding SelectedTaskOption, Mode=OneWay, Converter={StaticResource WeeklyTaskToVisibilityConverter}}">
+                <CheckBox x:Name="WeeklyTaskOptionsAllCheckBox" Content="Select all" IsThreeState="False"
+                      Checked="SelectAll_Checked" Unchecked="SelectAll_Unchecked"/>
+
+                <ScrollView HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden" >
+                    <!-- change to list if have time, this was made before I knew how to use datatemplate-->
+                    <StackPanel Orientation="Horizontal" x:Name="Weekdays" Padding="{StaticResource LargePadding}">
+                        <CheckBox Content="Sunday" Checked="Option_Checked" Unchecked="Option_Unchecked" IsChecked="{Binding InputWeekDays, Mode=OneWay, Converter={StaticResource ListContainsConverter}, ConverterParameter=Sunday}"/>
+                        <CheckBox Content="Monday" Checked="Option_Checked" Unchecked="Option_Unchecked" IsChecked="{Binding InputWeekDays, Mode=OneWay, Converter={StaticResource ListContainsConverter}, ConverterParameter=Monday}"/>
+                        <CheckBox Content="Tuesday" Checked="Option_Checked" Unchecked="Option_Unchecked" IsChecked="{Binding InputWeekDays, Mode=OneWay, Converter={StaticResource ListContainsConverter}, ConverterParameter=Tuesday}"/>
+                        <CheckBox Content="Wednesday" Checked="Option_Checked" Unchecked="Option_Unchecked" IsChecked="{Binding InputWeekDays, Mode=OneWay, Converter={StaticResource ListContainsConverter}, ConverterParameter=Wednesday}"/>
+                        <CheckBox Content="Thursday" Checked="Option_Checked" Unchecked="Option_Unchecked" IsChecked="{Binding InputWeekDays, Mode=OneWay, Converter={StaticResource ListContainsConverter}, ConverterParameter=Thursday}"/>
+                        <CheckBox Content="Friday" Checked="Option_Checked" Unchecked="Option_Unchecked" IsChecked="{Binding InputWeekDays, Mode=OneWay, Converter={StaticResource ListContainsConverter}, ConverterParameter=Friday}"/>
+                        <CheckBox Content="Saturday" Checked="Option_Checked" Unchecked="Option_Unchecked" IsChecked="{Binding InputWeekDays, Mode=OneWay, Converter={StaticResource ListContainsConverter}, ConverterParameter=Saturday}"/>
+                    </StackPanel>
+                </ScrollView>
+            </StackPanel>
+            
+            <!-- MonthlyTask: day of month selector -->
+            <StackPanel x:Name="MonthlyTaskSpInput"
+                        Visibility="{Binding SelectedTaskOption, Mode=OneWay, Converter={StaticResource MonthlyTaskToVisibilityConverter}}">
+                <TextBlock Text="Select a day of the month:" Style="{StaticResource BodyTextBlockStyle}" />
+                <ComboBox
+                    ItemsSource="{Binding DaysInMonth}"
+                    SelectedItem="{Binding InputMonthlyDay, Mode=TwoWay}"
+                    PlaceholderText="Select a day"
+                    HorizontalAlignment="Stretch">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+
+            <!-- NonRepeatedTask: specific day -->
+            <StackPanel x:Name="NonRepeatedTaskSpInput"
+                        Visibility="{Binding SelectedTaskOption, Mode=OneWay, Converter={StaticResource NonRepeatedTaskToVisibilityConverter}}">
+                <CalendarDatePicker 
+                    x:Name="NonRepeatedTaskDatePicker"
+                    Header="Pick a date"
+                    DateChanged="NonRepeatedTaskDatePicker_DateChanged"
+                />
+            </StackPanel>
+            
+        </StackPanel>
+    </Grid>
+</UserControl>

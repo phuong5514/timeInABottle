@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
-using Newtonsoft.Json;
 using TimeInABottle.Contracts.ViewModels;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Helpers;
@@ -241,18 +238,17 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
     /// <summary>
     /// Loads tasks based on the applied filters and order.
     /// </summary>
-    private void LoadTask()
+    public void LoadTask()
     {
-        if (_daoService is IDaoQueryService DaoService)
+        FullObservableCollection<ITask> newTasks;
+        if (_daoService is IDaoService queryDao)
         {
-            var newTasks = DaoService.CustomQuery(_filter, !_isInvertOrder);
-            AddTasks(newTasks);
+            newTasks = queryDao.CustomQuery(_filter, !_isInvertOrder);
         }
-        else
-        {
-            var allTasks = _daoService.GetAllTasks();
-            AddTasks(allTasks);
+        else {
+            newTasks = _daoService.GetAllTasks();
         }
+        AddTasks(newTasks);
     }
 
     /// <summary>
@@ -278,6 +274,13 @@ public partial class TaskListViewModel : ObservableRecipient, INavigationAware
     /// </summary>
     public void EnsureItemSelected()
     {
-        Selected ??= Tasks.First();
+        try
+        {
+            Selected ??= Tasks.First();
+        }
+        catch (InvalidOperationException)
+        {
+            Selected = null;
+        }
     }
 }

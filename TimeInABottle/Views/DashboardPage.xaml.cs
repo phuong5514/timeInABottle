@@ -1,12 +1,10 @@
-﻿using System.Drawing;
-using Microsoft.UI;
+﻿using System.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
+using TimeInABottle.Core.Helpers;
 using TimeInABottle.Core.Models.Tasks;
-using TimeInABottle.Core.Services;
+using TimeInABottle.Models;
 using TimeInABottle.ViewModels;
-
 namespace TimeInABottle.Views;
 
 /// <summary>
@@ -14,6 +12,21 @@ namespace TimeInABottle.Views;
 /// </summary>
 public sealed partial class DashboardPage : Page
 {
+    private int _increment;
+    private int _frequency;
+    private int _rowCount;
+
+    /// <summary>
+    /// Reads the configuration values for time slot increment and calculates frequency and row count.
+    /// </summary>
+    private void ReadConfig()
+    {
+        var incrementString = ConfigHandler.GetConfigValue("TimeSlotIncrement");
+        _increment = int.Parse(incrementString);
+        _frequency = 60 / _increment;
+        _rowCount = 24 * _frequency;
+    }
+
     /// <summary>
     /// Gets the ViewModel associated with the dashboard page.
     /// </summary>
@@ -25,200 +38,8 @@ public sealed partial class DashboardPage : Page
     public DashboardPage()
     {
         ViewModel = App.GetService<DashboardViewModel>();
-        //ViewModel.Innit();
+        ReadConfig();
         InitializeComponent();
-
-
-
-        SetGrid();
-        SetTitles();
-        LoadData();
-
-    }
-
-    /// <summary>
-    /// Loads the data for the dashboard page.
-    /// </summary>
-    private void LoadData()
-    {
-        if (ViewModel == null) return;
-
-        var thisWeekTasks = ViewModel.ThisWeekTasks;
-        foreach (var task in thisWeekTasks)
-        {
-            if (task is DailyTask)
-            {
-                // Daily Task: Create a grid cell for each day
-                for (var day = 0; day < 7; day++)
-                {
-                    var dayEvent = CreateTaskGrid(task);
-                    Grid.SetColumn(dayEvent, day); // Set column based on the day
-                    CalendarContainer.Children.Add(dayEvent);
-                }
-            }
-            else if (task is WeeklyTask weeklyTask)
-            {
-                // Weekly Task: Create grids only for specified weekdays
-                foreach (var day in weeklyTask.WeekDays)
-                {
-                    var weeklyEvent = CreateTaskGrid(task);
-                    Grid.SetColumn(weeklyEvent, (int)day); // Convert weekday to column index
-                    CalendarContainer.Children.Add(weeklyEvent);
-                }
-            }
-            else if (task is MonthlyTask monthlyTask)
-            {
-                var date = monthlyTask.Date;
-                var dayOfWeek = (int)new DateTime(DateTime.Now.Year, DateTime.Now.Month, date).DayOfWeek;
-                dayOfWeek = dayOfWeek == 0 ? 7 : dayOfWeek;
-
-                var monthlyEvent = CreateTaskGrid(task);
-
-                Grid.SetColumn(monthlyEvent, dayOfWeek);
-                CalendarContainer.Children.Add(monthlyEvent);
-            }
-            else if (task is NonRepeatedTask nonRepeatedTask)
-            {
-                DateOnly date = nonRepeatedTask.Date;
-                DateTime eventDate = new DateTime(date.Year, date.Month, date.Day);
-
-                var dayOfWeek = (int)eventDate.DayOfWeek;
-                dayOfWeek = dayOfWeek == 0 ? 7 : dayOfWeek;
-
-                var nonRepeatedEvent = CreateTaskGrid(task);
-
-                Grid.SetColumn(nonRepeatedEvent, dayOfWeek);
-                CalendarContainer.Children.Add(nonRepeatedEvent);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Creates a grid for a task.
-    /// </summary>
-    /// <param name="task">The task to create a grid for.</param>
-    /// <returns>A grid representing the task.</returns>
-    private Grid CreateTaskGrid(ITask task)
-    {
-        var eventGrid = new Grid
-        {
-            Style = (Style)Application.Current.Resources["CellContent"],
-            Background = new SolidColorBrush(Colors.Blue), // Customize as needed
-        };
-        var row = CalculateRow(task.Start);
-        var rowSpan = CalculateRowSpan(task.Start, task.End);
-
-        Grid.SetRow(eventGrid, row);
-        Grid.SetRowSpan(eventGrid, rowSpan);
-
-        return eventGrid;
-    }
-
-    /// <summary>
-    /// Calculates the row index based on the time.
-    /// </summary>
-    /// <param name="time">The time to calculate the row for.</param>
-    /// <returns>The row index.</returns>
-    private int CalculateRow(TimeOnly time) => 1 + (time.Minute / 30) + (time.Hour * 2);
-
-    /// <summary>
-    /// Calculates the row span based on the start and end times.
-    /// </summary>
-    /// <param name="start">The start time.</param>
-    /// <param name="end">The end time.</param>
-    /// <returns>The row span.</returns>
-    private int CalculateRowSpan(TimeOnly start, TimeOnly end)
-    {
-        int startRow = CalculateRow(start);
-        int endRow = CalculateRow(end);
-        return endRow - startRow;
-    }
-
-    /// <summary>
-    /// Sets the titles for the calendar grid.
-    /// </summary>
-    private void SetTitles()
-    {
-        // Add columns (1 for time labels, the rest for days)
-        CalendarContainer.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) }); // Time Column
-        for (var i = 0; i < 7; i++) // For Monday to Sunday
-        {
-            CalendarContainer.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) });
-        }
-
-        // Add rows (48 rows for 30-minute intervals over 24 hours)
-        for (var i = 0; i <= 48; i++) // 30-minute intervals
-        {
-            CalendarContainer.RowDefinitions.Add(new RowDefinition { Height = new GridLength(36) });
-        }
-
-        var titles = new[] { "Time", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
-        for (var i = 0; i < titles.Length; i++)
-        {
-            var title = titles[i];
-            var columnTitle = new TextBlock
-            {
-                Text = title,
-                VerticalAlignment = VerticalAlignment.Center,
-                HorizontalAlignment = HorizontalAlignment.Center,
-            };
-
-            Grid.SetRow(columnTitle, 0);
-            Grid.SetColumn(columnTitle, i);
-
-
-            CalendarContainer.Children.Add(columnTitle);
-
-        }
-
-        // Add time labels in the first column (0)
-        for (var i = 0; i < 24; i++) // 24 hours (two blocks per hour)
-        {
-            TextBlock timeLabel = new TextBlock
-            {
-                Text = $"{(i % 24)}:00",
-                VerticalAlignment = VerticalAlignment.Center,
-                HorizontalAlignment = HorizontalAlignment.Center,
-            };
-            var rowIndex = (i * 2) + 1;
-            Grid.SetRow(timeLabel, rowIndex); // First half of the hour
-            Grid.SetColumn(timeLabel, 0);
-            CalendarContainer.Children.Add(timeLabel);
-        }
-    }
-
-    /// <summary>
-    /// Sets the grid for the calendar.
-    /// </summary>
-    private void SetGrid()
-    {
-        var columns = 8;
-        var rows = 49;
-        for (var i = 0; i < columns; i++)
-        {
-
-            for (var j = 0; j < rows; j++)
-            {
-                Border emptyCell = new Border
-                {
-                    Style = GetStyle("Cell")
-                };
-                Grid.SetColumn(emptyCell, i);
-                Grid.SetRow(emptyCell, j);
-                CalendarContainer.Children.Add(emptyCell);
-            }
-
-        }
-    }
-
-    /// <summary>
-    /// Gets the style from the application resources.
-    /// </summary>
-    /// <param name="key">The key of the style.</param>
-    /// <returns>The style.</returns>
-    private static Style GetStyle(string key)
-    {
-        return (Style)Application.Current.Resources[key];
     }
 
     /// <summary>
@@ -232,16 +53,202 @@ public sealed partial class DashboardPage : Page
         {
             // Show the sidebar
             SideBar.Visibility = Visibility.Visible;
-            //Canvas.SetZIndex(SideBar, 10);
-            //set ZIndex so that the bar is over other component
             ColumnDefinitionSideBar.Width = new GridLength(3, GridUnitType.Star);
         }
         else
         {
             // Hide the sidebar
             SideBar.Visibility = Visibility.Collapsed;
-            //Canvas.SetZIndex(SideBar, 0);
             ColumnDefinitionSideBar.Width = new GridLength(0);
         }
+    }
+
+    /// <summary>
+    /// Handles the click event to edit a calendar item.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
+    private void CalendarItemEdit_Click(object sender, RoutedEventArgs e)
+    {
+        var task = (ITask)((FrameworkElement)sender).DataContext;
+        _ = CreateEditDialog(task);
+    }
+
+    /// <summary>
+    /// Handles the click event to delete a calendar item.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
+    private void CalendarItemDelete_Click(object sender, RoutedEventArgs e)
+    {
+        var task = (ITask)((FrameworkElement)sender).DataContext;
+        _ = CreateDeleteConfirmationDialog(task);
+    }
+
+    /// <summary>
+    /// Creates and shows a dialog for editing a task.
+    /// </summary>
+    /// <param name="selectedTask">The task to be edited.</param>
+    private async Task CreateEditDialog(ITask selectedTask)
+    {
+        if (selectedTask == null)
+        {
+            return;
+        }
+
+        var dialogViewModel = App.GetService<CUDDialogViewModel>();
+        dialogViewModel.EditMode(selectedTask);
+
+        var dialogContent = new TaskEditorDialogControl
+        {
+            ViewModel = dialogViewModel
+        };
+
+        var dialog = new ContentDialog
+        {
+            Title = "Edit Task",
+            Content = dialogContent,
+            PrimaryButtonText = "Save changes",
+            CloseButtonText = "Cancel",
+            XamlRoot = Content.XamlRoot,
+            DataContext = dialogViewModel
+        };
+
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary)
+        {
+            var code = dialogViewModel.SaveChanges();
+            if (code == FunctionResultCode.SUCCESS)
+            {
+                ViewModel.LoadData();
+            }
+            else
+            {
+                _ = CreateFailureDialog(code);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Creates and shows a confirmation dialog for deleting a task.
+    /// </summary>
+    /// <param name="selectedTask">The task to be deleted.</param>
+    private async Task CreateDeleteConfirmationDialog(ITask selectedTask)
+    {
+        var dialogViewModel = App.GetService<CUDDialogViewModel>();
+        dialogViewModel.EditMode(selectedTask);
+
+        var dialog = new ContentDialog
+        {
+            Title = "Delete Task",
+            Content = new UserControl
+            {
+                Content = new TextBlock { Text = $"Are you sure you want to delete {selectedTask.Name}?" }
+            },
+            PrimaryButtonText = "Delete",
+            CloseButtonText = "Cancel",
+            XamlRoot = Content.XamlRoot,
+            DataContext = dialogViewModel
+        };
+
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary)
+        {
+            if (dialogViewModel.DeleteTask())
+            {
+                ViewModel.LoadData();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Creates and shows a dialog indicating a failure with a specific error code.
+    /// </summary>
+    /// <param name="code">The error code indicating the type of failure.</param>
+    private async Task CreateFailureDialog(FunctionResultCode code)
+    {
+        var message = code switch
+        {
+            FunctionResultCode.ERROR => "An error occurred",
+            FunctionResultCode.ERROR_INVALID_INPUT => new StringBuilder()
+                .AppendLine("Invalid input, make sure to check your input!")
+                .AppendLine("")
+                .AppendLine("Commonly occurred scenarios:")
+                .AppendLine("1. Start time is after or is the same as end time")
+                .AppendLine("2. There is already a task occupying that time")
+                .ToString(),
+            FunctionResultCode.ERROR_MISSING_INPUT => "Missing input(s), make sure to fill all the required fields!",
+            FunctionResultCode.ERROR_UNKNOWN => "An unknown error occurred",
+            _ => "An unexpected error occurred"
+        };
+
+        var dialog = new ContentDialog
+        {
+            Title = "Error",
+            Content = new UserControl { Content = new TextBlock { Text = message } },
+            CloseButtonText = "Ok",
+            XamlRoot = Content.XamlRoot
+        };
+
+        _ = await dialog.ShowAsync();
+    }
+
+    /// <summary>
+    /// Creates and shows a dialog for adding a new task.
+    /// </summary>
+    private async Task CreateAddDialog()
+    {
+        var dialogViewModel = App.GetService<CUDDialogViewModel>();
+
+        var dialogContent = new TaskEditorDialogControl
+        {
+            ViewModel = dialogViewModel
+        };
+
+        var dialog = new ContentDialog
+        {
+            Title = "Add Task",
+            Content = dialogContent,
+            PrimaryButtonText = "Add",
+            CloseButtonText = "Cancel",
+            XamlRoot = Content.XamlRoot,
+            DataContext = dialogViewModel
+        };
+
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary)
+        {
+            var code = dialogViewModel.SaveChanges();
+            if (code == FunctionResultCode.SUCCESS)
+            {
+                ViewModel.LoadData();
+            }
+            else
+            {
+                _ = CreateFailureDialog(code);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Handles the right-tap event on the calendar container to show the add task flyout.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
+    private void CalendarContainer_RightTapped(object sender, Microsoft.UI.Xaml.Input.RightTappedRoutedEventArgs e)
+    {
+        var flyout = CalendarContainer.Resources["AddTaskFlyout"] as MenuFlyout;
+        // Show the flyout at the pointer location
+        flyout?.ShowAt(sender as UIElement, e.GetPosition(sender as UIElement));
+    }
+
+    /// <summary>
+    /// Handles the click event of the add task flyout item to create a new task.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
+    private void AddTaskFlyoutItem_Click(object sender, RoutedEventArgs e)
+    {
+        _ = CreateAddDialog();
     }
 }

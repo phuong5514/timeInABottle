@@ -4,22 +4,28 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:helper="using:TimeInABottle.Helpers"
     mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <helper:TaskToSpecialtyStringConverter x:Key="TaskToSpecialtyStringConverter"/>
+        <helper:TaskTypeToIconConverter x:Key="TaskTypeToIconConverter"/>
+    </UserControl.Resources>
+    
     <ScrollViewer
         Name="ForegroundElement"
         HorizontalAlignment="Stretch"
         VerticalScrollMode="Enabled"
         IsTabStop="True">
-        <StackPanel HorizontalAlignment="Left">
+        <StackPanel HorizontalAlignment="Stretch" Padding="{StaticResource LargePadding}" Background="{ThemeResource LayerFillColorDefaultBrush}">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-                <!--
+
                 <FontIcon
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    FontSize="48"
-                    Glyph="{x:Bind ListDetailsMenuItem.Symbol, Mode=OneWay}"
-                    AutomationProperties.Name="{x:Bind ListDetailsMenuItem.SymbolName, Mode=OneWay}"  />
-                -->
+                    FontSize="36"
+                    Glyph="{x:Bind ListDetailsMenuItem, Converter={StaticResource TaskTypeToIconConverter}, Mode=OneWay}"  />
+
                 <TextBlock
                     Margin="{StaticResource SmallLeftMargin}"
                     VerticalAlignment="Center"
@@ -27,56 +33,21 @@
                     Style="{ThemeResource TitleTextBlockStyle}" />
             </StackPanel>
             <StackPanel Padding="0,15,0,0">
-                <TextBlock Text="Start" Style="{StaticResource DetailSubTitleStyle}" />
+                <TextBlock Text="Start:" Style="{StaticResource DetailSubTitleStyle}" />
 
                 <TextBlock Text="{x:Bind ListDetailsMenuItem.Start, Mode=OneWay}" Style="{StaticResource DetailBodyBaseMediumStyle}" />
 
-                <TextBlock Text="End" Style="{StaticResource DetailSubTitleStyle}" />
+                <TextBlock Text="End:" Style="{StaticResource DetailSubTitleStyle}" />
 
                 <TextBlock Text="{x:Bind ListDetailsMenuItem.End, Mode=OneWay}" Style="{StaticResource DetailBodyBaseMediumStyle}" />
 
+                <TextBlock Text="{x:Bind ListDetailsMenuItem, Mode=OneWay, Converter={StaticResource TaskToSpecialtyStringConverter}}" Style="{StaticResource DetailBodyBaseMediumStyle}"/>
+
                 <TextBlock
                     Margin="{StaticResource SmallTopMargin}"
-                    Text="Description"
+                    Text="Description:"
                     Style="{StaticResource DetailSubTitleStyle}" />
                 <TextBlock Text="{x:Bind ListDetailsMenuItem.Description, Mode=OneWay}" Style="{StaticResource DetailBodyBaseMediumStyle}" />
-                
-                <!--
-                <TextBlock
-                    Margin="{StaticResource SmallTopMargin}"
-                    Text="Type"
-                    Style="{StaticResource DetailSubTitleStyle}" />
-                <TextBlock Text="{x:Bind ListDetailsMenuItem.ToString, Mode=OneWay}" Style="{StaticResource DetailBodyBaseMediumStyle}" />
-
-                <TextBlock
-                    Margin="{StaticResource SmallTopMargin}"
-                    Text="{x:Bind ListDetailsMenuItem, Mode=OneWay}"
-                    Style="{StaticResource DetailSubTitleStyle}" />
-                <TextBlock Text="{x:Bind ListDetailsMenuItem, Mode=OneWay}" Style="{StaticResource DetailBodyBaseMediumStyle}" />
-                
-                <TextBlock
-                    Margin="{StaticResource SmallTopMargin}"
-                    Text="Order total"
-                    Style="{StaticResource DetailSubTitleStyle}" />
-                <TextBlock Text="{x:Bind ListDetailsMenuItem.OrderTotal, Mode=OneWay}" Style="{StaticResource DetailBodyBaseMediumStyle}" />
-
-                <TextBlock
-                    Margin="{StaticResource MediumTopMargin}"
-                    Text="Note 1"
-                    Style="{StaticResource DetailSubTitleStyle}" />
-                <TextBlock
-                    Style="{StaticResource DetailBodyStyle}"
-                    Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis quis hendrerit nulla, vel molestie libero. In nec ultricies magna, ultricies molestie ipsum. Mauris non dignissim velit. Etiam malesuada blandit mauris eu maximus. Quisque ornare, felis nec scelerisque mollis, risus dolor posuere magna, in gravida quam mi id nisi. Nullam mattis consequat ex. Cras nulla neque, dictum ac urna et, vestibulum feugiat ex. Pellentesque malesuada accumsan ligula, vel fringilla lacus facilisis sit amet. Proin convallis tempor arcu, ac placerat libero pretium ut. Praesent hendrerit nisl at lobortis viverra. Fusce vitae velit odio. Nam ut tortor sed purus finibus sollicitudin quis at ante. Ut sodales dolor vel eros mollis suscipit. Donec eu nulla id urna ultricies consequat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;" />
-
-                <TextBlock
-                    Margin="{StaticResource SmallTopMargin}"
-                    Text="Note 2"
-                    Style="{StaticResource DetailSubTitleStyle}" />
-                <TextBlock
-                    Margin="{StaticResource MediumBottomMargin}"
-                    Style="{StaticResource DetailBodyStyle}"
-                    Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis quis hendrerit nulla, vel molestie libero. In nec ultricies magna, ultricies molestie ipsum. Mauris non dignissim velit. Etiam malesuada blandit mauris eu maximus. Quisque ornare, felis nec scelerisque mollis, risus dolor posuere magna, in gravida quam mi id nisi. Nullam mattis consequat ex. Cras nulla neque, dictum ac urna et, vestibulum feugiat ex. Pellentesque malesuada accumsan ligula, vel fringilla lacus facilisis sit amet. Proin convallis tempor arcu, ac placerat libero pretium ut. Praesent hendrerit nisl at lobortis viverra. Fusce vitae velit odio. Nam ut tortor sed purus finibus sollicitudin quis at ante. Ut sodales dolor vel eros mollis suscipit. Donec eu nulla id urna ultricies consequat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;" />
-                -->
             </StackPanel>
         </StackPanel>
     </ScrollViewer>

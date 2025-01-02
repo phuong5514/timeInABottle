@@ -1,6 +1,6 @@
 ﻿namespace TimeInABottle.Core.Contracts.Services;
 
-public interface IFileService
+public  interface IFileService
 {
     T Read<T>(string folderPath, string fileName);
 

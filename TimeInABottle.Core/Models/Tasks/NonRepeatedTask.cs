@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using TimeInABottle.Core.Helpers;
 
 namespace TimeInABottle.Core.Models.Tasks;
 /// <summary>
@@ -25,16 +20,18 @@ public class NonRepeatedTask : ITask
         Date = date;
     }
 
+    public NonRepeatedTask() : base() // For EF Core
+    {
+    }
+
     /// <summary>
     /// Gets the date of the task.
     /// The date cannot be set in the past and must be within 3 months from the current date.
     /// </summary>
     public DateOnly Date
     {
-        // TODO: hạn chế chỉ set ngày trong 1 giới hạn: ko thể set trong quá khứ,
-        // và khoảng cách từ ngày cài đặt đến ngày thực hiện không quá 3 tháng (tùy chỉnh)
         get;
-        private set;
+        set;
     }
 
     /// <summary>
@@ -42,4 +39,13 @@ public class NonRepeatedTask : ITask
     /// </summary>
     /// <returns>A string that represents the current object.</returns>
     public override string ToString() => "NonRepeatedTask";
+    public override object Accept(GetTaskSpecialtiesVisitor visitor) {
+        return Date;   
+    }
+
+    public override IEnumerable<int> GetWeekdaysInt()
+    {
+        var dayOfWeek = (int)Date.DayOfWeek;
+        return new List<int> { dayOfWeek };
+    }
 }

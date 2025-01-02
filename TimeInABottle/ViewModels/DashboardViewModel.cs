@@ -1,17 +1,17 @@
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using TimeInABottle.Core.Contracts.Services;
 using TimeInABottle.Core.Helpers;
 using TimeInABottle.Core.Models.Tasks;
 using TimeInABottle.Core.Models.Weather;
-using TimeInABottle.Core.Services;
-using TimeInABottle.Services;
 namespace TimeInABottle.ViewModels;
 
+/// <summary>
+/// ViewModel for the Dashboard, providing properties and methods to manage tasks and weather information.
+/// </summary>
 public partial class DashboardViewModel : ObservableRecipient
 {
-    private IDaoService? _dao;
+    private readonly IDaoService? _dao;
 
     private TimeOnly _time;
     public TimeOnly Time
@@ -29,47 +29,34 @@ public partial class DashboardViewModel : ObservableRecipient
         }
     }
 
-    private DispatcherTimer _timer;
-    private void UpdateTime(object sender, object e) => Time = TimeOnly.FromDateTime(DateTime.Now);
-    
-    private WeatherInfoWrapper _weather;
+    private readonly DispatcherTimer _timer = new();
+    private void UpdateTime(object? sender, object? e) => Time = TimeOnly.FromDateTime(DateTime.Now);
+
+    private WeatherInfoWrapper _weather = null!;
     public WeatherInfoWrapper Weather
     {
         get => _weather;
         private set
         {
-            if (_weather!= value)
+            if (_weather != value)
             {
                 _weather = value;
                 OnPropertyChanged(nameof(Weather));
             }
         }
     }
-    private void UpdateWeather(object sender, object e) => Weather = App.GetService<IWeatherService>().GetCurrentWeather();
+    private void UpdateWeather(object? sender, object? e) => Weather = App.GetService<IWeatherService>().GetCurrentWeather();
 
     private void StartTimer()
     {
-        _timer = new DispatcherTimer
-        {
-            Interval = TimeSpan.FromSeconds(15) // TODO: config file / setting page options
-        };
+        _timer.Interval = TimeSpan.FromSeconds(15); // TODO: config file / setting page options
         _timer.Tick += UpdateTime;
         _timer.Tick += UpdateWeather;
         _timer.Start();
     }
 
-    
-
-
-    public FullObservableCollection<ITask> TodayTasks
-    {
-        set; get;
-    }
-    public FullObservableCollection<ITask> ThisWeekTasks
-    {
-        set; get;
-    }
-
+    public FullObservableCollection<ITask> TodayTasks { get; set; } = new FullObservableCollection<ITask>();
+    public FullObservableCollection<ITask> ThisWeekTasks { get; set; } = new FullObservableCollection<ITask>();
 
     private ITask? _nextTask;
     public ITask? NextTask
@@ -85,8 +72,6 @@ public partial class DashboardViewModel : ObservableRecipient
         }
     }
 
-
-
     private void UpdateNextTask()
     {
         if (TodayTasks == null)
@@ -101,7 +86,7 @@ public partial class DashboardViewModel : ObservableRecipient
             if (task.Start > Time)
             {
                 NextTask = task;
-                
+
                 return;
             }
         }
@@ -109,35 +94,19 @@ public partial class DashboardViewModel : ObservableRecipient
         NextTask = null;
     }
 
-    //public void ShowNextTaskNotification() {
-    //    var notificationService = new NotificationService();
-    //    notificationService.ShowNextTask(NextTask);
-    //}
-
-
     public DateOnly Date
     {
         set; get;
     }
     private void UpdateDate() => Date = DateOnly.FromDateTime(DateTime.Now);
 
-
-    public void Innit()
+    private void getTodayTasks()
     {
-        _dao = new MockDaoService();
-        getTodayTasks();
-        getWeekTasks();
-        UpdateDate();
-        Time = TimeOnly.FromDateTime(DateTime.Now);
-        Weather = App.GetService<IWeatherService>().GetCurrentWeather();
-        StartTimer();
-    }
-
-    private void getTodayTasks() {
-        if (_dao == null) { 
+        if (_dao == null)
+        {
             return;
         }
-        var tasks = _dao.GetAllTasks();
+        var tasks = _dao.GetTodayTasks();
         TodayTasks = tasks;
     }
 
@@ -150,15 +119,19 @@ public partial class DashboardViewModel : ObservableRecipient
         ThisWeekTasks = _dao.GetThisWeekTasks();
     }
 
-    
-
-
-
-
-    //private void 
+    public void LoadData()
+    {
+        getTodayTasks();
+        getWeekTasks();
+    }
 
     public DashboardViewModel()
     {
-        Innit();
+        _dao = App.GetService<IDaoService>();
+        UpdateDate();
+        LoadData();
+        Time = TimeOnly.FromDateTime(DateTime.Now);
+        Weather = App.GetService<IWeatherService>().GetCurrentWeather();
+        StartTimer();
     }
 }
