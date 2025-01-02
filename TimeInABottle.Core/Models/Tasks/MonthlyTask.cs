@@ -45,8 +45,21 @@ public class MonthlyTask : IRepeatedTask
     }
 
     public override IEnumerable<int> GetWeekdaysInt() {
-        var thisMonthDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, Date);
-        var weekday = (int)thisMonthDate.DayOfWeek;
-        return new List<int> { weekday };
+        var startOfWeek = DateTime.Now.StartOfWeek(DayOfWeek.Monday);
+        for (var i = 0; i < 7; i++)
+        {
+            var thisDate = startOfWeek.AddDays(i);
+            if(thisDate.Day == Date)
+            {
+                return new List<int> { i + 1 };
+            }
+        }
+
+        return new List<int> { };
+
+        // have some problem
+        //var thisMonthDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, Date);
+        //var weekday = (int)thisMonthDate.DayOfWeek;
+        //return new List<int> { weekday };
     }
 }
