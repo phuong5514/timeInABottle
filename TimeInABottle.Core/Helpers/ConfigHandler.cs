@@ -84,7 +84,7 @@ public class ConfigHandler
         {
             { "TimeSlotIncrement", "15" },
             { "TimeSlotIncrements", "15,30,60" },
-            { "IsNotificationEnabled", "true" },
+            { "IsNotificationEnabled", "false" },
             { "BackgroundTaskRefreshRate", "15" },
             { "NotificationTime", "15" },
             { "NotificationDuration", "5" },
