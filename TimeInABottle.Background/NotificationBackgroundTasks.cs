@@ -106,10 +106,12 @@ public sealed class NotificationBackgroundTasks : IBackgroundTask
         textElements[0].AppendChild(toastXml.CreateTextNode(notificationText));
         textElements[1].AppendChild(toastXml.CreateTextNode($"{taskToSend.Name}"));
 
-        ToastNotification notification = new(toastXml)
-        {
-            ExpirationTime = DateTimeOffset.Now.AddSeconds(_notificationDuration)
-        };
+        ToastNotification notification = new(toastXml);
+        // bugged
+        //{
+        //    //ExpirationTime = DateTimeOffset.Now.AddSeconds(_notificationDuration)
+        //};
+        //notification.ExpirationTime = DateTimeOffset.Now + TimeSpan.FromSeconds(_notificationDuration);
 
         ToastNotificationManager.CreateToastNotifier().Show(notification);
     }

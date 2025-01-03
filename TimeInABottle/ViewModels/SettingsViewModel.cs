@@ -47,8 +47,8 @@ public partial class SettingsViewModel : ObservableRecipient
     [ObservableProperty]
     private int _notificationTime; // how long before the event the notification should be shown in minutes
 
-    [ObservableProperty]
-    private int _notificationDuration; // how long the notification should be shown in seconds
+    //[ObservableProperty]
+    //private int _notificationDuration; // how long the notification should be shown in seconds
 
     [ObservableProperty]
     private TimeSpan _schedulingStartTime; // the earliest time an event can be scheduled
@@ -98,8 +98,8 @@ public partial class SettingsViewModel : ObservableRecipient
             {
                 ["IsNotificationEnabled"] = IsNotificationEnabled.ToString(),
                 ["BackgroundTaskRefreshRate"] = BackgroundTaskRefreshRate.ToString(),
-                ["NotificationTime"] = NotificationTime.ToString(),
-                ["NotificationDuration"] = NotificationDuration.ToString()
+                ["NotificationTime"] = NotificationTime.ToString()
+                //["NotificationDuration"] = NotificationDuration.ToString()
             };
             ConfigHandler.SetConfigValues(dictionary);
         }
@@ -142,17 +142,17 @@ public partial class SettingsViewModel : ObservableRecipient
 
     private void ReadConfig()
     {
-        var configurations = (List<string>)ConfigHandler.GetConfigValues(["IsNotificationEnabled", "BackgroundTaskRefreshRate", "NotificationTime", "NotificationDuration", "SchedulingStartTime", "SchedulingEndTime"]);
+        var configurations = (List<string>)ConfigHandler.GetConfigValues(["IsNotificationEnabled", "BackgroundTaskRefreshRate", "NotificationTime", "SchedulingStartTime", "SchedulingEndTime"]);
 
         // notification
         IsNotificationEnabled = bool.Parse(configurations[0]);
         BackgroundTaskRefreshRate = int.Parse(configurations[1]);
         NotificationTime = int.Parse(configurations[2]);
-        NotificationDuration = int.Parse(configurations[3]);
+        //NotificationDuration = int.Parse(configurations[3]);
 
         // scheduling
-        SchedulingStartTime = TimeSpan.Parse(configurations[4]);
-        SchedulingEndTime = TimeSpan.Parse(configurations[5]);
+        SchedulingStartTime = TimeSpan.Parse(configurations[3]);
+        SchedulingEndTime = TimeSpan.Parse(configurations[4]);
 
         var registerService = App.GetService<IBackgroundTaskRegisterService>();
         if (IsNotificationEnabled)

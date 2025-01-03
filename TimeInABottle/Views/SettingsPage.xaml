@@ -78,12 +78,13 @@
 
 
 
-                   
+                        <!--
                         <TextBlock x:Uid="Settings_Notitication_Duration"/>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                             <TextBlock Text="{x:Bind ViewModel.NotificationDuration, Mode=OneWay}" Width="24" VerticalAlignment="Center" Margin="{StaticResource SmallRightMargin}" Padding="{StaticResource SmallPadding}"/>
                             <Slider Value="{x:Bind ViewModel.NotificationDuration, Mode=TwoWay}" Minimum="5" Maximum="30" Width="200"/>
                         </StackPanel>
+                        -->
                     </StackPanel>
 
                     <Button x:Name="Settings_Notification_Save" Command="{x:Bind ViewModel.NotificationSaveCommand}" Background="{ThemeResource SystemFillColorSuccessBackgroundBrush}" Margin="{StaticResource SmallTopMargin}">Save changes</Button>
