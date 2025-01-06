@@ -1,0 +1,580 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="TimeInABottle.Activation.ActivationHandler&lt;T&gt;" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAACAAAAAAAAAAAAEIAAAAA=</HashCode>
+      <FileName>Activation\ActivationHandler.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TimeInABottle.Activation.DefaultActivationHandler" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAEIAAAAA=</HashCode>
+      <FileName>Activation\DefaultActivationHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Behaviors.NavigationViewHeaderBehavior" Collapsed="true">
+    <Position X="3" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BEAAAAAAFEUAAAAEAAACoBIABAgAAAAAAABABCAAIAA=</HashCode>
+      <FileName>Behaviors\NavigationViewHeaderBehavior.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Helpers.BooleanToVisibilityConverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\BooleanToVisibilityConverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Helpers.DateTimeToDateTimeOffsetConverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="3" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\DateTimeToDateTimeOffsetConverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Helpers.EnumToBooleanConverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\EnumToBooleanConverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Helpers.FilterToNameConverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\FilterToNameConverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Helpers.FilterToStringConverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\FilterToStringConverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Helpers.FrameExtensions" Collapsed="true">
+    <Position X="11.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\FrameExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Helpers.GeoUtils" Collapsed="true">
+    <Position X="13.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAIAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\GeoUtils.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Helpers.ListContainsConverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="15.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\ListContainsConverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Helpers.MonthlyTaskToVisibilityConverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\MonthlyTaskToVisibilityConverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Helpers.NavigationHelper" Collapsed="true">
+    <Position X="13.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\NavigationHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Helpers.NonRepeatedTaskToVisibilityConverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\NonRepeatedTaskToVisibilityConverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Helpers.ResourceExtensions" Collapsed="true">
+    <Position X="10" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAABAAAAAAAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\ResourceExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Helpers.RuntimeHelper" Collapsed="true">
+    <Position X="11.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAQAAAAAAA=</HashCode>
+      <FileName>Helpers\RuntimeHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Helpers.SettingsStorageExtensions" Collapsed="true">
+    <Position X="4.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAACAAAAwIgQAAAIAAEAAAAAAAA=</HashCode>
+      <FileName>Helpers\SettingsStorageExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Helpers.TaskToNameConverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\TaskToNameConverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Helpers.TaskToNotificationConverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\TaskToNotificationConverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Helpers.TaskToSpecialtyStringConverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\TaskToSpecialtyStringConverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Helpers.TaskTypeToBooleanConverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\TaskTypeToBooleanConverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Helpers.TaskTypeToIconConverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\TaskTypeToIconConverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Helpers.TimeToGreetingConverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\TimeToGreetingConverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Helpers.TimeToStringConverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\TimeToStringConverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Helpers.TitleBarHelper" Collapsed="true">
+    <Position X="10" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAAAAACAAAAAAAAAAAAAACSEAAAAAAQA=</HashCode>
+      <FileName>Helpers\TitleBarHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Helpers.WeatherInfoWrapperToTemperatureConverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\WeatherInfoWrapperToTemperatureConverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Helpers.WeatherInfoWrapperToWeatherTypeConverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="13.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\WeatherInfoWrapperToWeatherTypeConverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Helpers.WeeklyTaskToVisibilityConverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="3" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\WeeklyTaskToVisibilityConverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Models.LocalSettingsOptions" Collapsed="true">
+    <Position X="3" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAACAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\LocalSettingsOptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Models.TaskWrapper" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="13.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAACAAAEAgRAAAgAAIBAAAAEAAAABAAAA=</HashCode>
+      <FileName>Models\TaskWrapper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Models.TimeTableView" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAMAEAQgRgAAAAQQAAAAAgAAIgEAACKAwAAABBAA=</HashCode>
+      <FileName>Models\TimeTableView.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Services.ActivationService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EgAAAAAAQAAAAAAIAAAAAQAAAAAAAAAAAgAAAAAAgAI=</HashCode>
+      <FileName>Services\ActivationService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Services.ApiWeatherServiceBehaviorController" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAQAAAAAAAgAAAAAAAAAAAAAACAAAAAAkBAEAAAI=</HashCode>
+      <FileName>Services\ApiWeatherServiceBehaviorController.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Services.BackgroundTaskRegisterService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAAEAAIAAAACEAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\BackgroundTaskRegisterService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Services.LocalSettingsService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAUAQAAIEAAgARAAAAAAAAAAAAAAAAQAAEAgAA=</HashCode>
+      <FileName>Services\LocalSettingsService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Services.LocalStorageService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Services\LocalStorageService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Services.LocationService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\LocationService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Services.NavigationService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="15.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAgAAAAACAAAIAAAAIIAEAAAAQgAABABE=</HashCode>
+      <FileName>Services\NavigationService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Services.NavigationViewService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAQAAAAARAAMAAAAgAACAACAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Services\NavigationViewService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Services.PageService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAAAAIgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\PageService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Services.ThemeSelectorService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="15.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EIAAAAAAAAAAAICQAAAAAAAAAAAIAAAAAAAgAAAACAA=</HashCode>
+      <FileName>Services\ThemeSelectorService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Services.TimeSlotBasedPlannerService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="3" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACEAAAAAgAASAAAIAAIAEARgAkAAEABAAAAAgAAAAAI=</HashCode>
+      <FileName>Services\TimeSlotBasedPlannerService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Services.WebViewService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="15.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAIgAAAQAAAAAARAAIAAACAAEACAAAAAABAAA=</HashCode>
+      <FileName>Services\WebViewService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.ViewModels.CUDDialogViewModel" Collapsed="true">
+    <Position X="11.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAgCAABAAAAAAggACAIBIAAAABMAgBYEDAiAAAAABQA=</HashCode>
+      <FileName>ViewModels\CUDDialogViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.ViewModels.DashboardViewModel" Collapsed="true">
+    <Position X="15.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAUAwAQAAAAAAhIAAAEAAgAAREAAAggAAAcA=</HashCode>
+      <FileName>ViewModels\DashboardViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.ViewModels.SchedularViewModel" Collapsed="true">
+    <Position X="15.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QCAEAJgAAAAQACCAAAUBBAUAAIAAgIBBAAAAAAIQAIo=</HashCode>
+      <FileName>ViewModels\SchedularViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.ViewModels.SettingsViewModel" Collapsed="true">
+    <Position X="6.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACBAAAAQAAAgAAkAAAAIAAAAAEACAAICAAAACAAAACM=</HashCode>
+      <FileName>ViewModels\SettingsViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.ViewModels.ShellViewModel" Collapsed="true">
+    <Position X="10" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAAAAAICAIAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>ViewModels\ShellViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.ViewModels.TaskListViewModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="3" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAgAgAQEAIQAAUIQQDACJQAQBAIAgIABQA=</HashCode>
+      <FileName>ViewModels\TaskListViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Views.DashboardPage" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="13.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ICIAAEAAAAAAAAAIAAAAIAAAGEAAACIAIAAAAAAIAAI=</HashCode>
+      <FileName>Views\DashboardPage.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Views.FilterDialogContent" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Views\FilterDialogContent.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Views.SchedularPage" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="13.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAgAAAAAAAEAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Views\SchedularPage.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Views.SettingsPage" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="3" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Views\SettingsPage.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Views.ShellPage" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAQAAQAAAAEAAAAAAAgQAAgAAAAAA=</HashCode>
+      <FileName>Views\ShellPage.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Views.TaskEditorDialogControl" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAEAAAAAAwAEAAAAAAEAAAAAAAAAAAAAAAEBA=</HashCode>
+      <FileName>Views\TaskEditorDialogControl.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Views.TaskListDetailControl" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="13.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAAIAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>Views\TaskListDetailControl.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Views.TaskListPage" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="15.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAIAAAAAAAAAAEAAAEAAARAAGAAAAAAAIgEAAgAAAFA=</HashCode>
+      <FileName>Views\TaskListPage.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.App" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAKCAAAQAAAAAAAEEA=</HashCode>
+      <FileName>App.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.MainWindow" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAACAQAAAAAQAAAAAAAA=</HashCode>
+      <FileName>MainWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Interface Name="TimeInABottle.Activation.IActivationHandler" Collapsed="true">
+    <Position X="3" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAACAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Activation\IActivationHandler.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TimeInABottle.Contracts.Services.IActivationService" Collapsed="true">
+    <Position X="4.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Contracts\Services\IActivationService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TimeInABottle.Contracts.Services.IAppNotificationService" Collapsed="true">
+    <Position X="6.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAAAAQAAAAAAAAAAAAAEAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>Contracts\Services\IAppNotificationService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TimeInABottle.Contracts.Services.IBackgroundTaskRegisterService" Collapsed="true">
+    <Position X="8.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAAAAAAAAAACAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Contracts\Services\IBackgroundTaskRegisterService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TimeInABottle.Contracts.Services.IBehaviorController" Collapsed="true">
+    <Position X="10" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAEAAAA=</HashCode>
+      <FileName>Contracts\Services\IBehaviorController.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TimeInABottle.Contracts.Services.ILocalSettingsService" Collapsed="true">
+    <Position X="11.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Contracts\Services\ILocalSettingsService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TimeInABottle.Contracts.Services.ILocationService" Collapsed="true">
+    <Position X="13.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Contracts\Services\ILocationService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TimeInABottle.Contracts.Services.INavigationService" Collapsed="true">
+    <Position X="3" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAAAAAIAAEAAAAQAAABAAE=</HashCode>
+      <FileName>Contracts\Services\INavigationService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TimeInABottle.Contracts.Services.INavigationViewService" Collapsed="true">
+    <Position X="4.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAARAAAAAAAAAAAAACAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Contracts\Services\INavigationViewService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TimeInABottle.Contracts.Services.IPageService" Collapsed="true">
+    <Position X="6.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Contracts\Services\IPageService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TimeInABottle.Contracts.Services.IPlannerService" Collapsed="true">
+    <Position X="8.25" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAEAAAABAAAAAAAAAAAA=</HashCode>
+      <FileName>Contracts\Services\IPlannerService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TimeInABottle.Contracts.Services.IStorageService" Collapsed="true">
+    <Position X="10" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Contracts\Services\IStorageService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TimeInABottle.Contracts.Services.IThemeSelectorService" Collapsed="true">
+    <Position X="11.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAACQAAAAAAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Contracts\Services\IThemeSelectorService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TimeInABottle.Contracts.Services.IWebViewService" Collapsed="true">
+    <Position X="13.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAQAAAAAARAAIAAACAAEACAAAAAABAAA=</HashCode>
+      <FileName>Contracts\Services\IWebViewService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TimeInABottle.Contracts.ViewModels.INavigationAware" Collapsed="true">
+    <Position X="15.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Contracts\ViewModels\INavigationAware.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="TimeInABottle.Behaviors.NavigationViewHeaderMode" Collapsed="true">
+    <Position X="4.75" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAAEAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Behaviors\NavigationViewHeaderMode.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="TimeInABottle.Models.FunctionResultCode" Collapsed="true">
+    <Position X="3" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAACBAAAAAAQAAAAAEAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>Models\FunctionResultCode.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

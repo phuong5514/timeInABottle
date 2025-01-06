@@ -1,0 +1,386 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="TimeInABottle.Core.Helpers.ConfigHandler" Collapsed="true">
+    <Position X="17.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACACQAQAAAAAAAAAAABAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\ConfigHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Core.Helpers.DateTimeExtensions" Collapsed="true">
+    <Position X="21" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\DateTimeExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Core.Helpers.DayOfWeekGetter" Collapsed="true">
+    <Position X="12.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Helpers\DayOfWeekGetter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Core.Helpers.FullObservableCollection&lt;T&gt;" Collapsed="true">
+    <Position X="21" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>Helpers\FullObservableCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Core.Helpers.GetTaskSpecialtiesVisitor" Collapsed="true">
+    <Position X="12.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAAACAACAACAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\GetTaskSpecialtiesVisitor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Core.Helpers.Json" Collapsed="true">
+    <Position X="14" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\Json.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Core.Helpers.LocalStorageWriter" Collapsed="true">
+    <Position X="12.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Helpers\LocalStorageWriter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Core.Helpers.TaskListSorter" Collapsed="true">
+    <Position X="14" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\TaskListSorter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Core.Helpers.TaskToJsonTaskConverter" Collapsed="true">
+    <Position X="15.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIQAAAAAAAgAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\TaskToJsonTaskConverter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Core.Models.Filters.CompositeFilter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="15.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAkAAIQAAQAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Filters\CompositeFilter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Core.Models.Filters.DailyTaskFilter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="19.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAkAAAAAAQAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Filters\DailyTaskFilter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Core.Models.Filters.DerivedTaskFilter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="14" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAkAAAAAAQAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Filters\DerivedTaskFilter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Core.Models.Filters.DescriptionFilter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="15.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAkAAAAAAQAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Filters\DescriptionFilter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Core.Models.Filters.FilterFactory" Collapsed="true">
+    <Position X="19.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAQAEAAAAAAA=</HashCode>
+      <FileName>Models\Filters\FilterFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Core.Models.Filters.KeywordFilter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="17.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAkAAAAAAQAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Filters\KeywordFilter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Core.Models.Filters.MonthlyTaskFilter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="14" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAkAAAAAAQAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Filters\MonthlyTaskFilter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Core.Models.Filters.NameFilter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="15.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAkAAAAAAQAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Filters\NameFilter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Core.Models.Filters.NonRepeatedTaskFilter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="17.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAkAAAAAAQAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Filters\NonRepeatedTaskFilter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Core.Models.Filters.TimeFilter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="17.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAkAAAAAAQAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Filters\TimeFilter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Core.Models.Filters.WeeklyTaskFilter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="21" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAkAAAAAAQAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Filters\WeeklyTaskFilter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Core.Models.Tasks.DailyTask" Collapsed="true">
+    <Position X="7.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAGAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Tasks\DailyTask.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Core.Models.Tasks.DerivedTask" Collapsed="true">
+    <Position X="3" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAGAAAAAAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Models\Tasks\DerivedTask.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Core.Models.Tasks.IRepeatedTask" Collapsed="true">
+    <Position X="7.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Tasks\IRepeatedTask.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Core.Models.Tasks.ITask" Collapsed="true">
+    <Position X="5.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIICAAAAACAgAAAGAAAAAAQAgAAAABAAAAAAAABAAAA=</HashCode>
+      <FileName>Models\Tasks\ITask.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TimeInABottle.Core.Models.Tasks.JsonTask" Collapsed="true">
+    <Position X="15.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAICAAAAACAgAAAAAAAAAAQQAAAgAAABEAAAAAAAAAA=</HashCode>
+      <FileName>Models\Tasks\JsonTask.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Core.Models.Tasks.MonthlyTask" Collapsed="true">
+    <Position X="5.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAGAAAAAAAAAAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Tasks\MonthlyTask.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Core.Models.Tasks.NonRepeatedTask" Collapsed="true">
+    <Position X="0.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAGAAAAAAAAAAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Tasks\NonRepeatedTask.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Core.Models.Tasks.TaskContext" Collapsed="true">
+    <Position X="21" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAEIAAAAAAAAAIAACAAAA=</HashCode>
+      <FileName>Models\Tasks\TaskContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Core.Models.Tasks.TaskFactory" Collapsed="true">
+    <Position X="12.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAAABAAAAAAAAAAAABAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Tasks\TaskFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Core.Models.Tasks.WeeklyTask" Collapsed="true">
+    <Position X="9.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKAAAAAAAAAAAAAGAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Tasks\WeeklyTask.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Core.Models.Weather.WeatherInfo" Collapsed="true">
+    <Position X="14" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Models\Weather\WeatherInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Core.Models.Weather.WeatherValues" Collapsed="true">
+    <Position X="19.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Models\Weather\WeatherInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Core.Models.Weather.WeatherTimeline" Collapsed="true">
+    <Position X="17.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAIAAgAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Models\Weather\WeatherInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Core.Models.Weather.WeatherData" Collapsed="true">
+    <Position X="12.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Weather\WeatherInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Core.Models.Weather.WeatherApiResponse" Collapsed="true">
+    <Position X="19.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Weather\WeatherInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Core.Models.Weather.WeatherInfoWrapper" Collapsed="true">
+    <Position X="15.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAIIAAAAAAAABAAAAEAQA=</HashCode>
+      <FileName>Models\Weather\WeatherInfoWrapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeInABottle.Core.Services.ApiWeatherService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="12.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAQAIAAAAAAAAIAABAAAAAQAACAAAAAAIAAAEAI=</HashCode>
+      <FileName>Services\ApiWeatherService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Core.Services.AvailableTimesGetter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="14" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAEAARABAAAAAAAABAAAAAIAAAAAAQAAAIAA=</HashCode>
+      <FileName>Services\AvailableTimesGetter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Core.Services.FileService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="17.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAAAAAAAAAAgAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\FileService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Core.Services.LocalStorageDaoService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="19.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAChBAACAAASAAAAhAABAABAAICAAQAIAAAAAAAA=</HashCode>
+      <FileName>Services\LocalStorageDaoService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Core.Services.LocalStorageWeatherService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="21" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Services\LocalStorageWeatherService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Core.Services.SqliteDaoService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="19.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAwChBAACAAACAAAAhBABAADAAAAAAQAAAAIAAAAA=</HashCode>
+      <FileName>Services\SqliteDaoService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TimeInABottle.Core.Services.WeatherBasedBufferService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="21" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAEAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\WeatherBasedBufferService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Interface Name="TimeInABottle.Core.Contracts.Services.IAvailableTimesGetter" Collapsed="true">
+    <Position X="12.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAEAAQABAAAAAAAAAAAAAAIAAAAAAQAAAIAA=</HashCode>
+      <FileName>Contracts\Services\IAvailableTimesGetter.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TimeInABottle.Core.Contracts.Services.IBufferService" Collapsed="true">
+    <Position X="14" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Contracts\Services\IBufferService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TimeInABottle.Core.Contracts.Services.IDaoService" Collapsed="true">
+    <Position X="17.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAQChBAACAAACAAAAhAABAABAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Contracts\Services\IDaoCUDService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TimeInABottle.Core.Contracts.Services.IDaoExporterService" Collapsed="true">
+    <Position X="15.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Contracts\Services\IDaoExporterService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TimeInABottle.Core.Contracts.Services.IFileService" Collapsed="true">
+    <Position X="19.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAAAAAAAAAAgAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Contracts\Services\IFileService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TimeInABottle.Core.Models.Filters.IFilter" Collapsed="true">
+    <Position X="1.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAkAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Filters\IFilter.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TimeInABottle.Core.Models.Filters.ITypeFilter" Collapsed="true">
+    <Position X="0.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Filters\ITypeFilter.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TimeInABottle.Core.Models.Filters.IValueFilter" Collapsed="true">
+    <Position X="2.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Filters\IValueFilter.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TimeInABottle.Core.Contracts.Services.IWeatherService" Collapsed="true">
+    <Position X="21" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAQAAAAAAAAAAIABAgAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Contracts\Services\IWeatherService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
